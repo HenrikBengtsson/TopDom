@@ -12,7 +12,7 @@
 # @param out_ext : string, ext file address to write
 #' @importFrom utils read.table write.table
 #' @export
-TopDom <- function(matrix.file, window.size, outFile=NULL, statFilter = TRUE) {
+TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) {
   print("#########################################################################")
   print("Step 0 : File Read ")
   print("#########################################################################")
@@ -96,8 +96,8 @@ TopDom <- function(matrix.file, window.size, outFile=NULL, statFilter = TRUE) {
     scale.matrix.data <- matrix.data
     for (i in seq_len(2 * window.size))
     {
-      # diag(scale.matrix.data[, i:n_bins] ) <- scale( diag( matrix.data[, i:n_bins] ) )
-      scale.matrix.data[ seq(1 + (n_bins * i), n_bins * n_bins, 1 + n_bins) ] <- scale(matrix.data[ seq(1 + (n_bins * i), n_bins * n_bins, 1 + n_bins) ])
+      # diag(scale.matrix.data[, i:n_bins]) <- scale(diag(matrix.data[, i:n_bins]))
+      scale.matrix.data[seq(1 + (n_bins * i), n_bins * n_bins, 1 + n_bins)] <- scale(matrix.data[seq(1 + (n_bins * i), n_bins * n_bins, 1 + n_bins)])
     }
 
     print("-- Compute p-values by Wilcox Ranksum Test")
@@ -188,7 +188,7 @@ Get.Diamond.Matrix <- function(mat.data, i, size) {
 # @param n_bins : total number of bins
 # @param min.size : minimum size of bins
 # @retrun : data.frame of proc.regions
-Which.process.region <- function(rmv.idx, n_bins, min.size=3) {
+Which.process.region <- function(rmv.idx, n_bins, min.size = 3) {
   gap.idx <- rmv.idx
 
   proc.regions <- data.frame(start = numeric(0), end = numeric(0))
@@ -217,7 +217,7 @@ Which.process.region <- function(rmv.idx, n_bins, min.size=3) {
   }
 
   colnames(proc.regions) <- c("start", "end")
-  proc.regions <- proc.regions[ which(abs(proc.regions[, "end"] - proc.regions[, "start"]) >= min.size), ]
+  proc.regions <- proc.regions[which(abs(proc.regions[, "end"] - proc.regions[, "start"]) >= min.size), ]
 
   proc.regions
 }
@@ -306,11 +306,11 @@ Detect.Local.Extreme <- function(x) {
       ret[cp$cp[i]] <- 1
     } else if (x[cp$cp[i]] < x[cp$cp[i] - 1] && x[cp$cp[i]] < x[cp$cp[i] + 1]) ret[cp$cp[i]] <- -1
 
-    min.val <- min(x[ cp$cp[i - 1] ], x[ cp$cp[i] ])
-    max.val <- max(x[ cp$cp[i - 1] ], x[ cp$cp[i] ])
+    min.val <- min(x[cp$cp[i - 1]], x[cp$cp[i]])
+    max.val <- max(x[cp$cp[i - 1]], x[cp$cp[i]])
 
-    if (min(x[cp$cp[i - 1]:cp$cp[i]]) < min.val) ret[ cp$cp[i - 1] - 1 + which.min(x[cp$cp[i - 1]:cp$cp[i]]) ] <- -1
-    if (max(x[cp$cp[i - 1]:cp$cp[i]]) > max.val) ret[ cp$cp[i - 1] - 1 + which.max(x[cp$cp[i - 1]:cp$cp[i]]) ] <- 1
+    if (min(x[cp$cp[i - 1]:cp$cp[i]]) < min.val) ret[cp$cp[i - 1] - 1 + which.min(x[cp$cp[i - 1]:cp$cp[i]])] <- -1
+    if (max(x[cp$cp[i - 1]:cp$cp[i]]) > max.val) ret[cp$cp[i - 1] - 1 + which.max(x[cp$cp[i - 1]:cp$cp[i]])] <- 1
   }
 
   ret
@@ -401,7 +401,7 @@ Change.Point <- function(x, y) {
 # @param scale : scale parameter if necessary. deprecated parameter
 # @return computed p-value vector
 #' @importFrom stats wilcox.test
-Get.Pvalue <- function(matrix.data, size, scale=1) {
+Get.Pvalue <- function(matrix.data, size, scale = 1) {
   n_bins <- nrow(matrix.data)
   pvalue <- rep(1, n_bins)
 
@@ -414,10 +414,10 @@ Get.Pvalue <- function(matrix.data, size, scale=1) {
     wil.test <- wilcox.test(x = dia * scale, y = c(ups, downs), alternative = "less", exact = FALSE)
     pvalue[i] <- wil.test$p.value
 
-    # print(paste(i, "=", wil.test$p.value) )
+    # print(paste(i, "=", wil.test$p.value))
   }
 
-  pvalue[ is.na(pvalue) ] <- 1
+  pvalue[is.na(pvalue)] <- 1
   pvalue
 }
 
@@ -431,7 +431,7 @@ Get.Upstream.Triangle <- function(mat.data, i, size) {
 
   lower <- max(1, i - size)
   tmp.mat <- mat.data[lower:i, lower:i]
-  tmp.mat[ upper.tri(tmp.mat, diag = FALSE) ]
+  tmp.mat[upper.tri(tmp.mat, diag = FALSE)]
 }
 
 # @fn Get.Downstream.Triangle
@@ -445,7 +445,7 @@ Get.Downstream.Triangle <- function(mat.data, i, size) {
 
   upperbound <- min(i + size, n_bins)
   tmp.mat <- mat.data[(i + 1):upperbound, (i + 1):upperbound]
-  tmp.mat[ upper.tri(tmp.mat, diag = FALSE) ]
+  tmp.mat[upper.tri(tmp.mat, diag = FALSE)]
 }
 
 # @fn Get.Diamond.Matrix2
@@ -477,7 +477,7 @@ Get.Diamond.Matrix2 <- function(mat.data, i, size) {
 # @param pvalues : pvalue vector
 # @param pvalue.cut : pvalue threshold
 # @return dataframe storing domain information
-Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues=NULL, pvalue.cut=NULL) {
+Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues = NULL, pvalue.cut = NULL) {
   n_bins <- nrow(bins)
   ret <- data.frame(chr = character(0), from.id = numeric(0), from.coord = numeric(0), to.id = numeric(0), to.coord = numeric(0), tag = character(0), size = numeric(0))
   levels(x = ret[, "tag"]) <- c("domain", "gap", "boundary")
@@ -516,7 +516,7 @@ Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues=NULL, pvalu
     {
       if (ret[i, "tag"] == "domain") {
         domain.bins.idx <- ret[i, "from.id"]:ret[i, "to.id"]
-        p.value.constr <- which(pvalues[ domain.bins.idx ] < pvalue.cut)
+        p.value.constr <- which(pvalues[domain.bins.idx] < pvalue.cut)
 
         if (length(domain.bins.idx) == length(p.value.constr)) ret[i, "tag"] <- "boundary"
       }
@@ -547,7 +547,7 @@ Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues=NULL, pvalu
     i <- i + 1
   }
 
-  ret <- rbind(ret[ ret[, "tag"] != "boundary", ], new.bdr.set)
+  ret <- rbind(ret[ret[, "tag"] != "boundary", ], new.bdr.set)
   ret <- ret[order(ret[, "to.coord"]), ]
 
   ret
@@ -561,7 +561,7 @@ Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues=NULL, pvalu
 # @param pvalues : pvalue vector
 # @param pvalue.cut : pvalue threshold
 # @return dataframe storing domain information
-Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues=NULL, pvalue.cut=NULL) {
+Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues = NULL, pvalue.cut = NULL) {
   n_bins <- nrow(bins)
   ret <- data.frame(chr = character(0), from.id = numeric(0), from.coord = numeric(0), to.id = numeric(0), to.coord = numeric(0), tag = character(0), size = numeric(0))
   levels(x = ret[, "tag"]) <- c("domain", "gap", "boundary")
@@ -600,7 +600,7 @@ Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues=NULL, p
     {
       if (ret[i, "tag"] == "domain") {
         domain.bins.idx <- ret[i, "from.id"]:ret[i, "to.id"]
-        p.value.constr <- which(pvalues[ domain.bins.idx ] < pvalue.cut)
+        p.value.constr <- which(pvalues[domain.bins.idx] < pvalue.cut)
 
         if (length(domain.bins.idx) == length(p.value.constr)) ret[i, "tag"] <- "boundary"
       }
