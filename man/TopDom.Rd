@@ -7,17 +7,17 @@
 TopDom(matrix.file, window.size, outFile = NULL, statFilter = TRUE)
 }
 \arguments{
-\item{window.size}{integer, number of bins to extend.}
-
-\item{matrixFile}{string, matrixFile Address,
+\item{matrix.file}{string, matrixFile Address,
 \itemize{
-\item Format = {chromosome, bin start, bin end, N numbers normalized value }
+\item Format = {chromosome, bin start, bin end, N numbers normalized value}
 \item N * (N + 3), where N is the number of bins
 }}
 
-\item{out_binSignal}{string, binSignal file address to write}
+\item{window.size}{integer, number of bins to extend.}
 
-\item{out_ext}{string, ext file address to write}
+\item{outFile}{string, binSignal file address to write}
+
+\item{statFilter}{logical, ...}
 }
 \description{
 Identify topological domains for given Hi-C contact matrix
