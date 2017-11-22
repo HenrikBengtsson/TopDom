@@ -11,10 +11,15 @@
 #' 
 #' @param statFilter logical, ...
 #'
-#' @return A named list with elements `binSignal`, `domain`, and `bed`.
-#' If argument `outFile` is non-`NULL`, then two files with names as given
-#' by argument `outFile` and filename extensions \file{*.binSignal} and
-#' \file{*.domain} are produced.
+#' @return A named list with data.frame elements `binSignal`, `domain`,
+#' and `bed`.
+#' The `bed` data frame has columns `chrom`, `chromStart`, `chromEnd`,
+#' and `name`.
+#' If argument `outFile` is non-`NULL`, then the three elements returned
+#' are also written to tab-delimited files with file names
+#' \file{<outFile>.binSignal}, \file{<outFile>.domain}, and
+#' \file{<outFile>.bed}, respectively.  None of the files have row names,
+#' and all but the BED file have column names.
 #'
 #' @section Format of HiC contact-matrix file:
 #' The contact-matrix file should be a whitespace-delimited text file with
@@ -139,7 +144,8 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
       # diag(scale.matrix.data[, i:n_bins]) <- scale(diag(matrix.data[, i:n_bins]))
       scale.matrix.data[seq(from = 1 + (n_bins * i), to = n_bins * n_bins, by = 1 + n_bins)] <- scale(matrix.data[seq(from = 1 + (n_bins * i), to = n_bins * n_bins, by = 1 + n_bins)])
     }
-
+    rm(list = "matrix.data")
+    
     mcat("-- Compute p-values by Wilcox Ranksum Test")
     for (i in seq_len(nrow(proc.regions))) {
       start <- proc.regions[i, "start"]
@@ -161,6 +167,7 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
     mcat("Step 3 Running Time : ", eltm[3])
     mcat("Step 3 : Done!")
   } else {
+    rm(list = "matrix.data")
     pvalue <- 0
   }
 
@@ -190,7 +197,6 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
     outBinSignal <- paste0(outFile, ".binSignal")
     mcat("binSignal File : ", outBinSignal)
     write.table(bins, file = outBinSignal, quote = FALSE, row.names = FALSE, col.names = TRUE, sep = "\t")
-
 
     outDomain <- paste0(outFile, ".domain")
     mcat("Domain File : ", outDomain)

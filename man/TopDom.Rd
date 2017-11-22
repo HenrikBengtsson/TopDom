@@ -19,10 +19,15 @@ files optionally produced.}
 \item{statFilter}{logical, ...}
 }
 \value{
-A named list with elements \code{binSignal}, \code{domain}, and \code{bed}.
-If argument \code{outFile} is non-\code{NULL}, then two files with names as given
-by argument \code{outFile} and filename extensions \file{*.binSignal} and
-\file{*.domain} are produced.
+A named list with data.frame elements \code{binSignal}, \code{domain},
+and \code{bed}.
+The \code{bed} data frame has columns \code{chrom}, \code{chromStart}, \code{chromEnd},
+and \code{name}.
+If argument \code{outFile} is non-\code{NULL}, then the three elements returned
+are also written to tab-delimited files with file names
+\file{<outFile>.binSignal}, \file{<outFile>.domain}, and
+\file{<outFile>.bed}, respectively.  None of the files have row names,
+and all but the BED file have column names.
 }
 \description{
 Identify topological domains for given Hi-C contact matrix
