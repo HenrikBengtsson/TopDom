@@ -1,19 +1,45 @@
 #' Identify topological domains for given Hi-C contact matrix
 #' 
-#' @param matrix.file string, matrixFile Address,
-#' - Format = {chromosome, bin start, bin end, N numbers normalized value}
-#' - N * (N + 3), where N is the number of bins
+#' @param matrix.file The pathname of a normalize Hi-C contact matrix file
+#' stored as a whitespace-delimited file.  See below for details.
 #' 
-#' @param window.size integer, number of bins to extend.
+#' @param window.size The number of bins to extend (as a non-negative integer).
+#' Recommended range is in {5, ..., 20}.
 #' 
-#' @param outFile string, binSignal file address to write
+#' @param outFile (optional) The filename without extension of the two result
+#' files optionally produced.
 #' 
 #' @param statFilter logical, ...
 #'
 #' @return A named list with elements `binSignal`, `domain`, and `bed`.
+#' If argument `outFile` is non-`NULL`, then two files with names as given
+#' by argument `outFile` and filename extensions \file{*.binSignal} and
+#' \file{*.domain} are produced.
+#'
+#' @section Format of HiC contact-matrix file:
+#' The contact-matrix file should be a whitespace-delimited text file with
+#' neither row names nor column names.  The content should be a N-by-(3+N)
+#' table where the first three columns correspond to `chr` (string),
+#' `from.coord` (integer position), and `to.coord` (integer position).
+#' These column defines the genomic location of the N Hi-C bins (in order).
+#' The last N columns should contain normalized contact counts (float) such
+#' that element (r, 3+c) in this table corresponds to count (r,c) in the
+#' normalized contact matrix.
+#'
+#' If an N-by-(4+N) table, then the first column is assumed to contain an
+#' `id` (integer), and everything else as above.
+#'
+#' Example:
+#' \preformatted{
+#'   chr10       0   40000  0 0 0 0 ...
+#'   chr10   40000   80000  0 0 0 0 ...
+#'   chr10   80000  120000  0 0 0 0 ...
+#'   chr10  120000  160000  0 0 0 0 ...
+#'   ...
+#' }
 #' 
 #' @author Hanjun Shin, Harris Lazaris, and Gangqing Hu.
-#' R package, help and code refactoring by Henrik Bengtsson.
+#' \R package, help, and code refactorization by Henrik Bengtsson.
 #' 
 #' @importFrom utils read.table write.table
 #' @export
@@ -21,29 +47,44 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
   mcat("#########################################################################")
   mcat("Step 0 : File Read")
   mcat("#########################################################################")
-  window.size <- as.numeric(window.size)
+  window.size <- as.integer(window.size)
+  stopifnot(is.numeric(window.size),
+            length(window.size) == 1,
+            !is.na(window.size),
+            window.size >= 0)
+  
   matdf <- read.table(matrix.file, header = FALSE)
-
-  if (ncol(matdf) - nrow(matdf) == 3) {
+  n_bins <- nrow(matdf)
+  if (ncol(matdf) - n_bins == 3) {
     colnames(matdf) <- c("chr", "from.coord", "to.coord")
-  } else if (ncol(matdf) - nrow(matdf) == 4) {
+  } else if (ncol(matdf) - n_bins == 4) {
     colnames(matdf) <- c("id", "chr", "from.coord", "to.coord")
   } else {
-    stop("Unknown type of matrix file: ", sQuote(matrix.file))
+    stop("Unknown format of count-matrix file: ", sQuote(matrix.file))
   }
-  n_bins <- nrow(matdf)
+  
   mean.cf <- rep(0, times = n_bins)
-  pvalue <- rep(1, times = n_bins)
+  pvalue <- rep(1.0, times = n_bins)
 
+  ## Gap region (== -0.5) by default
   local.ext <- rep(-0.5, times = n_bins)
 
+  ## Bin annotation
   bins <- data.frame(
-    id = seq_len(n_bins),
-    chr = matdf[, "chr"],
-    from.coord = matdf[, "from.coord"],
-    to.coord = matdf[, "to.coord"]
+    id         = seq_len(n_bins),
+    chr        = matdf[["chr"]],
+    from.coord = matdf[["from.coord"]],
+    to.coord   = matdf[["to.coord"]]
   )
-  matrix.data <- as.matrix(matdf[, (ncol(matdf) - nrow(matdf) + 1):ncol(matdf)])
+
+  ## Normalized N-by-N count matrix
+  matdf <- matdf[, (ncol(matdf) - n_bins + 1):ncol(matdf)]
+  matrix.data <- as.matrix(matdf)
+  rm(list = "matdf")
+  stopifnot(is.numeric(matrix.data),
+            is.matrix(matrix.data),
+            nrow(matrix.data) == ncol(matrix.data),
+            nrow(matrix.data) == n_bins)
 
   mcat("-- Done!")
   mcat("Step 0 : Done!")
@@ -71,16 +112,14 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
   # gap.idx <- Which.Gap.Region2(mean.cf)
   gap.idx <- Which.Gap.Region2(matrix.data = matrix.data, w = window.size)
 
-  proc.regions <- Which.process.region(rmv.idx = gap.idx, n_bins = n_bins, min.size = 3)
+  proc.regions <- Which.process.region(rmv.idx = gap.idx, n_bins = n_bins, min.size = 3L)
 
   # mcat(proc.regions)
 
   for (i in seq_len(nrow(proc.regions))) {
     start <- proc.regions[i, "start"]
-    end <- proc.regions[i, "end"]
-
-    mcat("Process Regions from ", start, " to ", end)
-
+    end   <- proc.regions[i,   "end"]
+    mcat("Process Region ", i, " from ", start, " to ", end)
     local.ext[start:end] <- Detect.Local.Extreme(x = mean.cf[start:end])
   }
 
@@ -190,9 +229,9 @@ Get.Diamond.Matrix <- function(mat.data, i, size) {
 # @fn Which.process.region
 # @param rmv.idx : vector of idx, remove index vector
 # @param n_bins : total number of bins
-# @param min.size : minimum size of bins
+# @param min.size : (integer) minimum size of bins
 # @retrun : data.frame of proc.regions
-Which.process.region <- function(rmv.idx, n_bins, min.size = 3) {
+Which.process.region <- function(rmv.idx, n_bins, min.size = 3L) {
   gap.idx <- rmv.idx
 
   proc.regions <- data.frame(start = numeric(0), end = numeric(0))
@@ -488,26 +527,53 @@ Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues = NULL, pva
   levels(x = ret[, "tag"]) <- c("domain", "gap", "boundary")
 
   rmv.idx <- setdiff(seq_len(n_bins), gap.idx)
-  proc.region <- Which.process.region(rmv.idx, n_bins = n_bins, min.size = 0)
+  proc.region <- Which.process.region(rmv.idx, n_bins = n_bins, min.size = 0L)
   from.coord <- bins[proc.region[, "start"], "from.coord"]
   n_procs <- nrow(proc.region)
-  zeros <- rep(0, times = n_procs)
-  gap <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = zeros, from.coord = from.coord, to.id = zeros, to.coord = zeros, tag = rep("gap", times = n_procs), size = zeros, stringsAsFactors = FALSE)
+  zeros <- double(length = n_procs)
+  gap <- data.frame(
+    chr = rep(bins[1, "chr"], times = n_procs),
+    from.id = zeros,
+    from.coord = from.coord,
+    to.id = zeros,
+    to.coord = zeros,
+    tag = rep("gap", times = n_procs),
+    size = zeros,
+    stringsAsFactors = FALSE
+  )
 
   rmv.idx <- union(signal.idx, gap.idx)
-  proc.region <- Which.process.region(rmv.idx, n_bins = n_bins, min.size = 0)
+  proc.region <- Which.process.region(rmv.idx, n_bins = n_bins, min.size = 0L)
   n_procs <- nrow(proc.region)
   from.coord <- bins[proc.region[, "start"], "from.coord"]
-  zeros <- rep(0, times = n_procs)
-  domain <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = zeros, from.coord = from.coord, to.id = zeros, to.coord = zeros, tag = rep("domain", times = n_procs), size = zeros, stringsAsFactors = FALSE)
+  zeros <- double(length = n_procs)
+  domain <- data.frame(
+    chr = rep(bins[1, "chr"], times = n_procs),
+    from.id = zeros,
+    from.coord = from.coord,
+    to.id = zeros,
+    to.coord = zeros,
+    tag = rep("domain", times = n_procs),
+    size = zeros,
+    stringsAsFactors = FALSE
+  )
 
   rmv.idx <- setdiff(seq_len(n_bins), signal.idx)
-  proc.region <- as.data.frame(Which.process.region(rmv.idx, n_bins = n_bins, min.size = 1))
+  proc.region <- as.data.frame(Which.process.region(rmv.idx, n_bins = n_bins, min.size = 1L))
   n_procs <- nrow(proc.region)
   if (n_procs > 0) {
     from.coord <- bins[proc.region[, "start"] + 1, "from.coord"]
-    zeros <- rep(0, times = n_procs)
-    boundary <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = zeros, from.coord = from.coord, to.id = zeros, to.coord = zeros, tag = rep("boundary", times = n_procs), size = zeros, stringsAsFactors = FALSE)
+    zeros <- double(length = n_procs)
+    boundary <- data.frame(
+      chr = rep(bins[1, "chr"], times = n_procs),
+      from.id = zeros,
+      from.coord = from.coord,
+      to.id = zeros,
+      to.coord = zeros,
+      tag = rep("boundary", times = n_procs),
+      size = zeros,
+      stringsAsFactors = FALSE
+    )
     ret <- rbind(ret, boundary)
   }
 
@@ -530,29 +596,38 @@ Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues = NULL, pva
     }
   }
 
-  new.bdr.set <- data.frame(chr = character(0), from.id = numeric(0), from.coord = numeric(0), to.id = numeric(0), to.coord = numeric(0), tag = character(0), size = numeric(0))
-  stack.bdr <- data.frame(chr = character(0), from.id = numeric(0), from.coord = numeric(0), to.id = numeric(0), to.coord = numeric(0), tag = character(0), size = numeric(0))
+  new.bdr.set <- stack.bdr <- stack.bdr.empty <- data.frame(
+    chr = character(0),
+    from.id = numeric(0),
+    from.coord = numeric(0),
+    to.id = numeric(0),
+    to.coord = numeric(0),
+    tag = character(0),
+    size = numeric(0)
+  )
 
-  i <- 1
+  i <- 1L
   while (i <= nrow(ret)) {
     if (ret[i, "tag"] == "boundary") {
       stack.bdr <- rbind(stack.bdr, ret[i, ])
     } else if (nrow(stack.bdr) > 0) {
       new.bdr <- data.frame(
-        chr = bins[1, "chr"],
-        from.id = min(stack.bdr[, "from.id"]),
+        chr        = bins[1, "chr"],
+        from.id    = min(stack.bdr[, "from.id"]),
         from.coord = min(stack.bdr[, "from.coord"]),
-        to.id = max(stack.bdr[, "to.id"]),
-        to.coord = max(stack.bdr[, "to.coord"]),
-        tag = "boundary",
-        size = max(stack.bdr[, "to.coord"]) - min(stack.bdr[, "from.coord"])
+        to.id      = max(stack.bdr[, "to.id"]),
+        to.coord   = max(stack.bdr[, "to.coord"]),
+        tag        = "boundary",
+        size       = max(stack.bdr[, "to.coord"]) - min(stack.bdr[, "from.coord"])
       )
       new.bdr.set <- rbind(new.bdr.set, new.bdr)
-      stack.bdr <- data.frame(chr = character(0), from.id = numeric(0), from.coord = numeric(0), to.id = numeric(0), to.coord = numeric(0), tag = character(0), size = numeric(0))
+      stack.bdr <- stack.bdr.empty
     }
 
-    i <- i + 1
+    i <- i + 1L
   }
+  rm(list = c("stack.bdr", "stack.bdr.empty"))
+  
 
   ret <- rbind(ret[ret[, "tag"] != "boundary", ], new.bdr.set)
   ret <- ret[order(ret[, "to.coord"]), ]
@@ -574,25 +649,25 @@ Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues = NULL,
   levels(x = ret[, "tag"]) <- c("domain", "gap", "boundary")
 
   rmv.idx <- setdiff(seq_len(n_bins), gap.idx)
-  proc.region <- Which.process.region(rmv.idx, n_bins = n_bins, min.size = 0)
+  proc.region <- Which.process.region(rmv.idx, n_bins = n_bins, min.size = 0L)
   from.coord <- bins[proc.region[, "start"], "from.coord"]
   n_procs <- nrow(proc.region)
-  zeros <- rep(0, times = n_procs)
+  zeros <- double(length = n_procs)
   gap <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = zeros, from.coord = from.coord, to.id = zeros, to.coord = zeros, tag = rep("gap", times = n_procs), size = zeros, stringsAsFactors = FALSE)
 
   rmv.idx <- union(signal.idx, gap.idx)
-  proc.region <- Which.process.region(rmv.idx, n_bins = n_bins, min.size = 0)
+  proc.region <- Which.process.region(rmv.idx, n_bins = n_bins, min.size = 0L)
   n_procs <- nrow(proc.region)
   from.coord <- bins[proc.region[, "start"], "from.coord"]
-  zeros <- rep(0, times = n_procs)
+  zeros <- double(length = n_procs)
   domain <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = zeros, from.coord = from.coord, to.id = zeros, to.coord = zeros, tag = rep("domain", times = n_procs), size = zeros, stringsAsFactors = FALSE)
 
   rmv.idx <- setdiff(seq_len(n_bins), signal.idx)
-  proc.region <- as.data.frame(Which.process.region(rmv.idx, n_bins = n_bins, min.size = 1))
+  proc.region <- as.data.frame(Which.process.region(rmv.idx, n_bins = n_bins, min.size = 1L))
   n_procs <- nrow(proc.region)
   if (n_procs > 0) {
     from.coord <- bins[proc.region[, "start"] + 1, "from.coord"]
-    zeros <- rep(0, times = n_procs)
+    zeros <- double(length = n_procs)
     boundary <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = zeros, from.coord = from.coord, to.id = zeros, to.coord = zeros, tag = rep("boundary", times = n_procs), size = zeros, stringsAsFactors = FALSE)
     ret <- rbind(ret, boundary)
   }
