@@ -2,14 +2,22 @@
 # @credit : Harris Lazaris(Ph.D Stduent, NYU), Dr. Gangqing Hu(Staff Scientist, NIH)
 # @brief : TopDom.R is a software package to identify topological domains for given Hi-C contact matrix.
 # @version 0.0.2
-
 # @fn TopDom
-# @param matrixFile : string, matrixFile Address,
-# - Format = {chromosome, bin start, bin end, N numbers normalized value }
-# - N * (N + 3), where N is the number of bins
-# @param window.size :integer, number of bins to extend.
-# @param out_binSignal : string, binSignal file address to write
-# @param out_ext : string, ext file address to write
+#' Identify topological domains for given Hi-C contact matrix
+#' 
+#' @param matrixFile string, matrixFile Address,
+#' - Format = {chromosome, bin start, bin end, N numbers normalized value }
+#' - N * (N + 3), where N is the number of bins
+#' 
+#' @param window.size integer, number of bins to extend.
+#' 
+#' @param out_binSignal string, binSignal file address to write
+#' 
+#' @param out_ext string, ext file address to write
+#'
+#' @author Hanjun Shin, Harris Lazaris, and Gangqing Hu.
+#' R package, help and code refactoring by Henrik Bengtsson.
+#' 
 #' @importFrom utils read.table write.table
 #' @export
 TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) {
