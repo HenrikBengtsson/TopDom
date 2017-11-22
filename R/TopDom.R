@@ -12,13 +12,13 @@
 # @param out_ext : string, ext file address to write
 #' @importFrom utils read.table write.table
 #' @export
-TopDom <- function( matrix.file, window.size, outFile=NULL, statFilter=T)
+TopDom <- function( matrix.file, window.size, outFile=NULL, statFilter = TRUE)
 {
   print("#########################################################################")
   print("Step 0 : File Read ")
   print("#########################################################################")
   window.size <- as.numeric(window.size)
-  matdf <- read.table(matrix.file, header=F)
+  matdf <- read.table(matrix.file, header = FALSE)
   
   if( ncol(matdf) - nrow(matdf) == 3) {
     colnames(matdf) <- c("chr", "from.coord", "to.coord")
@@ -144,16 +144,16 @@ TopDom <- function( matrix.file, window.size, outFile=NULL, statFilter=T)
     
     outBinSignal <- paste(outFile, ".binSignal", sep="")
     print(paste("binSignal File :", outBinSignal) )
-    write.table(bins, file=outBinSignal, quote=F, row.names=F, col.names=T, sep="\t")  
+    write.table(bins, file=outBinSignal, quote = FALSE, row.names = FALSE, col.names = TRUE, sep="\t")  
   
   
     outDomain <- paste(outFile, ".domain", sep="")
     print(paste("Domain File :", outDomain) )
-    write.table( domains, file=outDomain, quote=F, row.names=F, col.names=T, sep="\t")
+    write.table( domains, file=outDomain, quote = FALSE, row.names = FALSE, col.names = TRUE, sep="\t")
     
     outBed <- paste(outFile, ".bed", sep="")
     print(paste("Bed File : ", outBed))
-    write.table( bedform, file=outBed, quote=F, row.names=F, col.names=F, sep="\t")
+    write.table( bedform, file=outBed, quote = FALSE, row.names = FALSE, col.names = FALSE, sep="\t")
   }
   
   print("Done!!")
@@ -418,7 +418,7 @@ Get.Pvalue <- function( matrix.data, size, scale=1 )
     ups <- as.vector( Get.Upstream.Triangle(matrix.data, i, size=size) )
     downs <- as.vector( Get.Downstream.Triangle(matrix.data, i, size=size) )
     
-    wil.test <- wilcox.test(x=dia*scale, y=c(ups, downs), alternative="less", exact=F)
+    wil.test <- wilcox.test(x=dia*scale, y=c(ups, downs), alternative="less", exact = FALSE)
     pvalue[i] <- wil.test$p.value  
     
     #print(paste(i, "=", wil.test$p.value) )  
@@ -439,7 +439,7 @@ Get.Upstream.Triangle <- function(mat.data, i, size)
   
   lower <- max(1, i-size)
   tmp.mat <- mat.data[lower:i, lower:i]
-  return( tmp.mat[ upper.tri( tmp.mat, diag=F ) ] )
+  return( tmp.mat[ upper.tri( tmp.mat, diag = FALSE ) ] )
 }
 
 # @fn Get.Downstream.Triangle
@@ -454,7 +454,7 @@ Get.Downstream.Triangle <- function(mat.data, i, size)
   
   upperbound <- min(i+size, n_bins)
   tmp.mat <- mat.data[(i+1):upperbound, (i+1):upperbound]
-  return( tmp.mat[ upper.tri( tmp.mat, diag=F ) ] )
+  return( tmp.mat[ upper.tri( tmp.mat, diag = FALSE ) ] )
 }
 
 # @fn Get.Diamond.Matrix2
@@ -498,13 +498,13 @@ Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues=NULL, pvalu
   proc.region <- Which.process.region(rmv.idx, n_bins, min.size=0)
   from.coord <- bins[proc.region[, "start"], "from.coord"]
   n_procs <- nrow(proc.region)
-  gap <- data.frame(chr=rep( bins[1, "chr"], n_procs), from.id=rep(0, n_procs), from.coord=from.coord, to.id=rep(0, n_procs), to.coord=rep(0, n_procs), tag=rep("gap", n_procs), size=rep(0, n_procs), stringsAsFactors=F)
+  gap <- data.frame(chr=rep( bins[1, "chr"], n_procs), from.id=rep(0, n_procs), from.coord=from.coord, to.id=rep(0, n_procs), to.coord=rep(0, n_procs), tag=rep("gap", n_procs), size=rep(0, n_procs), stringsAsFactors = FALSE)
   
   rmv.idx <- union(signal.idx, gap.idx)
   proc.region <- Which.process.region(rmv.idx, n_bins, min.size=0)
   n_procs <- nrow(proc.region)
   from.coord <- bins[proc.region[, "start"], "from.coord"]
-  domain <- data.frame(chr=rep( bins[1, "chr"], n_procs), from.id=rep(0, n_procs), from.coord=from.coord, to.id=rep(0, n_procs), to.coord=rep(0, n_procs), tag=rep("domain", n_procs), size=rep(0, n_procs), stringsAsFactors=F)
+  domain <- data.frame(chr=rep( bins[1, "chr"], n_procs), from.id=rep(0, n_procs), from.coord=from.coord, to.id=rep(0, n_procs), to.coord=rep(0, n_procs), tag=rep("domain", n_procs), size=rep(0, n_procs), stringsAsFactors = FALSE)
   
   rmv.idx <- setdiff(1:n_bins, signal.idx)
   proc.region <- as.data.frame( Which.process.region(rmv.idx, n_bins, min.size=1) )
@@ -512,7 +512,7 @@ Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues=NULL, pvalu
   if(n_procs>0)
   {
     from.coord <- bins[proc.region[, "start"]+1, "from.coord"]  
-    boundary <- data.frame(chr=rep( bins[1, "chr"], n_procs), from.id=rep(0, n_procs), from.coord=from.coord, to.id=rep(0, n_procs), to.coord=rep(0, n_procs), tag=rep("boundary", n_procs), size=rep(0, n_procs), stringsAsFactors=F)
+    boundary <- data.frame(chr=rep( bins[1, "chr"], n_procs), from.id=rep(0, n_procs), from.coord=from.coord, to.id=rep(0, n_procs), to.coord=rep(0, n_procs), tag=rep("boundary", n_procs), size=rep(0, n_procs), stringsAsFactors = FALSE)
     ret <- rbind(ret, boundary)
   }
   
@@ -586,13 +586,13 @@ Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues=NULL, p
   proc.region <- Which.process.region(rmv.idx, n_bins, min.size=0)
   from.coord <- bins[proc.region[, "start"], "from.coord"]
   n_procs <- nrow(proc.region)
-  gap <- data.frame(chr=rep( bins[1, "chr"], n_procs), from.id=rep(0, n_procs), from.coord=from.coord, to.id=rep(0, n_procs), to.coord=rep(0, n_procs), tag=rep("gap", n_procs), size=rep(0, n_procs), stringsAsFactors=F)
+  gap <- data.frame(chr=rep( bins[1, "chr"], n_procs), from.id=rep(0, n_procs), from.coord=from.coord, to.id=rep(0, n_procs), to.coord=rep(0, n_procs), tag=rep("gap", n_procs), size=rep(0, n_procs), stringsAsFactors = FALSE)
   
   rmv.idx <- union(signal.idx, gap.idx)
   proc.region <- Which.process.region(rmv.idx, n_bins, min.size=0)
   n_procs <- nrow(proc.region)
   from.coord <- bins[proc.region[, "start"], "from.coord"]
-  domain <- data.frame(chr=rep( bins[1, "chr"], n_procs), from.id=rep(0, n_procs), from.coord=from.coord, to.id=rep(0, n_procs), to.coord=rep(0, n_procs), tag=rep("domain", n_procs), size=rep(0, n_procs), stringsAsFactors=F)
+  domain <- data.frame(chr=rep( bins[1, "chr"], n_procs), from.id=rep(0, n_procs), from.coord=from.coord, to.id=rep(0, n_procs), to.coord=rep(0, n_procs), tag=rep("domain", n_procs), size=rep(0, n_procs), stringsAsFactors = FALSE)
   
   rmv.idx <- setdiff(1:n_bins, signal.idx)
   proc.region <- as.data.frame( Which.process.region(rmv.idx, n_bins, min.size=1) )
@@ -600,7 +600,7 @@ Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues=NULL, p
   if(n_procs>0)
   {
     from.coord <- bins[proc.region[, "start"]+1, "from.coord"]  
-    boundary <- data.frame(chr=rep( bins[1, "chr"], n_procs), from.id=rep(0, n_procs), from.coord=from.coord, to.id=rep(0, n_procs), to.coord=rep(0, n_procs), tag=rep("boundary", n_procs), size=rep(0, n_procs), stringsAsFactors=F)
+    boundary <- data.frame(chr=rep( bins[1, "chr"], n_procs), from.id=rep(0, n_procs), from.coord=from.coord, to.id=rep(0, n_procs), to.coord=rep(0, n_procs), tag=rep("boundary", n_procs), size=rep(0, n_procs), stringsAsFactors = FALSE)
     ret <- rbind(ret, boundary)
   }
   
