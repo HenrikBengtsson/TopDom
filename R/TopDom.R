@@ -1,8 +1,3 @@
-# @author : Hanjun Shin(shanjun@usc.edu)
-# @credit : Harris Lazaris(Ph.D Stduent, NYU), Dr. Gangqing Hu(Staff Scientist, NIH)
-# @brief : TopDom.R is a software package to identify topological domains for given Hi-C contact matrix.
-# @version 0.0.2
-# @fn TopDom
 #' Identify topological domains for given Hi-C contact matrix
 #' 
 #' @param matrix.file string, matrixFile Address,
@@ -24,7 +19,7 @@
 #' @export
 TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) {
   mcat("#########################################################################")
-  mcat("Step 0 : File Read ")
+  mcat("Step 0 : File Read")
   mcat("#########################################################################")
   window.size <- as.numeric(window.size)
   matdf <- read.table(matrix.file, header = FALSE)
@@ -51,7 +46,7 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
   matrix.data <- as.matrix(matdf[, (ncol(matdf) - nrow(matdf) + 1):ncol(matdf)])
 
   mcat("-- Done!")
-  mcat("Step 0 : Done !!")
+  mcat("Step 0 : Done!")
 
 
   mcat("#########################################################################")
@@ -65,14 +60,14 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
 
   eltm <- proc.time() - ptm
   mcat("Step 1 Running Time : ", eltm[3])
-  mcat("Step 1 : Done !!")
+  mcat("Step 1 : Done!")
 
   mcat("#########################################################################")
   mcat("Step 2 : Detect TD boundaries based on binSignals")
   mcat("#########################################################################")
 
   ptm <- proc.time()
-  # gap.idx <- Which.Gap.Region(matrix.data=matrix.data)
+  # gap.idx <- Which.Gap.Region(matrix.data = matrix.data)
   # gap.idx <- Which.Gap.Region2(mean.cf)
   gap.idx <- Which.Gap.Region2(matrix.data = matrix.data, w = window.size)
 
@@ -91,7 +86,7 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
 
   eltm <- proc.time() - ptm
   mcat("Step 2 Running Time : ", eltm[3])
-  mcat("Step 2 : Done !!")
+  mcat("Step 2 : Done!")
 
   if (statFilter) {
     mcat("#########################################################################")
@@ -167,9 +162,9 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
     write.table(bedform, file = outBed, quote = FALSE, row.names = FALSE, col.names = FALSE, sep = "\t")
   }
 
-  mcat("Done!!")
+  mcat("Done!")
 
-  mcat("Job Complete !")
+  mcat("Job Complete!")
   list(binSignal = bins, domain = domains, bed = bedform)
 }
 
