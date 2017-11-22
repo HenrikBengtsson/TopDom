@@ -19,6 +19,9 @@ TopDom(matrix.file, window.size, outFile = NULL, statFilter = TRUE)
 
 \item{statFilter}{logical, ...}
 }
+\value{
+A named list with elements \code{binSignal}, \code{domain}, and \code{bed}.
+}
 \description{
 Identify topological domains for given Hi-C contact matrix
 }

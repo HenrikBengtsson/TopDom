@@ -15,6 +15,8 @@
 #' 
 #' @param statFilter logical, ...
 #'
+#' @return A named list with elements `binSignal`, `domain`, and `bed`.
+#' 
 #' @author Hanjun Shin, Harris Lazaris, and Gangqing Hu.
 #' R package, help and code refactoring by Henrik Bengtsson.
 #' 
@@ -32,7 +34,7 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
   } else if (ncol(matdf) - nrow(matdf) == 4) {
     colnames(matdf) <- c("id", "chr", "from.coord", "to.coord")
   } else {
-    mcat("Unknwon Type of matrix file")
+    mcat("Unknown Type of matrix file")
     return(0)
   }
   n_bins <- nrow(matdf)
