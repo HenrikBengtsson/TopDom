@@ -1,11 +1,11 @@
 Package: TopDom
 Version: 0.0.2-9000
-Title: An efficient and Deterministic Method for identifying Topological Domains in Genomes
+Title: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes
 Depends: R (>= 3.3.0)
 Suggests: 
-Authors@R: c(person("Henrik", "Bengtsson", role=c("cre"),
+Authors@R: c(person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
                                           email = "henrikb@braju.com"))
-Description: An R package based on the TopDom R script provided by the authors of TopDom.
+Description: An R package based on the TopDom R script provided by the authors of the 'TopDom' method and the original implementation.
 License: LGPL (>= 2.1)
 LazyLoad: TRUE
 URL: https://github.com/HenrikBengtsson/gitified-TopDom

@@ -10,6 +10,7 @@
 # @param window.size :integer, number of bins to extend.
 # @param out_binSignal : string, binSignal file address to write
 # @param out_ext : string, ext file address to write
+#' @importFrom utils read.table write.table
 #' @export
 TopDom <- function( matrix.file, window.size, outFile=NULL, statFilter=T)
 {
@@ -405,6 +406,7 @@ Change.Point <- function( x, y )
 # @param size : size to extend
 # @param scale : scale parameter if necessary. deprecated parameter
 # @return computed p-value vector
+#' @importFrom stats wilcox.test
 Get.Pvalue <- function( matrix.data, size, scale=1 )
 {
   n_bins = nrow(matrix.data)
