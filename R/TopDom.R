@@ -180,7 +180,7 @@ Get.Diamond.Matrix <- function(mat.data, i, size) {
   lowerbound <- max(1, i - size + 1)
   upperbound <- min(i + size, n_bins)
 
-  return(mat.data[lowerbound:i, (i + 1):upperbound])
+  mat.data[lowerbound:i, (i + 1):upperbound]
 }
 
 # @fn Which.process.region
@@ -219,7 +219,7 @@ Which.process.region <- function(rmv.idx, n_bins, min.size=3) {
   colnames(proc.regions) <- c("start", "end")
   proc.regions <- proc.regions[ which(abs(proc.regions[, "end"] - proc.regions[, "start"]) >= min.size), ]
 
-  return(proc.regions)
+  proc.regions
 }
 
 # @fn Which.Gap.Region
@@ -248,7 +248,7 @@ Which.Gap.Region <- function(matrix.data) {
   }
 
   idx <- which(gap == -0.5)
-  return(idx)
+  idx
 }
 
 # @fn Which.Gap.Region3
@@ -258,7 +258,7 @@ Which.Gap.Region3 <- function(mean.cf) {
   n_bins <- length(mean.cf)
   gapidx <- which(mean.cf == 0)
 
-  return(gapidx)
+  gapidx
 }
 
 # @fn Which.Gap.Region2
@@ -275,7 +275,7 @@ Which.Gap.Region2 <- function(matrix.data, w) {
   }
 
   idx <- which(gap == -0.5)
-  return(idx)
+  idx
 }
 
 # @fn Detect.Local.Extreme
@@ -313,7 +313,7 @@ Detect.Local.Extreme <- function(x) {
     if (max(x[cp$cp[i - 1]:cp$cp[i]]) > max.val) ret[ cp$cp[i - 1] - 1 + which.max(x[cp$cp[i - 1]:cp$cp[i]]) ] <- 1
   }
 
-  return(ret)
+  ret
 }
 
 # @fn Data.Norm
@@ -342,7 +342,7 @@ Data.Norm <- function(x, y) {
     ret.y[i] <- ret.y[i - 1] + (diff.y[i - 1] * scale.y)
   }
 
-  return(list(x = ret.x, y = ret.y))
+  list(x = ret.x, y = ret.y)
 }
 
 # @fn Change.Point
@@ -392,7 +392,7 @@ Change.Point <- function(x, y) {
 
   cp <- c(cp, n_bins)
 
-  return(list(cp = cp, objF = Fv, errF = Ev))
+  list(cp = cp, objF = Fv, errF = Ev)
 }
 
 # @fn Get.Pvalue
@@ -418,7 +418,7 @@ Get.Pvalue <- function(matrix.data, size, scale=1) {
   }
 
   pvalue[ is.na(pvalue) ] <- 1
-  return(pvalue)
+  pvalue
 }
 
 # @fn Get.Upstream.Triangle
@@ -431,7 +431,7 @@ Get.Upstream.Triangle <- function(mat.data, i, size) {
 
   lower <- max(1, i - size)
   tmp.mat <- mat.data[lower:i, lower:i]
-  return(tmp.mat[ upper.tri(tmp.mat, diag = FALSE) ])
+  tmp.mat[ upper.tri(tmp.mat, diag = FALSE) ]
 }
 
 # @fn Get.Downstream.Triangle
@@ -445,7 +445,7 @@ Get.Downstream.Triangle <- function(mat.data, i, size) {
 
   upperbound <- min(i + size, n_bins)
   tmp.mat <- mat.data[(i + 1):upperbound, (i + 1):upperbound]
-  return(tmp.mat[ upper.tri(tmp.mat, diag = FALSE) ])
+  tmp.mat[ upper.tri(tmp.mat, diag = FALSE) ]
 }
 
 # @fn Get.Diamond.Matrix2
@@ -467,7 +467,7 @@ Get.Diamond.Matrix2 <- function(mat.data, i, size) {
     }
   }
 
-  return(new.mat)
+  new.mat
 }
 
 # @fn Convert.Bin.To.Domain
@@ -550,7 +550,7 @@ Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues=NULL, pvalu
   ret <- rbind(ret[ ret[, "tag"] != "boundary", ], new.bdr.set)
   ret <- ret[order(ret[, "to.coord"]), ]
 
-  return(ret)
+  ret
 }
 
 
@@ -607,5 +607,5 @@ Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues=NULL, p
     }
   }
 
-  return(ret)
+  ret
 }
