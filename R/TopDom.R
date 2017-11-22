@@ -10,6 +10,7 @@
 # @param window.size :integer, number of bins to extend.
 # @param out_binSignal : string, binSignal file address to write
 # @param out_ext : string, ext file address to write
+#' @export
 TopDom <- function( matrix.file, window.size, outFile=NULL, statFilter=T)
 {
   print("#########################################################################")
