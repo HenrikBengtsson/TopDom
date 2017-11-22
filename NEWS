@@ -1,0 +1,29 @@
+Package: TopDom
+===============
+
+Version: 0.0.2-9000 [2017-11-21]
+
+SIGNIFICANT CHANGES:
+
+ o Turned the original TopDom R script into a package.
+
+ o All progress messages are outputted done to standard error.
+
+NEW FEATURES:
+
+ o If the matrix file is not of a known format, then TopDom() produces an
+   informative error. Previously it gave a message on stdout and returned 0.
+
+CODE STYLE:
+
+ o Tidied up code.
+
+
+Version: 0.0.2 [2016-07-08]
+
+ o TopDom v0.0.2 script from http://zhoulab.usc.edu/TopDom/.
+ 
+ 
+Version: 0.0.1 [2015-11-09]
+
+ o TopDom v0.0.1 script from http://zhoulab.usc.edu/TopDom/.
