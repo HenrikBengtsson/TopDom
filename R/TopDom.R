@@ -49,8 +49,7 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
   print("Step 1 : Generating binSignals by computing bin-level contact frequencies")
   print("#########################################################################")
   ptm <- proc.time()
-  for (i in seq_len(n_bins))
-  {
+  for (i in seq_len(n_bins)) {
     diamond <- Get.Diamond.Matrix(mat.data = matrix.data, i = i, size = window.size)
     mean.cf[i] <- mean(diamond)
   }
@@ -72,8 +71,7 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
 
   # print(proc.regions)
 
-  for (i in seq_len(nrow(proc.regions)))
-  {
+  for (i in seq_len(nrow(proc.regions))) {
     start <- proc.regions[i, "start"]
     end <- proc.regions[i, "end"]
 
@@ -94,15 +92,13 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
     ptm <- proc.time()
     print("-- Matrix Scaling....")
     scale.matrix.data <- matrix.data
-    for (i in seq_len(2 * window.size))
-    {
+    for (i in seq_len(2 * window.size)) {
       # diag(scale.matrix.data[, i:n_bins]) <- scale(diag(matrix.data[, i:n_bins]))
       scale.matrix.data[seq(1 + (n_bins * i), n_bins * n_bins, 1 + n_bins)] <- scale(matrix.data[seq(1 + (n_bins * i), n_bins * n_bins, 1 + n_bins)])
     }
 
     print("-- Compute p-values by Wilcox Ranksum Test")
-    for (i in seq_len(nrow(proc.regions)))
-    {
+    for (i in seq_len(nrow(proc.regions))) {
       start <- proc.regions[i, "start"]
       end <- proc.regions[i, "end"]
 
@@ -237,7 +233,7 @@ Which.Gap.Region <- function(matrix.data) {
       if (sum(matrix.data[i:j, i:j]) == 0) {
         gap[i:j] <- -0.5
         j <- j + 1
-        # if(j-i > 1) gap[i:j] <- -0.5
+        # if (j-i > 1) gap[i:j] <- -0.5
         # j <- j+1
       } else {
         break
@@ -269,8 +265,7 @@ Which.Gap.Region2 <- function(matrix.data, w) {
   n_bins <- nrow(matrix.data)
   gap <- rep(0, n_bins)
 
-  for (i in seq_len(n_bins))
-  {
+  for (i in seq_len(n_bins)) {
     if (sum(matrix.data[i, max(1, i - w):min(i + w, n_bins)]) == 0) gap[i] <- -0.5
   }
 
@@ -300,8 +295,7 @@ Detect.Local.Extreme <- function(x) {
 
   if (length(cp$cp) <= 2) return(ret)
   if (length(cp$cp) == n_bins) return(ret)
-  for (i in 2:(length(cp$cp) - 1))
-  {
+  for (i in 2:(length(cp$cp) - 1)) {
     if (x[cp$cp[i]] >= x[cp$cp[i] - 1] && x[cp$cp[i]] >= x[cp$cp[i] + 1]) {
       ret[cp$cp[i]] <- 1
     } else if (x[cp$cp[i]] < x[cp$cp[i] - 1] && x[cp$cp[i]] < x[cp$cp[i] + 1]) ret[cp$cp[i]] <- -1
@@ -336,8 +330,7 @@ Data.Norm <- function(x, y) {
   # print(scale.x)
   # print(scale.y)
 
-  for (i in 2:length(x))
-  {
+  for (i in 2:length(x)) {
     ret.x[i] <- ret.x[i - 1] + (diff.x[i - 1] * scale.x)
     ret.y[i] <- ret.y[i - 1] + (diff.y[i - 1] * scale.y)
   }
@@ -405,8 +398,7 @@ Get.Pvalue <- function(matrix.data, size, scale = 1) {
   n_bins <- nrow(matrix.data)
   pvalue <- rep(1, n_bins)
 
-  for (i in seq_len(n_bins - 1))
-  {
+  for (i in seq_len(n_bins - 1)) {
     dia <- as.vector(Get.Diamond.Matrix2(matrix.data, i, size = size))
     ups <- as.vector(Get.Upstream.Triangle(matrix.data, i, size = size))
     downs <- as.vector(Get.Downstream.Triangle(matrix.data, i, size = size))
@@ -457,8 +449,7 @@ Get.Diamond.Matrix2 <- function(mat.data, i, size) {
   n_bins <- nrow(mat.data)
   new.mat <- matrix(rep(NA, size * size), nrow = size, ncol = size)
 
-  for (k in seq_len(size))
-  {
+  for (k in seq_len(size)) {
     if (i - (k - 1) >= 1 && i < n_bins) {
       lower <- min(i + 1, n_bins)
       upper <- min(i + size, n_bins)
@@ -512,8 +503,7 @@ Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues = NULL, pva
   ret[, "size"] <- ret[, "to.coord"] - ret[, "from.coord"]
 
   if (!is.null(pvalues) && !is.null(pvalue.cut)) {
-    for (i in seq_len(nrow(ret)))
-    {
+    for (i in seq_len(nrow(ret))) {
       if (ret[i, "tag"] == "domain") {
         domain.bins.idx <- ret[i, "from.id"]:ret[i, "to.id"]
         p.value.constr <- which(pvalues[domain.bins.idx] < pvalue.cut)
@@ -596,8 +586,7 @@ Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues = NULL,
   ret[, "size"] <- ret[, "to.coord"] - ret[, "from.coord"]
 
   if (!is.null(pvalues) && !is.null(pvalue.cut)) {
-    for (i in seq_len(nrow(ret)))
-    {
+    for (i in seq_len(nrow(ret))) {
       if (ret[i, "tag"] == "domain") {
         domain.bins.idx <- ret[i, "from.id"]:ret[i, "to.id"]
         p.value.constr <- which(pvalues[domain.bins.idx] < pvalue.cut)
