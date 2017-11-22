@@ -5,15 +5,15 @@
 # @fn TopDom
 #' Identify topological domains for given Hi-C contact matrix
 #' 
-#' @param matrixFile string, matrixFile Address,
-#' - Format = {chromosome, bin start, bin end, N numbers normalized value }
+#' @param matrix.file string, matrixFile Address,
+#' - Format = {chromosome, bin start, bin end, N numbers normalized value}
 #' - N * (N + 3), where N is the number of bins
 #' 
 #' @param window.size integer, number of bins to extend.
 #' 
-#' @param out_binSignal string, binSignal file address to write
+#' @param outFile string, binSignal file address to write
 #' 
-#' @param out_ext string, ext file address to write
+#' @param statFilter logical, ...
 #'
 #' @author Hanjun Shin, Harris Lazaris, and Gangqing Hu.
 #' R package, help and code refactoring by Henrik Bengtsson.
@@ -112,7 +112,7 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
 
       mprint(paste("Process Regions from ", start, "to", end))
 
-      pvalue[start:end] <- Get.Pvalue(matrix.data = scale.matrix.data[start:end, start:end], size = window.size, scale = 1)
+      pvalue[start:end] <- Get.Pvalue(matrix.data = scale.matrix.data[start:end, start:end], size = window.size, scale = 1.0)
     }
     mprint("-- Done!")
 
@@ -179,7 +179,11 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
 # @retrun : matrix.
 Get.Diamond.Matrix <- function(mat.data, i, size) {
   n_bins <- nrow(mat.data)
-  if (i == n_bins) return(NA)
+  if (i == n_bins) {
+    na <- NA_real_
+    storage.mode(na) <- storage.mode(mat.data)
+    return(na)
+  }
 
   lowerbound <- max(1, i - size + 1)
   upperbound <- min(i + size, n_bins)
@@ -358,8 +362,8 @@ Change.Point <- function(x, y) {
   }
 
   n_bins <- length(x)
-  Fv <- rep(NA, times = n_bins)
-  Ev <- rep(NA, times = n_bins)
+  Fv <- rep(NA_real_, times = n_bins)
+  Ev <- rep(NA_real_, times = n_bins)
   cp <- 1
 
   i <- 1
@@ -402,7 +406,7 @@ Change.Point <- function(x, y) {
 # @param scale : scale parameter if necessary. deprecated parameter
 # @return computed p-value vector
 #' @importFrom stats wilcox.test
-Get.Pvalue <- function(matrix.data, size, scale = 1) {
+Get.Pvalue <- function(matrix.data, size, scale = 1.0) {
   n_bins <- nrow(matrix.data)
   pvalue <- rep(1, times = n_bins)
 
@@ -441,7 +445,11 @@ Get.Upstream.Triangle <- function(mat.data, i, size) {
 # @return downstream triangle matrix
 Get.Downstream.Triangle <- function(mat.data, i, size) {
   n_bins <- nrow(mat.data)
-  if (i == n_bins) return(NA)
+  if (i == n_bins) {
+    na <- NA_real_
+    storage.mode(na) <- storage.mode(mat.data)
+    return(na)
+  }
 
   upperbound <- min(i + size, n_bins)
   tmp.mat <- mat.data[(i + 1):upperbound, (i + 1):upperbound]
@@ -455,7 +463,9 @@ Get.Downstream.Triangle <- function(mat.data, i, size) {
 # @return diamond matrix
 Get.Diamond.Matrix2 <- function(mat.data, i, size) {
   n_bins <- nrow(mat.data)
-  new.mat <- matrix(rep(NA, times = size * size), nrow = size, ncol = size)
+  na <- NA_real_
+  storage.mode(na) <- storage.mode(mat.data)
+  new.mat <- matrix(rep(na, times = size * size), nrow = size, ncol = size)
 
   for (k in seq_len(size)) {
     if (i - (k - 1) >= 1 && i < n_bins) {
