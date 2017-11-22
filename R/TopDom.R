@@ -113,9 +113,9 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
     mcat("-- Done!")
 
     mcat("-- Filtering False Positives")
-    local.ext[intersect(union(which(local.ext == -1), which(local.ext == -1)), which(pvalue < 0.05))] <- -2
-    local.ext[which(local.ext == -1)] <- 0
-    local.ext[which(local.ext == -2)] <- -1
+    local.ext[intersect(union(which(local.ext == -1.0), which(local.ext == -1.0)), which(pvalue < 0.05))] <- -2.0
+    local.ext[which(local.ext == -1.0)] <-  0.0
+    local.ext[which(local.ext == -2.0)] <- -1.0
     mcat("-- Done!")
 
     eltm <- proc.time() - ptm
@@ -127,7 +127,7 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
 
   domains <- Convert.Bin.To.Domain.TMP(
     bins = bins,
-    signal.idx = which(local.ext == -1),
+    signal.idx = which(local.ext == -1.0),
     gap.idx = which(local.ext == -0.5),
     pvalues = pvalue,
     pvalue.cut = 0.05
@@ -283,7 +283,7 @@ Which.Gap.Region2 <- function(matrix.data, w) {
 
 # @fn Detect.Local.Extreme
 # @param x : original signal to find local minima
-# @return vector of local extrme, -1 if the index is local minimum, 1 if the index is local maxima, 0 otherwise.
+# @return vector of local extrme, -1 if the index is local minimum, +1 if the index is local maxima, 0 otherwise.
 Detect.Local.Extreme <- function(x) {
   n_bins <- length(x)
   ret <- rep(0, times = n_bins)
@@ -291,10 +291,10 @@ Detect.Local.Extreme <- function(x) {
 
   if (n_bins <= 3) {
     ret[which.min(x)] <- -1
-    ret[which.max(x)] <- 1
-
+    ret[which.max(x)] <- +1
     return(ret)
   }
+  
   # Norm##################################################3
   new.point <- Data.Norm(x = seq_len(n_bins), y = x)
   x <- new.point$y
@@ -305,14 +305,14 @@ Detect.Local.Extreme <- function(x) {
   if (length(cp$cp) == n_bins) return(ret)
   for (i in 2:(length(cp$cp) - 1)) {
     if (x[cp$cp[i]] >= x[cp$cp[i] - 1] && x[cp$cp[i]] >= x[cp$cp[i] + 1]) {
-      ret[cp$cp[i]] <- 1
+      ret[cp$cp[i]] <- +1
     } else if (x[cp$cp[i]] < x[cp$cp[i] - 1] && x[cp$cp[i]] < x[cp$cp[i] + 1]) ret[cp$cp[i]] <- -1
 
     min.val <- min(x[cp$cp[i - 1]], x[cp$cp[i]])
     max.val <- max(x[cp$cp[i - 1]], x[cp$cp[i]])
 
     if (min(x[cp$cp[i - 1]:cp$cp[i]]) < min.val) ret[cp$cp[i - 1] - 1 + which.min(x[cp$cp[i - 1]:cp$cp[i]])] <- -1
-    if (max(x[cp$cp[i - 1]:cp$cp[i]]) > max.val) ret[cp$cp[i - 1] - 1 + which.max(x[cp$cp[i - 1]:cp$cp[i]])] <- 1
+    if (max(x[cp$cp[i - 1]:cp$cp[i]]) > max.val) ret[cp$cp[i - 1] - 1 + which.max(x[cp$cp[i - 1]:cp$cp[i]])] <- +1
   }
 
   ret
@@ -491,20 +491,23 @@ Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues = NULL, pva
   proc.region <- Which.process.region(rmv.idx, n_bins = n_bins, min.size = 0)
   from.coord <- bins[proc.region[, "start"], "from.coord"]
   n_procs <- nrow(proc.region)
-  gap <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = rep(0, times = n_procs), from.coord = from.coord, to.id = rep(0, times = n_procs), to.coord = rep(0, times = n_procs), tag = rep("gap", times = n_procs), size = rep(0, times = n_procs), stringsAsFactors = FALSE)
+  zeros <- rep(0, times = n_procs)
+  gap <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = zeros, from.coord = from.coord, to.id = zeros, to.coord = zeros, tag = rep("gap", times = n_procs), size = zeros, stringsAsFactors = FALSE)
 
   rmv.idx <- union(signal.idx, gap.idx)
   proc.region <- Which.process.region(rmv.idx, n_bins = n_bins, min.size = 0)
   n_procs <- nrow(proc.region)
   from.coord <- bins[proc.region[, "start"], "from.coord"]
-  domain <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = rep(0, times = n_procs), from.coord = from.coord, to.id = rep(0, times = n_procs), to.coord = rep(0, times = n_procs), tag = rep("domain", times = n_procs), size = rep(0, times = n_procs), stringsAsFactors = FALSE)
+  zeros <- rep(0, times = n_procs)
+  domain <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = zeros, from.coord = from.coord, to.id = zeros, to.coord = zeros, tag = rep("domain", times = n_procs), size = zeros, stringsAsFactors = FALSE)
 
   rmv.idx <- setdiff(seq_len(n_bins), signal.idx)
   proc.region <- as.data.frame(Which.process.region(rmv.idx, n_bins = n_bins, min.size = 1))
   n_procs <- nrow(proc.region)
   if (n_procs > 0) {
     from.coord <- bins[proc.region[, "start"] + 1, "from.coord"]
-    boundary <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = rep(0, times = n_procs), from.coord = from.coord, to.id = rep(0, times = n_procs), to.coord = rep(0, times = n_procs), tag = rep("boundary", times = n_procs), size = rep(0, times = n_procs), stringsAsFactors = FALSE)
+    zeros <- rep(0, times = n_procs)
+    boundary <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = zeros, from.coord = from.coord, to.id = zeros, to.coord = zeros, tag = rep("boundary", times = n_procs), size = zeros, stringsAsFactors = FALSE)
     ret <- rbind(ret, boundary)
   }
 
@@ -574,20 +577,23 @@ Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues = NULL,
   proc.region <- Which.process.region(rmv.idx, n_bins = n_bins, min.size = 0)
   from.coord <- bins[proc.region[, "start"], "from.coord"]
   n_procs <- nrow(proc.region)
-  gap <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = rep(0, times = n_procs), from.coord = from.coord, to.id = rep(0, times = n_procs), to.coord = rep(0, times = n_procs), tag = rep("gap", times = n_procs), size = rep(0, times = n_procs), stringsAsFactors = FALSE)
+  zeros <- rep(0, times = n_procs)
+  gap <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = zeros, from.coord = from.coord, to.id = zeros, to.coord = zeros, tag = rep("gap", times = n_procs), size = zeros, stringsAsFactors = FALSE)
 
   rmv.idx <- union(signal.idx, gap.idx)
   proc.region <- Which.process.region(rmv.idx, n_bins = n_bins, min.size = 0)
   n_procs <- nrow(proc.region)
   from.coord <- bins[proc.region[, "start"], "from.coord"]
-  domain <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = rep(0, times = n_procs), from.coord = from.coord, to.id = rep(0, times = n_procs), to.coord = rep(0, times = n_procs), tag = rep("domain", times = n_procs), size = rep(0, times = n_procs), stringsAsFactors = FALSE)
+  zeros <- rep(0, times = n_procs)
+  domain <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = zeros, from.coord = from.coord, to.id = zeros, to.coord = zeros, tag = rep("domain", times = n_procs), size = zeros, stringsAsFactors = FALSE)
 
   rmv.idx <- setdiff(seq_len(n_bins), signal.idx)
   proc.region <- as.data.frame(Which.process.region(rmv.idx, n_bins = n_bins, min.size = 1))
   n_procs <- nrow(proc.region)
   if (n_procs > 0) {
     from.coord <- bins[proc.region[, "start"] + 1, "from.coord"]
-    boundary <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = rep(0, times = n_procs), from.coord = from.coord, to.id = rep(0, times = n_procs), to.coord = rep(0, times = n_procs), tag = rep("boundary", times = n_procs), size = rep(0, times = n_procs), stringsAsFactors = FALSE)
+    zeros <- rep(0, times = n_procs)
+    boundary <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = zeros, from.coord = from.coord, to.id = zeros, to.coord = zeros, tag = rep("boundary", times = n_procs), size = zeros, stringsAsFactors = FALSE)
     ret <- rbind(ret, boundary)
   }
 
