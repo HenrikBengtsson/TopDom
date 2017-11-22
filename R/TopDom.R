@@ -94,7 +94,7 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
     scale.matrix.data <- matrix.data
     for (i in seq_len(2 * window.size)) {
       # diag(scale.matrix.data[, i:n_bins]) <- scale(diag(matrix.data[, i:n_bins]))
-      scale.matrix.data[seq(1 + (n_bins * i), n_bins * n_bins, 1 + n_bins)] <- scale(matrix.data[seq(1 + (n_bins * i), n_bins * n_bins, 1 + n_bins)])
+      scale.matrix.data[seq(from = 1 + (n_bins * i), to = n_bins * n_bins, by = 1 + n_bins)] <- scale(matrix.data[seq(from = 1 + (n_bins * i), to = n_bins * n_bins, by = 1 + n_bins)])
     }
 
     print("-- Compute p-values by Wilcox Ranksum Test")
