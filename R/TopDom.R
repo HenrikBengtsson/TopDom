@@ -65,7 +65,7 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
   ptm <- proc.time()
   # gap.idx <- Which.Gap.Region(matrix.data=matrix.data)
   # gap.idx <- Which.Gap.Region2(mean.cf)
-  gap.idx <- Which.Gap.Region2(matrix.data = matrix.data, window.size)
+  gap.idx <- Which.Gap.Region2(matrix.data = matrix.data, w = window.size)
 
   proc.regions <- Which.process.region(rmv.idx = gap.idx, n_bins = n_bins, min.size = 3)
 
@@ -161,7 +161,7 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
   print("Done!!")
 
   print("Job Complete !")
-  return(list(binSignal = bins, domain = domains, bed = bedform))
+  list(binSignal = bins, domain = domains, bed = bedform)
 }
 
 # @fn Get.Diamond.Matrix
@@ -399,9 +399,9 @@ Get.Pvalue <- function(matrix.data, size, scale = 1) {
   pvalue <- rep(1, times = n_bins)
 
   for (i in seq_len(n_bins - 1)) {
-    dia <- as.vector(Get.Diamond.Matrix2(matrix.data, i, size = size))
-    ups <- as.vector(Get.Upstream.Triangle(matrix.data, i, size = size))
-    downs <- as.vector(Get.Downstream.Triangle(matrix.data, i, size = size))
+    dia <- as.vector(Get.Diamond.Matrix2(matrix.data, i = i, size = size))
+    ups <- as.vector(Get.Upstream.Triangle(matrix.data, i = i, size = size))
+    downs <- as.vector(Get.Downstream.Triangle(matrix.data, i = i, size = size))
 
     wil.test <- wilcox.test(x = dia * scale, y = c(ups, downs), alternative = "less", exact = FALSE)
     pvalue[i] <- wil.test$p.value
@@ -474,19 +474,19 @@ Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues = NULL, pva
   levels(x = ret[, "tag"]) <- c("domain", "gap", "boundary")
 
   rmv.idx <- setdiff(seq_len(n_bins), gap.idx)
-  proc.region <- Which.process.region(rmv.idx, n_bins, min.size = 0)
+  proc.region <- Which.process.region(rmv.idx, n_bins = n_bins, min.size = 0)
   from.coord <- bins[proc.region[, "start"], "from.coord"]
   n_procs <- nrow(proc.region)
   gap <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = rep(0, times = n_procs), from.coord = from.coord, to.id = rep(0, times = n_procs), to.coord = rep(0, times = n_procs), tag = rep("gap", times = n_procs), size = rep(0, times = n_procs), stringsAsFactors = FALSE)
 
   rmv.idx <- union(signal.idx, gap.idx)
-  proc.region <- Which.process.region(rmv.idx, n_bins, min.size = 0)
+  proc.region <- Which.process.region(rmv.idx, n_bins = n_bins, min.size = 0)
   n_procs <- nrow(proc.region)
   from.coord <- bins[proc.region[, "start"], "from.coord"]
   domain <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = rep(0, times = n_procs), from.coord = from.coord, to.id = rep(0, times = n_procs), to.coord = rep(0, times = n_procs), tag = rep("domain", times = n_procs), size = rep(0, times = n_procs), stringsAsFactors = FALSE)
 
   rmv.idx <- setdiff(seq_len(n_bins), signal.idx)
-  proc.region <- as.data.frame(Which.process.region(rmv.idx, n_bins, min.size = 1))
+  proc.region <- as.data.frame(Which.process.region(rmv.idx, n_bins = n_bins, min.size = 1))
   n_procs <- nrow(proc.region)
   if (n_procs > 0) {
     from.coord <- bins[proc.region[, "start"] + 1, "from.coord"]
@@ -498,8 +498,8 @@ Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues = NULL, pva
   ret <- ret[order(ret[, 3]), ]
 
   ret[, "to.coord"] <- c(ret[2:nrow(ret), "from.coord"], bins[n_bins, "to.coord"])
-  ret[, "from.id"] <- match(ret[, "from.coord"], bins[, "from.coord"])
-  ret[, "to.id"] <- match(ret[, "to.coord"], bins[, "to.coord"])
+  ret[, "from.id"] <- match(ret[, "from.coord"], table = bins[, "from.coord"])
+  ret[, "to.id"] <- match(ret[, "to.coord"], table = bins[, "to.coord"])
   ret[, "size"] <- ret[, "to.coord"] - ret[, "from.coord"]
 
   if (!is.null(pvalues) && !is.null(pvalue.cut)) {
@@ -557,19 +557,19 @@ Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues = NULL,
   levels(x = ret[, "tag"]) <- c("domain", "gap", "boundary")
 
   rmv.idx <- setdiff(seq_len(n_bins), gap.idx)
-  proc.region <- Which.process.region(rmv.idx, n_bins, min.size = 0)
+  proc.region <- Which.process.region(rmv.idx, n_bins = n_bins, min.size = 0)
   from.coord <- bins[proc.region[, "start"], "from.coord"]
   n_procs <- nrow(proc.region)
   gap <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = rep(0, times = n_procs), from.coord = from.coord, to.id = rep(0, times = n_procs), to.coord = rep(0, times = n_procs), tag = rep("gap", times = n_procs), size = rep(0, times = n_procs), stringsAsFactors = FALSE)
 
   rmv.idx <- union(signal.idx, gap.idx)
-  proc.region <- Which.process.region(rmv.idx, n_bins, min.size = 0)
+  proc.region <- Which.process.region(rmv.idx, n_bins = n_bins, min.size = 0)
   n_procs <- nrow(proc.region)
   from.coord <- bins[proc.region[, "start"], "from.coord"]
   domain <- data.frame(chr = rep(bins[1, "chr"], times = n_procs), from.id = rep(0, times = n_procs), from.coord = from.coord, to.id = rep(0, times = n_procs), to.coord = rep(0, times = n_procs), tag = rep("domain", times = n_procs), size = rep(0, times = n_procs), stringsAsFactors = FALSE)
 
   rmv.idx <- setdiff(seq_len(n_bins), signal.idx)
-  proc.region <- as.data.frame(Which.process.region(rmv.idx, n_bins, min.size = 1))
+  proc.region <- as.data.frame(Which.process.region(rmv.idx, n_bins = n_bins, min.size = 1))
   n_procs <- nrow(proc.region)
   if (n_procs > 0) {
     from.coord <- bins[proc.region[, "start"] + 1, "from.coord"]
@@ -581,8 +581,8 @@ Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues = NULL,
   ret <- ret[order(ret[, 3]), ]
 
   ret[, "to.coord"] <- c(ret[2:nrow(ret), "from.coord"], bins[n_bins, "to.coord"])
-  ret[, "from.id"] <- match(ret[, "from.coord"], bins[, "from.coord"])
-  ret[, "to.id"] <- match(ret[, "to.coord"], bins[, "to.coord"])
+  ret[, "from.id"] <- match(ret[, "from.coord"], table = bins[, "from.coord"])
+  ret[, "to.id"] <- match(ret[, "to.coord"], table = bins[, "to.coord"])
   ret[, "size"] <- ret[, "to.coord"] - ret[, "from.coord"]
 
   if (!is.null(pvalues) && !is.null(pvalue.cut)) {
