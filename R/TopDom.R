@@ -34,8 +34,7 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
   } else if (ncol(matdf) - nrow(matdf) == 4) {
     colnames(matdf) <- c("id", "chr", "from.coord", "to.coord")
   } else {
-    mcat("Unknown Type of matrix file")
-    return(0)
+    stop("Unknown type of matrix file: ", sQuote(matrix.file))
   }
   n_bins <- nrow(matdf)
   mean.cf <- rep(0, times = n_bins)
