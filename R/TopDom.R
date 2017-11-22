@@ -1,5 +1,7 @@
-# @author : Hanjun Shin
+# @author : Hanjun Shin(shanjun@usc.edu)
+# @credit : Harris Lazaris(Ph.D Stduent, NYU), Dr. Gangqing Hu(Staff Scientist, NIH)
 # @brief : TopDom.R is a software package to identify topological domains for given Hi-C contact matrix. 
+# @version 0.0.2
 
 # @fn TopDom
 # @param matrixFile : string, matrixFile Address,
@@ -24,14 +26,12 @@ TopDom <- function( matrix.file, window.size, outFile=NULL, statFilter=T)
     print("Unknwon Type of matrix file")
     return(0)
   }
-  
   n_bins = nrow(matdf)
   mean.cf <- rep(0, n_bins)
   pvalue <- rep(1, n_bins)
   
   local.ext = rep(-0.5, n_bins)
   
-    
   bins <- data.frame(id=1:n_bins, 
                      chr=matdf[, "chr"], 
                      from.coord=matdf[, "from.coord"], 
@@ -49,7 +49,7 @@ TopDom <- function( matrix.file, window.size, outFile=NULL, statFilter=T)
   for(i in 1:n_bins)
   {
     diamond = Get.Diamond.Matrix(mat.data=matrix.data, i=i, size=window.size)
-    mean.cf[i] = mean(diamond)    
+    mean.cf[i] = mean(diamond)
   }
   
   eltm = proc.time() - ptm
@@ -61,8 +61,13 @@ TopDom <- function( matrix.file, window.size, outFile=NULL, statFilter=T)
   print("#########################################################################")
   
   ptm = proc.time()
-  gap.idx = Which.Gap.Region(matrix.data=matrix.data)
+  #gap.idx = Which.Gap.Region(matrix.data=matrix.data)
+  #gap.idx = Which.Gap.Region2(mean.cf)
+  gap.idx = Which.Gap.Region2(matrix.data=matrix.data, window.size)
+  
   proc.regions = Which.process.region(rmv.idx=gap.idx, n_bins=n_bins, min.size=3)
+  
+  #print(proc.regions)
   
   for( i in 1:nrow(proc.regions))
   {
@@ -121,10 +126,14 @@ TopDom <- function( matrix.file, window.size, outFile=NULL, statFilter=T)
                                   gap.idx=which(local.ext==-0.5), 
                                   pvalues=pvalue, 
                                   pvalue.cut=0.05)
+  
   bins = cbind(bins, 
                local.ext = local.ext,
                mean.cf = mean.cf, 
                pvalue = pvalue)
+  
+  bedform = domains[, c("chr", "from.coord", "to.coord", "tag")]
+  colnames(bedform) = c("chrom", "chromStart", "chromEnd", "name")
   
   if( !is.null(outFile) ) {
     print("#########################################################################")
@@ -139,12 +148,16 @@ TopDom <- function( matrix.file, window.size, outFile=NULL, statFilter=T)
     outDomain = paste(outFile, ".domain", sep="")
     print(paste("Domain File :", outDomain) )
     write.table( domains, file=outDomain, quote=F, row.names=F, col.names=T, sep="\t")
+    
+    outBed = paste(outFile, ".bed", sep="")
+    print(paste("Bed File : ", outBed))
+    write.table( bedform, file=outBed, quote=F, row.names=F, col.names=F, sep="\t")
   }
   
   print("Done!!")
   
   print("Job Complete !")
-  return(list(binSignal=bins, domain=domains))
+  return(list(binSignal=bins, domain=domains, bed=bedform))
 }
 
 # @fn Get.Diamond.Matrix
@@ -205,6 +218,7 @@ Which.process.region <- function(rmv.idx, n_bins, min.size=3)
 }
 
 # @fn Which.Gap.Region
+# @breif version 0.0.1 used
 # @param matrix.data : n by n matrix
 # @return gap index
 Which.Gap.Region <- function(matrix.data)
@@ -220,12 +234,44 @@ Which.Gap.Region <- function(matrix.data)
     {
       if( sum( matrix.data[i:j, i:j]) == 0 ) {
         gap[i:j] = -0.5
-        j = j+1
+        j = j+1  
+        #if(j-i > 1) gap[i:j]=-0.5
+        #j=j+1
       } else break
     }
     
     i = j  
   }
+  
+  idx = which(gap == -0.5)
+  return(idx)
+}
+
+# @fn Which.Gap.Region3
+# @param matrix.data : n by n matrix
+# @return gap index
+Which.Gap.Region3 <- function(mean.cf)
+{
+  n_bins = length(mean.cf)
+  gapidx = which(mean.cf==0)
+  
+  return(gapidx)
+}
+
+# @fn Which.Gap.Region2
+# @breif version 0.0.2 used
+# @param matrix.data : n by n matrix
+# @return gap index
+Which.Gap.Region2 <- function(matrix.data, w)
+{
+  n_bins = nrow(matrix.data)
+  gap = rep(0, n_bins)
+  
+  for(i in 1:n_bins)
+  {
+    if( sum( matrix.data[i, max(1, i-w):min(i+w, n_bins)] ) == 0 ) gap[i]=-0.5
+  }
+  
   idx = which(gap == -0.5)
   return(idx)
 }
@@ -253,6 +299,7 @@ Detect.Local.Extreme <- function(x)
   cp = Change.Point(x=1:n_bins, y=x)
   
   if( length(cp$cp) <= 2 ) return(ret)
+  if( length(cp$cp) == n_bins) return(ret)
   for(i in 2:(length(cp$cp)-1))
   {
     if( x[cp$cp[i]] >= x[cp$cp[i]-1] && x[cp$cp[i]] >= x[cp$cp[i]+1] ) ret[cp$cp[i]] = 1
