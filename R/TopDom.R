@@ -144,16 +144,16 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
     print("Writing Files")
     print("#########################################################################")
 
-    outBinSignal <- paste(outFile, ".binSignal", sep = "")
+    outBinSignal <- paste0(outFile, ".binSignal")
     print(paste("binSignal File :", outBinSignal))
     write.table(bins, file = outBinSignal, quote = FALSE, row.names = FALSE, col.names = TRUE, sep = "\t")
 
 
-    outDomain <- paste(outFile, ".domain", sep = "")
+    outDomain <- paste0(outFile, ".domain")
     print(paste("Domain File :", outDomain))
     write.table(domains, file = outDomain, quote = FALSE, row.names = FALSE, col.names = TRUE, sep = "\t")
 
-    outBed <- paste(outFile, ".bed", sep = "")
+    outBed <- paste0(outFile, ".bed")
     print(paste("Bed File : ", outBed))
     write.table(bedform, file = outBed, quote = FALSE, row.names = FALSE, col.names = FALSE, sep = "\t")
   }
