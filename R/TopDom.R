@@ -48,7 +48,7 @@
 #' 
 #' @importFrom utils read.table write.table
 #' @export
-TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) {
+TopDom <- function(matrix.file, window.size, chr = NULL, binSize, outFile = NULL, statFilter = TRUE) {
   mcat("#########################################################################")
   mcat("Step 0 : File Read")
   mcat("#########################################################################")
@@ -57,39 +57,71 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
             length(window.size) == 1,
             !is.na(window.size),
             window.size >= 0)
-  
-  matdf <- read.table(matrix.file, header = FALSE)
-  n_bins <- nrow(matdf)
-  if (ncol(matdf) - n_bins == 3) {
-    colnames(matdf) <- c("chr", "from.coord", "to.coord")
-  } else if (ncol(matdf) - n_bins == 4) {
-    colnames(matdf) <- c("id", "chr", "from.coord", "to.coord")
+
+  if (!is.null(chr)) {
+    chr <- as.character(chr)
+    stopifnot(is.character(chr), length(chr) == 1, !is.na(chr))
+    binSize <- as.integer(binSize)
+    stopifnot(is.integer(binSize), length(binSize) == 1, !is.na(binSize), binSize >= 1)
+    
+    first <- read.table(matrix.file, header = FALSE, nrows = 1L)
+    mcat("  -- reading ", length(first), "-by-", length(first), " count matrix")
+    ## Assert that it's a count matrix
+    is.numeric <- unlist(lapply(first, FUN = is.numeric), use.names = FALSE)
+    stopifnot(all(is.numeric))
+    
+    ## Column types to read
+    colClasses <- rep("numeric", times = length(first))
+    matrix.data <- read.table(matrix.file, colClasses = colClasses, header = FALSE)
+    colnames(matrix.data) <- NULL
+
+    ## N-by-N count matrix (from file content)
+    matrix.data <- as.matrix(matrix.data)
+    stopifnot(nrow(matrix.data) == ncol(matrix.data))
+    n_bins <- nrow(matrix.data)
+    
+    ## Bin annotation from (chr, binSize)
+    bins <- data.frame(
+      id         = seq_len(n_bins),
+      chr        = chr,
+      from.coord = seq(from = 0, by = binSize, length.out = n_bins),
+      to.coord   = seq(from = binSize, by = binSize, length.out = n_bins)
+    )
   } else {
-    stop("Unknown format of count-matrix file: ", sQuote(matrix.file))
-  }
+    matdf <- read.table(matrix.file, header = FALSE)
+    n_bins <- nrow(matdf)
+    if (ncol(matdf) - n_bins == 3) {
+      colnames(matdf) <- c("chr", "from.coord", "to.coord")
+    } else if (ncol(matdf) - n_bins == 4) {
+      colnames(matdf) <- c("id", "chr", "from.coord", "to.coord")
+    } else {
+      stop("Unknown format of count-matrix file: ", sQuote(matrix.file))
+    }
+    
+    ## Bin annotation (from file content)
+    bins <- data.frame(
+      id         = seq_len(n_bins),
+      chr        = matdf[["chr"]],
+      from.coord = matdf[["from.coord"]],
+      to.coord   = matdf[["to.coord"]]
+    )
   
+    ## N-by-N count matrix (from file content)
+    matdf <- matdf[, (ncol(matdf) - n_bins + 1):ncol(matdf)]
+    matrix.data <- as.matrix(matdf)
+    rm(list = "matdf")
+  }
+
+  stopifnot(is.numeric(matrix.data),
+            is.matrix(matrix.data),
+            nrow(matrix.data) == ncol(matrix.data),
+            nrow(matrix.data) == n_bins)
+
   mean.cf <- rep(0, times = n_bins)
   pvalue <- rep(1.0, times = n_bins)
 
   ## Gap region (== -0.5) by default
   local.ext <- rep(-0.5, times = n_bins)
-
-  ## Bin annotation
-  bins <- data.frame(
-    id         = seq_len(n_bins),
-    chr        = matdf[["chr"]],
-    from.coord = matdf[["from.coord"]],
-    to.coord   = matdf[["to.coord"]]
-  )
-
-  ## Normalized N-by-N count matrix
-  matdf <- matdf[, (ncol(matdf) - n_bins + 1):ncol(matdf)]
-  matrix.data <- as.matrix(matdf)
-  rm(list = "matdf")
-  stopifnot(is.numeric(matrix.data),
-            is.matrix(matrix.data),
-            nrow(matrix.data) == ncol(matrix.data),
-            nrow(matrix.data) == n_bins)
 
   mcat("-- Done!")
   mcat("Step 0 : Done!")
@@ -124,7 +156,7 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
   for (i in seq_len(nrow(proc.regions))) {
     start <- proc.regions[i, "start"]
     end   <- proc.regions[i,   "end"]
-    mcat("Process Region ", i, " from ", start, " to ", end)
+    mcat("Process Region #", i, " from ", start, " to ", end)
     local.ext[start:end] <- Detect.Local.Extreme(x = mean.cf[start:end])
   }
 
@@ -151,7 +183,7 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
       start <- proc.regions[i, "start"]
       end <- proc.regions[i, "end"]
 
-      mcat("Process Regions from ", start, " to ", end)
+      mcat("Process Region #", i, " from ", start, " to ", end)
 
       pvalue[start:end] <- Get.Pvalue(matrix.data = scale.matrix.data[start:end, start:end], size = window.size, scale = 1.0)
     }

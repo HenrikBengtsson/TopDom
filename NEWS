@@ -14,6 +14,12 @@ NEW FEATURES:
  o If the matrix file is not of a known format, then TopDom() produces an
    informative error. Previously it gave a message on stdout and returned 0.
 
+ o TopDom() can now read a pure count matrix file without bin information.
+   To read such files, specify what chromosome is being read (argument 'chr')
+   and the bin size of the count matrix (argument 'binSize').
+   
+ o Add arguments 'chr' and 'binSize' to TopDom().
+ 
 CODE STYLE:
 
  o Tidied up code.
