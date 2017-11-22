@@ -7,6 +7,12 @@ SIGNIFICANT CHANGES:
 
  o Turned the original TopDom R script into a package.
 
+ o All progress messages are outputted done to standard error.
+
+CODE STYLE:
+
+ o Tidied up code.
+
 
 Version: 0.0.2 [2016-07-08]
 

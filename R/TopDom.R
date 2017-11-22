@@ -13,9 +13,9 @@
 #' @importFrom utils read.table write.table
 #' @export
 TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) {
-  print("#########################################################################")
-  print("Step 0 : File Read ")
-  print("#########################################################################")
+  mprint("#########################################################################")
+  mprint("Step 0 : File Read ")
+  mprint("#########################################################################")
   window.size <- as.numeric(window.size)
   matdf <- read.table(matrix.file, header = FALSE)
 
@@ -24,7 +24,7 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
   } else if (ncol(matdf) - nrow(matdf) == 4) {
     colnames(matdf) <- c("id", "chr", "from.coord", "to.coord")
   } else {
-    print("Unknwon Type of matrix file")
+    mprint("Unknwon Type of matrix file")
     return(0)
   }
   n_bins <- nrow(matdf)
@@ -41,13 +41,13 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
   )
   matrix.data <- as.matrix(matdf[, (ncol(matdf) - nrow(matdf) + 1):ncol(matdf)])
 
-  print("-- Done!")
-  print("Step 0 : Done !!")
+  mprint("-- Done!")
+  mprint("Step 0 : Done !!")
 
 
-  print("#########################################################################")
-  print("Step 1 : Generating binSignals by computing bin-level contact frequencies")
-  print("#########################################################################")
+  mprint("#########################################################################")
+  mprint("Step 1 : Generating binSignals by computing bin-level contact frequencies")
+  mprint("#########################################################################")
   ptm <- proc.time()
   for (i in seq_len(n_bins)) {
     diamond <- Get.Diamond.Matrix(mat.data = matrix.data, i = i, size = window.size)
@@ -55,12 +55,12 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
   }
 
   eltm <- proc.time() - ptm
-  print(paste("Step 1 Running Time : ", eltm[3]))
-  print("Step 1 : Done !!")
+  mprint(paste("Step 1 Running Time : ", eltm[3]))
+  mprint("Step 1 : Done !!")
 
-  print("#########################################################################")
-  print("Step 2 : Detect TD boundaries based on binSignals")
-  print("#########################################################################")
+  mprint("#########################################################################")
+  mprint("Step 2 : Detect TD boundaries based on binSignals")
+  mprint("#########################################################################")
 
   ptm <- proc.time()
   # gap.idx <- Which.Gap.Region(matrix.data=matrix.data)
@@ -69,54 +69,54 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
 
   proc.regions <- Which.process.region(rmv.idx = gap.idx, n_bins = n_bins, min.size = 3)
 
-  # print(proc.regions)
+  # mprint(proc.regions)
 
   for (i in seq_len(nrow(proc.regions))) {
     start <- proc.regions[i, "start"]
     end <- proc.regions[i, "end"]
 
-    print(paste("Process Regions from ", start, "to", end))
+    mprint(paste("Process Regions from ", start, "to", end))
 
     local.ext[start:end] <- Detect.Local.Extreme(x = mean.cf[start:end])
   }
 
   eltm <- proc.time() - ptm
-  print(paste("Step 2 Running Time : ", eltm[3]))
-  print("Step 2 : Done !!")
+  mprint(paste("Step 2 Running Time : ", eltm[3]))
+  mprint("Step 2 : Done !!")
 
   if (statFilter) {
-    print("#########################################################################")
-    print("Step 3 : Statistical Filtering of false positive TD boundaries")
-    print("#########################################################################")
+    mprint("#########################################################################")
+    mprint("Step 3 : Statistical Filtering of false positive TD boundaries")
+    mprint("#########################################################################")
 
     ptm <- proc.time()
-    print("-- Matrix Scaling....")
+    mprint("-- Matrix Scaling....")
     scale.matrix.data <- matrix.data
     for (i in seq_len(2 * window.size)) {
       # diag(scale.matrix.data[, i:n_bins]) <- scale(diag(matrix.data[, i:n_bins]))
       scale.matrix.data[seq(from = 1 + (n_bins * i), to = n_bins * n_bins, by = 1 + n_bins)] <- scale(matrix.data[seq(from = 1 + (n_bins * i), to = n_bins * n_bins, by = 1 + n_bins)])
     }
 
-    print("-- Compute p-values by Wilcox Ranksum Test")
+    mprint("-- Compute p-values by Wilcox Ranksum Test")
     for (i in seq_len(nrow(proc.regions))) {
       start <- proc.regions[i, "start"]
       end <- proc.regions[i, "end"]
 
-      print(paste("Process Regions from ", start, "to", end))
+      mprint(paste("Process Regions from ", start, "to", end))
 
       pvalue[start:end] <- Get.Pvalue(matrix.data = scale.matrix.data[start:end, start:end], size = window.size, scale = 1)
     }
-    print("-- Done!")
+    mprint("-- Done!")
 
-    print("-- Filtering False Positives")
+    mprint("-- Filtering False Positives")
     local.ext[intersect(union(which(local.ext == -1), which(local.ext == -1)), which(pvalue < 0.05))] <- -2
     local.ext[which(local.ext == -1)] <- 0
     local.ext[which(local.ext == -2)] <- -1
-    print("-- Done!")
+    mprint("-- Done!")
 
     eltm <- proc.time() - ptm
-    print(paste("Step 3 Running Time : ", eltm[3]))
-    print("Step 3 : Done!")
+    mprint(paste("Step 3 Running Time : ", eltm[3]))
+    mprint("Step 3 : Done!")
   } else {
     pvalue <- 0
   }
@@ -140,27 +140,27 @@ TopDom <- function(matrix.file, window.size, outFile = NULL, statFilter = TRUE) 
   colnames(bedform) <- c("chrom", "chromStart", "chromEnd", "name")
 
   if (!is.null(outFile)) {
-    print("#########################################################################")
-    print("Writing Files")
-    print("#########################################################################")
+    mprint("#########################################################################")
+    mprint("Writing Files")
+    mprint("#########################################################################")
 
     outBinSignal <- paste0(outFile, ".binSignal")
-    print(paste("binSignal File :", outBinSignal))
+    mprint(paste("binSignal File :", outBinSignal))
     write.table(bins, file = outBinSignal, quote = FALSE, row.names = FALSE, col.names = TRUE, sep = "\t")
 
 
     outDomain <- paste0(outFile, ".domain")
-    print(paste("Domain File :", outDomain))
+    mprint(paste("Domain File :", outDomain))
     write.table(domains, file = outDomain, quote = FALSE, row.names = FALSE, col.names = TRUE, sep = "\t")
 
     outBed <- paste0(outFile, ".bed")
-    print(paste("Bed File : ", outBed))
+    mprint(paste("Bed File : ", outBed))
     write.table(bedform, file = outBed, quote = FALSE, row.names = FALSE, col.names = FALSE, sep = "\t")
   }
 
-  print("Done!!")
+  mprint("Done!!")
 
-  print("Job Complete !")
+  mprint("Job Complete !")
   list(binSignal = bins, domain = domains, bed = bedform)
 }
 
@@ -327,8 +327,8 @@ Data.Norm <- function(x, y) {
   scale.x <- 1 / mean(abs(diff(x)))
   scale.y <- 1 / mean(abs(diff(y)))
 
-  # print(scale.x)
-  # print(scale.y)
+  # mprint(scale.x)
+  # mprint(scale.y)
 
   for (i in 2:length(x)) {
     ret.x[i] <- ret.x[i - 1] + (diff.x[i - 1] * scale.x)
@@ -345,7 +345,7 @@ Data.Norm <- function(x, y) {
 # Note that the first and the last point will be always change point
 Change.Point <- function(x, y) {
   if (length(x) != length(y)) {
-    print("ERROR : The length of x and y should be the same")
+    mprint("ERROR : The length of x and y should be the same")
     return(0)
   }
 
@@ -406,7 +406,7 @@ Get.Pvalue <- function(matrix.data, size, scale = 1) {
     wil.test <- wilcox.test(x = dia * scale, y = c(ups, downs), alternative = "less", exact = FALSE)
     pvalue[i] <- wil.test$p.value
 
-    # print(paste(i, "=", wil.test$p.value))
+    # mprint(paste(i, "=", wil.test$p.value))
   }
 
   pvalue[is.na(pvalue)] <- 1
@@ -597,4 +597,10 @@ Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues = NULL,
   }
 
   ret
+}
+
+
+#' @importFrom utils capture.output
+mprint <- function(...) {
+  cat(capture.output(print(...)), sep = "\n", file = stderr())
 }
