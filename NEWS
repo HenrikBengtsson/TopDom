@@ -1,7 +1,7 @@
 Package: TopDom
 ===============
 
-Version: 0.0.2-9000 [2017-11-27]
+Version: 0.0.2-9000 [2017-11-28]
 
 SIGNIFICANT CHANGES:
 
@@ -26,6 +26,10 @@ CODE STYLE:
 
  o Tidied up code.
 
+SOFTWARE QUALITY:
+
+ o Added package tests.
+ 
 
 Version: 0.0.2 [2016-07-08]
 
