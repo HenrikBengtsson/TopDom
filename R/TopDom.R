@@ -2,6 +2,7 @@
 #' 
 #' @param matrix.file The pathname of a normalize Hi-C contact matrix file
 #' stored as a whitespace-delimited file.  See below for details.
+#' Also a gzip-compressed file can be used.  
 #' 
 #' @param window.size The number of bins to extend (as a non-negative integer).
 #' Recommended range is in {5, ..., 20}.

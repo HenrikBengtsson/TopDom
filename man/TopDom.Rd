@@ -4,11 +4,13 @@
 \alias{TopDom}
 \title{Identify topological domains for given Hi-C contact matrix}
 \usage{
-TopDom(matrix.file, window.size, outFile = NULL, statFilter = TRUE)
+TopDom(matrix.file, window.size, chr = NULL, binSize, outFile = NULL,
+  statFilter = TRUE)
 }
 \arguments{
 \item{matrix.file}{The pathname of a normalize Hi-C contact matrix file
-stored as a whitespace-delimited file.  See below for details.}
+stored as a whitespace-delimited file.  See below for details.
+Also a gzip-compressed file can be used.}
 
 \item{window.size}{The number of bins to extend (as a non-negative integer).
 Recommended range is in {5, ..., 20}.}
