@@ -1,8 +1,7 @@
 #' Identify topological domains for given Hi-C contact matrix
 #' 
-#' @param matrix.file The pathname of a normalize Hi-C contact matrix file
-#' stored as a whitespace-delimited file.  See below for details.
-#' Also a gzip-compressed file can be used.
+#' @param data A TopDomData object or the pathname to a normalized
+#' Hi-C contact matrix file as read by [readHiC].
 #' 
 #' @param window.size The number of bins to extend (as a non-negative integer).
 #' Recommended range is in {5, ..., 20}.
@@ -11,6 +10,8 @@
 #' files optionally produced.
 #' 
 #' @param statFilter logical, ...
+#' 
+#' @param ... Additional arguments passed to [readHiC].
 #'
 #' @return A named list with data.frame elements `binSignal`, `domain`,
 #' and `bed`.
@@ -27,22 +28,15 @@
 #' 
 #' @importFrom utils read.table write.table
 #' @export
-TopDom <- function(matrix.file, chr = NULL, binSize = NULL, window.size, outFile = NULL, statFilter = TRUE) {
+TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ...) {
   window.size <- as.integer(window.size)
   stopifnot(is.numeric(window.size),
             length(window.size) == 1,
             !is.na(window.size),
             window.size >= 0)
 
-  if (is.list(matrix.file)) {
-    stopifnot(all(c("bins", "counts") %in% names(matrix.file)))
-    stopifnot(is.data.frame(matrix.file$bins), is.matrix(matrix.file$counts))
-  } else {
-    mcat("#########################################################################")
-    mcat("Step 0 : File Read")
-    mcat("#########################################################################")
-    data <- readHiC(matrix.file, chr = chr, binSize = binSize)
-  }
+  if (is.character(data)) data <- readHiC(data, ...)
+  stopifnot(inherits(data, "TopDomData"))
 
   bins <- data$bins
   matrix.data <- data$counts
@@ -53,10 +47,6 @@ TopDom <- function(matrix.file, chr = NULL, binSize = NULL, window.size, outFile
 
   ## Gap region (== -0.5) by default
   local.ext <- rep(-0.5, times = n_bins)
-
-  mcat("-- Done!")
-  mcat("Step 0 : Done!")
-
 
   mcat("#########################################################################")
   mcat("Step 1 : Generating binSignals by computing bin-level contact frequencies")
@@ -673,7 +663,7 @@ mcat <- function(...) {
 
 #' Reads a Hi-C contact data file
 #' 
-#' @param matrix.file The pathname of a normalize Hi-C contact matrix file
+#' @param file The pathname of a normalize Hi-C contact matrix file
 #' stored as a whitespace-delimited file.  See below for details.
 #' Also a gzip-compressed file can be used.
 #'
@@ -706,17 +696,23 @@ mcat <- function(...) {
 #' }
 #' 
 #' @seealso [TopDom].
-#' 
+#'
+#' @importFrom utils file_test
 #' @export
-readHiC <- function(matrix.file, chr = NULL, binSize = NULL) {
-  stopifnot(file_test("-f", matrix.file))
+readHiC <- function(file, chr = NULL, binSize = NULL) {
+  stopifnot(file_test("-f", file))
+
+  mcat("#########################################################################")
+  mcat("Step 0 : File Read")
+  mcat("#########################################################################")
+  
   if (!is.null(chr)) {
     chr <- as.character(chr)
     stopifnot(is.character(chr), length(chr) == 1, !is.na(chr))
     binSize <- as.integer(binSize)
     stopifnot(is.integer(binSize), length(binSize) == 1, !is.na(binSize), binSize >= 1)
     
-    first <- read.table(matrix.file, header = FALSE, nrows = 1L)
+    first <- read.table(file, header = FALSE, nrows = 1L)
     mcat("  -- reading ", length(first), "-by-", length(first), " count matrix")
     ## Assert that it's a count matrix
     is.numeric <- unlist(lapply(first, FUN = is.numeric), use.names = FALSE)
@@ -724,7 +720,7 @@ readHiC <- function(matrix.file, chr = NULL, binSize = NULL) {
     
     ## Column types to read
     colClasses <- rep("numeric", times = length(first))
-    matrix.data <- read.table(matrix.file, colClasses = colClasses, header = FALSE)
+    matrix.data <- read.table(file, colClasses = colClasses, header = FALSE)
     colnames(matrix.data) <- NULL
 
     ## N-by-N count matrix (from file content)
@@ -741,16 +737,16 @@ readHiC <- function(matrix.file, chr = NULL, binSize = NULL) {
       to.coord   = seq(from = binSize, by = binSize, length.out = n_bins)
     )
   } else {
-    matdf <- read.table(matrix.file, header = FALSE)
+    matdf <- read.table(file, header = FALSE)
     n_bins <- nrow(matdf)
     if (ncol(matdf) - n_bins == 3) {
       colnames(matdf) <- c("chr", "from.coord", "to.coord")
     } else if (ncol(matdf) - n_bins == 4) {
       colnames(matdf) <- c("id", "chr", "from.coord", "to.coord")
     } else {
-      stop("Unknown format of count-matrix file: ", sQuote(matrix.file))
+      stop("Unknown format of count-matrix file: ", sQuote(file))
     }
-    
+
     ## Bin annotation (from file content)
     bins <- data.frame(
       id         = seq_len(n_bins),
@@ -758,7 +754,7 @@ readHiC <- function(matrix.file, chr = NULL, binSize = NULL) {
       from.coord = matdf[["from.coord"]],
       to.coord   = matdf[["to.coord"]]
     )
-  
+
     ## N-by-N count matrix (from file content)
     matdf <- matdf[, (ncol(matdf) - n_bins + 1):ncol(matdf)]
     matrix.data <- as.matrix(matdf)
@@ -770,5 +766,8 @@ readHiC <- function(matrix.file, chr = NULL, binSize = NULL) {
             nrow(matrix.data) == ncol(matrix.data),
             nrow(matrix.data) == n_bins)
 
-  list(bins = bins, counts = matrix.data)
+  mcat("-- Done!")
+  mcat("Step 0 : Done!")
+
+  structure(list(bins = bins, counts = matrix.data), class = "TopDomData")
 }

@@ -4,10 +4,10 @@
 \alias{readHiC}
 \title{Reads a Hi-C contact data file}
 \usage{
-readHiC(matrix.file, chr = NULL, binSize = NULL)
+readHiC(file, chr = NULL, binSize = NULL)
 }
 \arguments{
-\item{matrix.file}{The pathname of a normalize Hi-C contact matrix file
+\item{file}{The pathname of a normalize Hi-C contact matrix file
 stored as a whitespace-delimited file.  See below for details.
 Also a gzip-compressed file can be used.}
 
