@@ -33,9 +33,17 @@ SOFTWARE QUALITY:
 
 Version: 0.0.2 [2016-07-08]
 
- o TopDom v0.0.2 script from http://zhoulab.usc.edu/TopDom/.
- 
- 
+ o TopDom v0.0.2 script from http://zhoulab.usc.edu/TopDom/ with the below
+   entries from the official release note:
+   
+ o Gap Identification module is changed.
+   
+ o Minor bug related to Change Points identificaiton in very small
+   regions is fixed.
+     
+ o bed format support.
+   
+
 Version: 0.0.1 [2015-11-09]
 
  o TopDom v0.0.1 script from http://zhoulab.usc.edu/TopDom/.

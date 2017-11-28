@@ -3,6 +3,7 @@ if (require("TopDomData")) {
   path <- system.file("exdata", package = "TopDomData", mustWork = TRUE)
 
   ## From Supplementary Materials of TopDom article
+  ## Source: http://zhoulab.usc.edu/TopDom/topdom_sup.htm
   pathname <- file.path(path, "mESC_5w_chr10.nij.HindIII.comb.40kb.domain")
   truth <- read.table(pathname, sep = "\t", header = TRUE,
                       colClasses = c("factor", "integer", "numeric", "integer",
