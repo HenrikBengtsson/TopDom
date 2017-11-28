@@ -1,13 +1,15 @@
 Package: TopDom
 ===============
 
-Version: 0.0.2-9000 [2017-11-21]
+Version: 0.0.2-9000 [2017-11-27]
 
 SIGNIFICANT CHANGES:
 
  o Turned the original TopDom R script into a package.
 
  o All progress messages are outputted done to standard error.
+
+ o Add readHiC().
 
 NEW FEATURES:
 

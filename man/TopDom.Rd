@@ -4,8 +4,8 @@
 \alias{TopDom}
 \title{Identify topological domains for given Hi-C contact matrix}
 \usage{
-TopDom(matrix.file, window.size, chr = NULL, binSize, outFile = NULL,
-  statFilter = TRUE)
+TopDom(matrix.file, chr = NULL, binSize = NULL, window.size,
+  outFile = NULL, statFilter = TRUE)
 }
 \arguments{
 \item{matrix.file}{The pathname of a normalize Hi-C contact matrix file
@@ -34,30 +34,6 @@ and all but the BED file have column names.
 \description{
 Identify topological domains for given Hi-C contact matrix
 }
-\section{Format of HiC contact-matrix file}{
-
-The contact-matrix file should be a whitespace-delimited text file with
-neither row names nor column names.  The content should be a N-by-(3+N)
-table where the first three columns correspond to \code{chr} (string),
-\code{from.coord} (integer position), and \code{to.coord} (integer position).
-These column defines the genomic location of the N Hi-C bins (in order).
-The last N columns should contain normalized contact counts (float) such
-that element (r, 3+c) in this table corresponds to count (r,c) in the
-normalized contact matrix.
-
-If an N-by-(4+N) table, then the first column is assumed to contain an
-\code{id} (integer), and everything else as above.
-
-Example:
-\preformatted{
-  chr10       0   40000  0 0 0 0 ...
-  chr10   40000   80000  0 0 0 0 ...
-  chr10   80000  120000  0 0 0 0 ...
-  chr10  120000  160000  0 0 0 0 ...
-  ...
-}
-}
-
 \author{
 Hanjun Shin, Harris Lazaris, and Gangqing Hu.
 \R package, help, and code refactorization by Henrik Bengtsson.
