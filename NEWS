@@ -1,0 +1,47 @@
+Package: TopDom
+===============
+
+Version: 0.1.0 [2018-04-23]
+
+SIGNIFICANT CHANGES:
+
+ o Turned the original TopDom R script into a package.
+
+ o All progress messages are outputted done to standard error.
+
+ o Add readHiC().
+
+NEW FEATURES:
+
+ o TopDom() can now read, via readHiC(), a pure count matrix file without bin
+   information.  To read such files, specify what chromosome is being read
+   (argument 'chr') and the bin size of the count matrix (argument 'binSize').
+
+ o If the matrix file is not of a known format, then TopDom() produces an
+   informative error. Previously it gave a message on stdout and returned 0.
+
+CODE STYLE:
+
+ o Tidied up code.
+
+SOFTWARE QUALITY:
+
+ o Added package tests.
+ 
+
+Version: 0.0.2 [2016-07-08]
+
+ o TopDom v0.0.2 script from http://zhoulab.usc.edu/TopDom/ with the below
+   entries from the official release note:
+   
+ o Gap Identification module is changed.
+   
+ o Minor bug related to Change Points identificaiton in very small
+   regions is fixed.
+     
+ o bed format support.
+   
+
+Version: 0.0.1 [2015-11-09]
+
+ o TopDom v0.0.1 script from http://zhoulab.usc.edu/TopDom/.
