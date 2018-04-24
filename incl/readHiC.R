@@ -5,8 +5,5 @@ if (require("TopDomData")) {
   pathname <- file.path(path, "nij.chr10.gz")
   data <- readHiC(pathname, chr = "chr10", binSize = 40e3)
   print(data)
-
-  ## Find topological domains using TopDom method
-  fit <- TopDom(data, window.size = 5L)
-  str(fit$domain)
+  str(data)
 }

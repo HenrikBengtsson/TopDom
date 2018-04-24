@@ -15,8 +15,8 @@ Also a gzip-compressed file can be used.}
 annotation, the latter is created from these parameters.}
 }
 \value{
-A list with elements \code{bins} (data.frame) and
-\code{counts} (matrix).
+A list with elements \code{bins} (an N-by-4 data.frame) and
+\code{counts} (N-by-N matrix).
 }
 \description{
 Reads a Hi-C contact data file
@@ -45,6 +45,20 @@ Example:
 }
 }
 
+\examples{
+if (require("TopDomData")) {
+  path <- system.file("exdata", package = "TopDomData", mustWork = TRUE)
+
+  ## Original count data
+  pathname <- file.path(path, "nij.chr10.gz")
+  data <- readHiC(pathname, chr = "chr10", binSize = 40e3)
+  print(data)
+
+  ## Find topological domains using TopDom method
+  fit <- TopDom(data, window.size = 5L)
+  str(fit$domain)
+}
+}
 \seealso{
 \link{TopDom}.
 }

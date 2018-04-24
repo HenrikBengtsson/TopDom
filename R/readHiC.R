@@ -7,8 +7,8 @@
 #' @param chr,binSize If the file contains a count matrix without bin
 #' annotation, the latter is created from these parameters.
 #'
-#' @return A list with elements \code{bins} (data.frame) and
-#' \code{counts} (matrix).
+#' @return A list with elements \code{bins} (an N-by-4 data.frame) and
+#' \code{counts} (N-by-N matrix).
 #'
 #' @section Format of HiC contact-matrix file:
 #' The contact-matrix file should be a whitespace-delimited text file with
@@ -31,6 +31,8 @@
 #'   chr10  120000  160000  0 0 0 0 ...
 #'   ...
 #' }
+#'
+#' @example incl/TopDom.R
 #' 
 #' @seealso [TopDom].
 #'
