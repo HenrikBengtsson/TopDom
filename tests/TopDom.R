@@ -27,7 +27,7 @@ if (require("TopDomData")) {
   ## WORKAROUND: https://github.com/brodieG/diffobj/issues/111
   rownames(truth) <- NULL
   rownames(fit1$domain) <- NULL
-  ## diff <- diffPrint(fit1$domain, truth)
+  ## diff <- diffobj::diffPrint(fit1$domain, truth)
   ## print(diff)
   ## < fit$domain                                                   
   ## > truth                                                        

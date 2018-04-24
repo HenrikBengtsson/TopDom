@@ -23,6 +23,8 @@
 #' \file{<outFile>.bed}, respectively.  None of the files have row names,
 #' and all but the BED file have column names.
 #'
+#' @example incl/TopDom.R
+#' 
 #' @author Hanjun Shin, Harris Lazaris, and Gangqing Hu.
 #' \R package, help, and code refactorization by Henrik Bengtsson.
 #' 
