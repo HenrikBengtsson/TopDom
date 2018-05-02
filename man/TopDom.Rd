@@ -48,6 +48,19 @@ if (require("TopDomData")) {
   str(fit$domain)
 }
 }
+\references{
+\itemize{
+\item Shin et al.,
+TopDom: an efficient and deterministic method for identifying
+topological domains in genomes,
+\emph{Nucleic Acids Res.} 2016 Apr 20; 44(7): e70., 2015.
+doi: 10.1093/nar/gkv1505,
+PMCID: \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/}{PMC4838359},
+PMID: 26704975.
+\item Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017.
+\url{http://zhoulab.usc.edu/TopDom/}.
+}
+}
 \author{
 Hanjun Shin, Harris Lazaris, and Gangqing Hu.
 \R package, help, and code refactorization by Henrik Bengtsson.

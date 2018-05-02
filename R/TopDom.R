@@ -27,7 +27,19 @@
 #' 
 #' @author Hanjun Shin, Harris Lazaris, and Gangqing Hu.
 #' \R package, help, and code refactorization by Henrik Bengtsson.
-#' 
+#'
+#' @references
+#' * Shin et al.,
+#'   TopDom: an efficient and deterministic method for identifying
+#'   topological domains in genomes,
+#'   _Nucleic Acids Res._ 2016 Apr 20; 44(7): e70., 2015.
+#'   doi: 10.1093/nar/gkv1505,
+#'   PMCID: [PMC4838359](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/),
+#'   PMID: 26704975.
+#'
+#' * Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017.
+#'   <http://zhoulab.usc.edu/TopDom/>.
+#'
 #' @importFrom utils read.table write.table
 #' @export
 TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ...) {
