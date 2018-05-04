@@ -1,3 +1,4 @@
+#' @importFrom utils str
 #' @export
 print.TopDomData <- function(x, ...) {
   cat(sprintf("%s:\n", class(x)))
