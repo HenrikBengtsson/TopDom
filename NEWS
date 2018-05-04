@@ -1,6 +1,15 @@
 Package: TopDom
 ===============
 
+Version: 0.1.1 [2018-05-04]
+
+NEW FEATURES:
+
+ o Add print() method for TopDomData object.
+
+ o Reference the TopDom paper (Shin et al., 2016) in the help and the README.
+ 
+
 Version: 0.1.0 [2018-04-23]
 
 SIGNIFICANT CHANGES:
