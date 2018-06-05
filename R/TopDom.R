@@ -36,9 +36,10 @@
 #'   doi: 10.1093/nar/gkv1505,
 #'   PMCID: [PMC4838359](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/),
 #'   PMID: 26704975.
-#'
 #' * Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017.
 #'   <http://zhoulab.usc.edu/TopDom/>.
+#' * Shin et al., TopDom Manual, 2016-07-08.
+#'   \url{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf}.
 #'
 #' @importFrom utils read.table write.table
 #' @export

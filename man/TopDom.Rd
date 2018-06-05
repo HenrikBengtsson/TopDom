@@ -59,6 +59,8 @@ PMCID: \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/}{PMC4838359},
 PMID: 26704975.
 \item Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017.
 \url{http://zhoulab.usc.edu/TopDom/}.
+\item Shin et al., TopDom Manual, 2016-07-08.
+\url{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf}.
 }
 }
 \author{
