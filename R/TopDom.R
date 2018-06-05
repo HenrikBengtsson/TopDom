@@ -1,7 +1,7 @@
 #' Identify topological domains for given Hi-C contact matrix
 #' 
-#' @param data A TopDomData object or the pathname to a normalized
-#' Hi-C contact matrix file as read by [readHiC].
+#' @param data A TopDomData object, or the pathname to a normalized
+#' Hi-C contact matrix file as read by [readHiC()], that specify N bins.
 #' 
 #' @param window.size The number of bins to extend (as a non-negative integer).
 #' Recommended range is in {5, ..., 20}.
@@ -11,15 +11,70 @@
 #' 
 #' @param statFilter logical, ...
 #' 
-#' @param ... Additional arguments passed to [readHiC].
+#' @param ... Additional arguments passed to [readHiC()].
 #'
 #' @return A named list with data.frame elements `binSignal`, `domain`,
 #' and `bed`.
-#' The `bed` data frame has columns `chrom`, `chromStart`, `chromEnd`,
-#' and `name`.
-#' If argument `outFile` is non-`NULL`, then the three elements returned
-#' are also written to tab-delimited files with file names
-#' \file{<outFile>.binSignal}, \file{<outFile>.domain}, and
+#' * The `binSignal` data frame (N-by-7) holds mean contact frequency,
+#'   local extreme, and p-value for every bin. The first four columns
+#'   represent basic bin information given by matrix file, such as
+#'   bin id (`id`), chromosome(`chr`), start coordination (`from.coord`),
+#'   and end coordination (`to.coord`) for each bin.
+#'   The last three columns (`local.ext`, `mean.cf`, and `p-value`) represent
+#'   computed values by the TopDom algorithm.
+#'   The columns are:
+#'   - `id`: Bin ID
+#'   - `chr`: Chromosome
+#'   - `from.coord`: Start coordination of bin
+#'   - `to.coord`: End coordination of bin
+#'   - `local.ext`:
+#'      + `-1`: Local minima.
+#'      + `-0.5`: Gap region.
+#'      + `0`: General bin.
+#'      + `1`: Local maxima.
+#'   - `mean.cf`: Average of contact frequencies between lower and upper
+#'     regions for bin _i_.
+#'   - `p-value`: Computed p-value by Wilcox rank sum test.
+#'     Read reference for more details.
+#' 
+#' * The `domain` data frame (D-by-7):
+#'   Every bin is categorized by basic building block, such as gap, domain,
+#'   or boundary.
+#'   Each row indicates a basic building block.
+#'   The first five columns include the basic information about the block,
+#'   'tag' column indicates the class of the building block.
+#'   - `id`: Identifier of block
+#'   - `chr`: Chromosome
+#'   - `from.id`: Start bin index of the block
+#'   - `from.coord`: Start coordination of the block
+#'   - `to.id`: End bin index of the block
+#'   - `to.coord`: End coordination of the block
+#'   - `tag`: Categorized name of the block. Three possible blocks exists:
+#'     + `gap`
+#'     + `domain`
+#'     + `boundary`
+#'   - `size`: size of the block
+#'
+#' * The `bed` data frame (D-by-4) is a representation of the `domain`
+#'   data frame in the
+#'   [BED file format](https://genome.ucsc.edu/FAQ/FAQformat.html#format1).
+#'   It has four columns:
+#'   - `chrom`: The name of the chromosome.
+#'   - `chromStart`: The starting position of the feature in the chromosome.
+#'      The first base in a chromosome is numbered 0.
+#'   - `chromEnd`: The ending position of the feature in the chromosome.
+#'      The `chromEnd` base is _not_ included in the feature. For example,
+#'      the first 100 bases of a chromosome are defined as `chromStart=0`,
+#'      `chromEnd=100`, and span the bases numbered 0-99.
+#'   - `name`: Defines the name of the BED line. This label is displayed to
+#'      the left of the BED line in the
+#'      [UCSC Genome Browser](https://genome.ucsc.edu/cgi-bin/hgGateway)
+#'      window when the track is open to full display mode or directly to
+#'      the left of the item in pack mode.
+#' 
+#' If argument `outFile` is non-`NULL`, then the three elements (`binSignal`,
+#' `domain`, and `bed`) returned are also written to tab-delimited files
+#' with file names \file{<outFile>.binSignal}, \file{<outFile>.domain}, and
 #' \file{<outFile>.bed}, respectively.  None of the files have row names,
 #' and all but the BED file have column names.
 #'
