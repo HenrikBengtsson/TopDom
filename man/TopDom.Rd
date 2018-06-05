@@ -13,8 +13,8 @@ Hi-C contact matrix file as read by \code{\link[=readHiC]{readHiC()}}, that spec
 \item{window.size}{The number of bins to extend (as a non-negative integer).
 Recommended range is in {5, ..., 20}.}
 
-\item{outFile}{(optional) The filename without extension of the two result
-files optionally produced.}
+\item{outFile}{(optional) The filename without extension of the three
+result files optionally produced. See details below.}
 
 \item{statFilter}{logical, ...}
 
@@ -45,9 +45,9 @@ The columns are:
 \item \code{1}: Local maxima.
 }
 \item \code{mean.cf}: Average of contact frequencies between lower and upper
-regions for bin \emph{i}.
+regions for bin \emph{i = 1,2,...,N}.
 \item \code{p-value}: Computed p-value by Wilcox rank sum test.
-Read reference for more details.
+See Shin et al. (2016) for more details.
 }
 \item The \code{domain} data frame (D-by-7):
 Every bin is categorized by basic building block, such as gap, domain,
@@ -118,10 +118,10 @@ if (require("TopDomData")) {
 \item Shin et al.,
 TopDom: an efficient and deterministic method for identifying
 topological domains in genomes,
-\emph{Nucleic Acids Res.} 2016 Apr 20; 44(7): e70., 2015.
+\emph{Nucleic Acids Research}, 44(7): e70, April 2016.
 doi: 10.1093/nar/gkv1505,
 PMCID: \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/}{PMC4838359},
-PMID: 26704975.
+PMID: \href{https://www.ncbi.nlm.nih.gov/pubmed/26704975}{26704975}.
 \item Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017.
 \url{http://zhoulab.usc.edu/TopDom/}.
 \item Shin et al., TopDom Manual, 2016-07-08.

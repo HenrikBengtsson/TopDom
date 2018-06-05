@@ -6,8 +6,8 @@
 #' @param window.size The number of bins to extend (as a non-negative integer).
 #' Recommended range is in {5, ..., 20}.
 #' 
-#' @param outFile (optional) The filename without extension of the two result
-#' files optionally produced.
+#' @param outFile (optional) The filename without extension of the three
+#' result files optionally produced. See details below.
 #' 
 #' @param statFilter logical, ...
 #' 
@@ -33,9 +33,9 @@
 #'      + `0`: General bin.
 #'      + `1`: Local maxima.
 #'   - `mean.cf`: Average of contact frequencies between lower and upper
-#'     regions for bin _i_.
+#'     regions for bin _i = 1,2,...,N_.
 #'   - `p-value`: Computed p-value by Wilcox rank sum test.
-#'     Read reference for more details.
+#'     See Shin et al. (2016) for more details.
 #' 
 #' * The `domain` data frame (D-by-7):
 #'   Every bin is categorized by basic building block, such as gap, domain,
@@ -87,10 +87,10 @@
 #' * Shin et al.,
 #'   TopDom: an efficient and deterministic method for identifying
 #'   topological domains in genomes,
-#'   _Nucleic Acids Res._ 2016 Apr 20; 44(7): e70., 2015.
+#'   _Nucleic Acids Research_, 44(7): e70, April 2016.
 #'   doi: 10.1093/nar/gkv1505,
 #'   PMCID: [PMC4838359](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/),
-#'   PMID: 26704975.
+#'   PMID: [26704975](https://www.ncbi.nlm.nih.gov/pubmed/26704975).
 #' * Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017.
 #'   <http://zhoulab.usc.edu/TopDom/>.
 #' * Shin et al., TopDom Manual, 2016-07-08.
