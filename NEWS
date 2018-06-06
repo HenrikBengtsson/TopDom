@@ -1,7 +1,13 @@
 Package: TopDom
 ===============
 
-Version: 0.1.1-9000 [2018-06-04]
+Version: 0.1.1-9000 [2018-06-06]
+
+NEW FEATURES:
+
+ o Add image() for TopDomData.
+ 
+ o List returned by TopDom() gained class 'TopDom'.
 
 DOCUMENTATION:
 

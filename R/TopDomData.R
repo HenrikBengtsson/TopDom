@@ -7,3 +7,14 @@ print.TopDomData <- function(x, ...) {
   cat("counts:\n")
   str(x$counts)
 }
+
+#' @export
+dim.TopDomData <- function(x) {
+  dim(x$counts)
+}
+
+#' @export
+image.TopDomData <- function(x, transform = log2, ...) {
+  image(transform(x$counts), ...)
+}
+
