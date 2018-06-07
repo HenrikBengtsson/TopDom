@@ -34,7 +34,7 @@ is, the \eqn{B'} subset that maximize \eqn{overlap(a_i, B')}.
 For exact definitions, see Page 8 in Shin et al. (2016).
 
 Note that the overlap score is an asymmetric score, which means that
-\code{overlapScores(a, b) != overlapScores(a, b)}.
+\code{overlapScores(a, b) != overlapScores(b, a)}.
 }
 \references{
 \itemize{
