@@ -5,11 +5,11 @@ Depends: R (>= 3.3.0)
 Suggests: TopDomData
 Authors@R: c(person("Henrik", "Bengtsson", role = c("aut", "cre", "cph"),
                     email = "henrikb@braju.com"),
-             person("Hanjun", "Shin", role = c("aut", "ctr"),
+             person("Hanjun", "Shin", role = c("aut", "ctr", "cph"),
 	            email = "shanjun@usc.edu"),
-             person("Harris", "Lazaris", role = c("ctr"),
+             person("Harris", "Lazaris", role = c("ctr", "cph"),
 	            comment = "PhD Student, NYU"),
-             person("Gangqing", "Hu", role = c("ctr"),
+             person("Gangqing", "Hu", role = c("ctr", "cph"),
 	            comment = "Staff Scientist, NIH"))
 Description: An R package based on the 'TopDom_v0.0.2.R' script provided by the authors of the 'TopDom' method and the original implementation.
 License: LGPL (>= 2.1)
