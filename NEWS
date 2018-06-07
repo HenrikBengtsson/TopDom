@@ -17,6 +17,9 @@ NEW FEATURES:
  
  o List returned by TopDom() gained class 'TopDom'.
 
+ o Added logical option 'TopDom.debug', which controls whether functions
+   produce debug output or not.  The default is FALSE.
+
 DOCUMENTATION:
 
  o Updated the 'Value' section of help("TopDom") with details from the

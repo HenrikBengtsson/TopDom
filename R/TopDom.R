@@ -12,6 +12,8 @@
 #' @param statFilter logical, ...
 #' 
 #' @param ... Additional arguments passed to [readHiC()].
+#' 
+#' @param debug If `TRUE`, debug output is produced.
 #'
 #' @return A named list of class `TopDom` with data.frame elements
 #' `binSignal`, `domain`, and `bed`.
@@ -98,12 +100,13 @@
 #'
 #' @importFrom utils read.table write.table
 #' @export
-TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ...) {
+TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., debug = getOption("TopDom.debug", FALSE)) {
   window.size <- as.integer(window.size)
   stopifnot(is.numeric(window.size),
             length(window.size) == 1,
             !is.na(window.size),
             window.size >= 0)
+  stopifnot(is.logical(debug), length(debug) == 1L, !is.na(debug))
 
   if (is.character(data)) data <- readHiC(data, ...)
   stopifnot(inherits(data, "TopDomData"))
@@ -118,9 +121,11 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ...) {
   ## Gap region (== -0.5) by default
   local.ext <- rep(-0.5, times = n_bins)
 
-  mcat("#########################################################################")
-  mcat("Step 1 : Generating binSignals by computing bin-level contact frequencies")
-  mcat("#########################################################################")
+  if (debug) {
+    mcat("#########################################################################")
+    mcat("Step 1 : Generating binSignals by computing bin-level contact frequencies")
+    mcat("#########################################################################")
+  }
   ptm <- proc.time()
   for (i in seq_len(n_bins)) {
     diamond <- Get.Diamond.Matrix(mat.data = matrix.data, i = i, size = window.size)
@@ -128,12 +133,14 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ...) {
   }
 
   eltm <- proc.time() - ptm
-  mcat("Step 1 Running Time : ", eltm[3])
-  mcat("Step 1 : Done!")
+  if (debug) {
+    mcat("Step 1 Running Time : ", eltm[3])
+    mcat("Step 1 : Done!")
 
-  mcat("#########################################################################")
-  mcat("Step 2 : Detect TD boundaries based on binSignals")
-  mcat("#########################################################################")
+    mcat("#########################################################################")
+    mcat("Step 2 : Detect TD boundaries based on binSignals")
+    mcat("#########################################################################")
+  }
 
   ptm <- proc.time()
   # gap.idx <- Which.Gap.Region(matrix.data = matrix.data)
@@ -147,21 +154,25 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ...) {
   for (i in seq_len(nrow(proc.regions))) {
     start <- proc.regions[i, "start"]
     end   <- proc.regions[i,   "end"]
-    mcat("Process Region #", i, " from ", start, " to ", end)
+    if (debug) mcat("Process Region #", i, " from ", start, " to ", end)
     local.ext[start:end] <- Detect.Local.Extreme(x = mean.cf[start:end])
   }
 
   eltm <- proc.time() - ptm
-  mcat("Step 2 Running Time : ", eltm[3])
-  mcat("Step 2 : Done!")
-
+  if (debug) {
+    mcat("Step 2 Running Time : ", eltm[3])
+    mcat("Step 2 : Done!")
+  }
+  
   if (statFilter) {
-    mcat("#########################################################################")
-    mcat("Step 3 : Statistical Filtering of false positive TD boundaries")
-    mcat("#########################################################################")
-
+    if (debug) {
+      mcat("#########################################################################")
+      mcat("Step 3 : Statistical Filtering of false positive TD boundaries")
+      mcat("#########################################################################")
+    }
+    
     ptm <- proc.time()
-    mcat("-- Matrix Scaling....")
+    if (debug) mcat("-- Matrix Scaling....")
     scale.matrix.data <- matrix.data
     for (i in seq_len(2 * window.size)) {
       # diag(scale.matrix.data[, i:n_bins]) <- scale(diag(matrix.data[, i:n_bins]))
@@ -169,26 +180,26 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ...) {
     }
     rm(list = "matrix.data")
     
-    mcat("-- Compute p-values by Wilcox Ranksum Test")
+    if (debug) mcat("-- Compute p-values by Wilcox Ranksum Test")
     for (i in seq_len(nrow(proc.regions))) {
       start <- proc.regions[i, "start"]
       end <- proc.regions[i, "end"]
 
-      mcat("Process Region #", i, " from ", start, " to ", end)
+      if (debug) mcat("Process Region #", i, " from ", start, " to ", end)
 
       pvalue[start:end] <- Get.Pvalue(matrix.data = scale.matrix.data[start:end, start:end], size = window.size, scale = 1.0)
     }
-    mcat("-- Done!")
+    if (debug) mcat("-- Done!")
 
-    mcat("-- Filtering False Positives")
+    if (debug) mcat("-- Filtering False Positives")
     local.ext[intersect(union(which(local.ext == -1.0), which(local.ext == -1.0)), which(pvalue < 0.05))] <- -2.0
     local.ext[which(local.ext == -1.0)] <-  0.0
     local.ext[which(local.ext == -2.0)] <- -1.0
-    mcat("-- Done!")
+    if (debug) mcat("-- Done!")
 
     eltm <- proc.time() - ptm
-    mcat("Step 3 Running Time : ", eltm[3])
-    mcat("Step 3 : Done!")
+    if (debug) mcat("Step 3 Running Time : ", eltm[3])
+    if (debug) mcat("Step 3 : Done!")
   } else {
     rm(list = "matrix.data")
     pvalue <- 0
@@ -213,26 +224,28 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ...) {
   colnames(bedform) <- c("chrom", "chromStart", "chromEnd", "name")
 
   if (!is.null(outFile)) {
-    mcat("#########################################################################")
-    mcat("Writing Files")
-    mcat("#########################################################################")
+    if (debug) {
+      mcat("#########################################################################")
+      mcat("Writing Files")
+      mcat("#########################################################################")
+    }
 
     outBinSignal <- paste0(outFile, ".binSignal")
-    mcat("binSignal File : ", outBinSignal)
+    if (debug) mcat("binSignal File : ", outBinSignal)
     write.table(bins, file = outBinSignal, quote = FALSE, row.names = FALSE, col.names = TRUE, sep = "\t")
 
     outDomain <- paste0(outFile, ".domain")
-    mcat("Domain File : ", outDomain)
+    if (debug) mcat("Domain File : ", outDomain)
     write.table(domains, file = outDomain, quote = FALSE, row.names = FALSE, col.names = TRUE, sep = "\t")
 
     outBed <- paste0(outFile, ".bed")
-    mcat("Bed File : ", outBed)
+    if (debug) mcat("Bed File : ", outBed)
     write.table(bedform, file = outBed, quote = FALSE, row.names = FALSE, col.names = FALSE, sep = "\t")
   }
 
-  mcat("Done!")
+  if (debug) mcat("Done!")
 
-  mcat("Job Complete!")
+  if (debug) mcat("Job Complete!")
   
   structure(
     list(binSignal = bins, domain = domains, bed = bedform),

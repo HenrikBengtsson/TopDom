@@ -5,14 +5,19 @@
 #'
 #' @param \ldots ...
 #'
-#' @value
-#' Returns a data frame with D_A rows.
+#' @param debug If `TRUE`, debug output is produced.
+#' 
+#' @return
+#' Returns a named list, where the names correspond to the chromosomes.
+#' Each of these chromosome elements contains a named list of elements
+#' `best_scores` and `best_sets`.
 #' 
 #' @seealso [TopDom].
 #'
 #' @export
-overlapScores <- function(a, b, ...) {
+overlapScores <- function(a, b, ..., debug = getOption("TopDom.debug", FALSE)) {
   stopifnot(inherits(a, "TopDom"), inherits(b, "TopDom"))
+  stopifnot(is.logical(debug), length(debug) == 1L, !is.na(debug))
 
   domains_A <- a$domain
   domains_B <- b$domain
@@ -21,18 +26,20 @@ overlapScores <- function(a, b, ...) {
   scores <- vector("list", length = length(chromosomes))
   names(scores) <- chromosomes
   for (chr in chromosomes) {
-    message(sprintf("Chromosome %s ...", chr))
+    if (debug) message(sprintf("Chromosome %s ...", chr))
     doms_A <- domains_A[domains_A$chr == chr, ]
     doms_B <- domains_B[domains_B$chr == chr, ]
-    scores[[chr]] <- overlapScoresOneChromosome(doms_A, doms_B, ...)
-    message(sprintf("Chromosome %s ... done", chr))
+    scores[[chr]] <- overlapScoresOneChromosome(doms_A, doms_B, ...,
+                                                debug = debug)
+    if (debug) message(sprintf("Chromosome %s ... done", chr))
   }
 
   scores
 }
 
 
-overlapScoresOneChromosome <- function(doms_A, doms_B, ...) {
+overlapScoresOneChromosome <- function(doms_A, doms_B, ..., debug = getOption("TopDom.debug", FALSE)) {
+  stopifnot(is.logical(debug), length(debug) == 1L, !is.na(debug))
   ## FIXME: Assert that A and B are sorted by (chr, pos)
 
   dtags <- diff(c(0L, as.integer(doms_B$tag == "domain"), 0L))
@@ -51,9 +58,8 @@ overlapScoresOneChromosome <- function(doms_A, doms_B, ...) {
   idxs_td <- which(doms_A$tag == "domain")
   for (ii in seq_along(idxs_td)) {
     idx_td <- idxs_td[ii]
-    message(sprintf("TD #%d of %d ...", ii, length(idxs_td)))
+    if (debug) message(sprintf("TD #%d of %d ...", ii, length(idxs_td)))
     td <- doms_A[idx_td, ]
-    print(td)
     
     ## Identify sets to consider
     ## Q. Now many sets can match this? [0,1], [0,2], [0,3], or even more?
@@ -113,7 +119,7 @@ overlapScoresOneChromosome <- function(doms_A, doms_B, ...) {
     best_scores[ii] <- best_score
     best_sets[[ii]] <- best_set
     
-    message(sprintf("TD #%d of %d ... done", ii, length(idxs_td)))
+    if (debug) message(sprintf("TD #%d of %d ... done", ii, length(idxs_td)))
   } ## for (ii ...)
 
   list(best_scores = best_scores, best_sets = best_sets)

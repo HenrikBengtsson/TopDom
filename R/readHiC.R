@@ -7,6 +7,8 @@
 #' @param chr,binSize If the file contains a count matrix without bin
 #' annotation, the latter is created from these parameters.
 #'
+#' @param debug If `TRUE`, debug output is produced.
+#' 
 #' @return A list with elements \code{bins} (an N-by-4 data.frame) and
 #' \code{counts} (N-by-N matrix).
 #'
@@ -38,12 +40,15 @@
 #'
 #' @importFrom utils file_test
 #' @export
-readHiC <- function(file, chr = NULL, binSize = NULL) {
+readHiC <- function(file, chr = NULL, binSize = NULL, debug = getOption("TopDom.debug", FALSE)) {
   stopifnot(file_test("-f", file))
+  stopifnot(is.logical(debug), length(debug) == 1L, !is.na(debug))
 
-  mcat("#########################################################################")
-  mcat("Step 0 : File Read")
-  mcat("#########################################################################")
+  if (debug) {
+    mcat("#########################################################################")
+    mcat("Step 0 : File Read")
+    mcat("#########################################################################")
+  }
   
   if (!is.null(chr)) {
     chr <- as.character(chr)
@@ -52,7 +57,7 @@ readHiC <- function(file, chr = NULL, binSize = NULL) {
     stopifnot(is.integer(binSize), length(binSize) == 1, !is.na(binSize), binSize >= 1)
     
     first <- read.table(file, header = FALSE, nrows = 1L)
-    mcat("  -- reading ", length(first), "-by-", length(first), " count matrix")
+    if (debug) mcat("  -- reading ", length(first), "-by-", length(first), " count matrix")
     ## Assert that it's a count matrix
     is.numeric <- unlist(lapply(first, FUN = is.numeric), use.names = FALSE)
     stopifnot(all(is.numeric))
@@ -105,8 +110,8 @@ readHiC <- function(file, chr = NULL, binSize = NULL) {
             nrow(matrix.data) == ncol(matrix.data),
             nrow(matrix.data) == n_bins)
 
-  mcat("-- Done!")
-  mcat("Step 0 : Done!")
+  if (debug) mcat("-- Done!")
+  if (debug) mcat("Step 0 : Done!")
 
   structure(list(bins = bins, counts = matrix.data), class = "TopDomData")
 }

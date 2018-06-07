@@ -4,7 +4,8 @@
 \alias{TopDom}
 \title{Identify topological domains for given Hi-C contact matrix}
 \usage{
-TopDom(data, window.size, outFile = NULL, statFilter = TRUE, ...)
+TopDom(data, window.size, outFile = NULL, statFilter = TRUE, ...,
+  debug = getOption("TopDom.debug", FALSE))
 }
 \arguments{
 \item{data}{A TopDomData object, or the pathname to a normalized
@@ -19,6 +20,8 @@ result files optionally produced. See details below.}
 \item{statFilter}{logical, ...}
 
 \item{...}{Additional arguments passed to \code{\link[=readHiC]{readHiC()}}.}
+
+\item{debug}{If \code{TRUE}, debug output is produced.}
 }
 \value{
 A named list of class \code{TopDom} with data.frame elements

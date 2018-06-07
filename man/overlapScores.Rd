@@ -4,13 +4,20 @@
 \alias{overlapScores}
 \title{Calculates Overlap Scores between Two Sets of Topological Domains}
 \usage{
-overlapScores(a, b, ...)
+overlapScores(a, b, ..., debug = getOption("TopDom.debug", FALSE))
 }
 \arguments{
 \item{a, b}{Topological domain sets 'A' and 'B', where set 'A' contains
 D_A domains and set 'B' D_B domains.}
 
+\item{debug}{If \code{TRUE}, debug output is produced.}
+
 \item{\ldots}{...}
+}
+\value{
+Returns a named list, where the names correspond to the chromosomes.
+Each of these chromosome elements contains a named list of elements
+\code{best_scores} and \code{best_sets}.
 }
 \description{
 Calculates Overlap Scores between Two Sets of Topological Domains
