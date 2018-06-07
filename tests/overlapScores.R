@@ -29,6 +29,9 @@ if (require("TopDomData")) {
   dataB <- resample(data)
   tds_B <- TopDom(dataB, window.size = 5L)
 
-  scores <- overlapScores(tds_A, tds_B)
-  str(scores)
+  ab_scores <- overlapScores(tds_A, tds_B)
+  print(ab_scores)
+
+  ba_scores <- overlapScores(tds_B, tds_A)
+  print(ba_scores)
 }

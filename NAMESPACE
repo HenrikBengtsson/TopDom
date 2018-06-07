@@ -3,6 +3,7 @@
 S3method(dim,TopDomData)
 S3method(image,TopDomData)
 S3method(print,TopDomData)
+S3method(print,TopDomOverlapScores)
 export(TopDom)
 export(overlapScores)
 export(readHiC)

@@ -7,21 +7,49 @@
 overlapScores(a, b, ..., debug = getOption("TopDom.debug", FALSE))
 }
 \arguments{
-\item{a, b}{Topological domain sets 'A' and 'B', where set 'A' contains
-D_A domains and set 'B' D_B domains.}
+\item{a, b}{Topological domain (TD) sets \eqn{A} and \eqn{B}
+as returned by \code{\link[=TopDom]{TopDom()}}.}
 
 \item{debug}{If \code{TRUE}, debug output is produced.}
 
 \item{\ldots}{...}
 }
 \value{
-Returns a named list, where the names correspond to the chromosomes.
+Returns a named list of class \code{TopDomOverlapScores}, where the names
+correspond to the chromosomes in domain set \eqn{A}.
 Each of these chromosome elements contains a named list of elements
-\code{best_scores} and \code{best_sets}.
+\code{best_score} (\eqn{D_A_c} numerics in \eqn{[0,1]}) and
+`best_sets' (\eqn{D_A_c} list of index vectors), where
+\eqn{D_A_c} is the number of TDs in chromosome \eqn{c} in set \eqn{A}.
 }
 \description{
 Calculates Overlap Scores between Two Sets of Topological Domains
 }
+\details{
+The \emph{overlap score}, \eqn{overlap(a_i, B')}, represents how well topological
+domain (TD) \eqn{a_i} in set \eqn{A} overlap with a \emph{consecutive} subset
+\eqn{B'} of TDs in \eqn{B}.
+For each TD \eqn{a_i}, the \emph{best match} \eqn{B'_max} is identified, that
+is, the \eqn{B'} subset that maximize \eqn{overlap(a_i, B')}.
+For exact definitions, see Page 8 in Shin et al. (2016).
+
+Note that the overlap score is an asymmetric score, which means that
+\code{overlapScores(a, b) != overlapScores(a, b)}.
+}
+\references{
+\itemize{
+\item Shin et al.,
+TopDom: an efficient and deterministic method for identifying
+topological domains in genomes,
+\emph{Nucleic Acids Research}, 44(7): e70, April 2016.
+doi: 10.1093/nar/gkv1505,
+PMCID: \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/}{PMC4838359},
+PMID: \href{https://www.ncbi.nlm.nih.gov/pubmed/26704975}{26704975}.
+}
+}
 \seealso{
 \link{TopDom}.
+}
+\author{
+Henrik Bengtsson - based on the description in Shin et al. (2016).
 }
