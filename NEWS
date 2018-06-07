@@ -3,6 +3,12 @@ Package: TopDom
 
 Version: 0.1.1-9000 [2018-06-07]
 
+NOTE:
+
+ o The license of the underlying TopDom R code/scripts is still unknown,
+   i.e. to be decided by the original authors of TopDom.  Any mentioning
+   of code licenses in this package / git repository history is invalid.
+   
 NEW FEATURES:
 
  o Add overlapScores().
