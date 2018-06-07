@@ -21,8 +21,8 @@ result files optionally produced. See details below.}
 \item{...}{Additional arguments passed to \code{\link[=readHiC]{readHiC()}}.}
 }
 \value{
-A named list with data.frame elements \code{binSignal}, \code{domain},
-and \code{bed}.
+A named list of class \code{TopDom} with data.frame elements
+\code{binSignal}, \code{domain}, and \code{bed}.
 \itemize{
 \item The \code{binSignal} data frame (N-by-7) holds mean contact frequency,
 local extreme, and p-value for every bin. The first four columns

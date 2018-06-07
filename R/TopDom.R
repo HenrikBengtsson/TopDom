@@ -13,8 +13,8 @@
 #' 
 #' @param ... Additional arguments passed to [readHiC()].
 #'
-#' @return A named list with data.frame elements `binSignal`, `domain`,
-#' and `bed`.
+#' @return A named list of class `TopDom` with data.frame elements
+#' `binSignal`, `domain`, and `bed`.
 #' * The `binSignal` data frame (N-by-7) holds mean contact frequency,
 #'   local extreme, and p-value for every bin. The first four columns
 #'   represent basic bin information given by matrix file, such as
@@ -233,7 +233,11 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ...) {
   mcat("Done!")
 
   mcat("Job Complete!")
-  list(binSignal = bins, domain = domains, bed = bedform)
+  
+  structure(
+    list(binSignal = bins, domain = domains, bed = bedform),
+    class = "TopDom"
+  )
 }
 
 # @fn Get.Diamond.Matrix
