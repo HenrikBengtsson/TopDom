@@ -26,6 +26,8 @@
 #' Note that the overlap score is an asymmetric score, which means that
 #' `overlapScores(a, b) != overlapScores(b, a)`.
 #' 
+#' @example incl/overlapScores.R
+#' 
 #' @references
 #' * Shin et al.,
 #'   TopDom: an efficient and deterministic method for identifying

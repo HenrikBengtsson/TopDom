@@ -58,8 +58,8 @@ if (require("TopDomData")) {
   print(data)
 
   ## Find topological domains using TopDom method
-  fit <- TopDom(data, window.size = 5L)
-  str(fit$domain)
+  tds <- TopDom(data, window.size = 5L)
+  str(tds$domain)
 }
 }
 \seealso{
