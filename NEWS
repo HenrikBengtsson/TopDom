@@ -1,8 +1,12 @@
 Package: TopDom
 ===============
 
-Version: 0.1.1-9000 [2018-06-07]
+Version: 0.1.2 [2018-06-28]
 
+SIGNIFICANT CHANGES:
+
+ * Released on GitHub.
+ 
 NOTE:
 
  * The license of the underlying TopDom R code/scripts is still unknown,
