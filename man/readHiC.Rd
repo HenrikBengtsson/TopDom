@@ -4,7 +4,8 @@
 \alias{readHiC}
 \title{Reads a Hi-C contact data file}
 \usage{
-readHiC(file, chr = NULL, binSize = NULL)
+readHiC(file, chr = NULL, binSize = NULL,
+  debug = getOption("TopDom.debug", FALSE))
 }
 \arguments{
 \item{file}{The pathname of a normalize Hi-C contact matrix file
@@ -13,6 +14,8 @@ Also a gzip-compressed file can be used.}
 
 \item{chr, binSize}{If the file contains a count matrix without bin
 annotation, the latter is created from these parameters.}
+
+\item{debug}{If \code{TRUE}, debug output is produced.}
 }
 \value{
 A list with elements \code{bins} (an N-by-4 data.frame) and
@@ -55,8 +58,8 @@ if (require("TopDomData")) {
   print(data)
 
   ## Find topological domains using TopDom method
-  fit <- TopDom(data, window.size = 5L)
-  str(fit$domain)
+  tds <- TopDom(data, window.size = 5L)
+  str(tds$domain)
 }
 }
 \seealso{

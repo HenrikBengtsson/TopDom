@@ -1,25 +1,82 @@
 #' Identify topological domains for given Hi-C contact matrix
 #' 
-#' @param data A TopDomData object or the pathname to a normalized
-#' Hi-C contact matrix file as read by [readHiC].
+#' @param data A TopDomData object, or the pathname to a normalized
+#' Hi-C contact matrix file as read by [readHiC()], that specify N bins.
 #' 
 #' @param window.size The number of bins to extend (as a non-negative integer).
 #' Recommended range is in {5, ..., 20}.
 #' 
-#' @param outFile (optional) The filename without extension of the two result
-#' files optionally produced.
+#' @param outFile (optional) The filename without extension of the three
+#' result files optionally produced. See details below.
 #' 
 #' @param statFilter logical, ...
 #' 
-#' @param ... Additional arguments passed to [readHiC].
+#' @param ... Additional arguments passed to [readHiC()].
+#' 
+#' @param debug If `TRUE`, debug output is produced.
 #'
-#' @return A named list with data.frame elements `binSignal`, `domain`,
-#' and `bed`.
-#' The `bed` data frame has columns `chrom`, `chromStart`, `chromEnd`,
-#' and `name`.
-#' If argument `outFile` is non-`NULL`, then the three elements returned
-#' are also written to tab-delimited files with file names
-#' \file{<outFile>.binSignal}, \file{<outFile>.domain}, and
+#' @return A named list of class `TopDom` with data.frame elements
+#' `binSignal`, `domain`, and `bed`.
+#' * The `binSignal` data frame (N-by-7) holds mean contact frequency,
+#'   local extreme, and p-value for every bin. The first four columns
+#'   represent basic bin information given by matrix file, such as
+#'   bin id (`id`), chromosome(`chr`), start coordination (`from.coord`),
+#'   and end coordination (`to.coord`) for each bin.
+#'   The last three columns (`local.ext`, `mean.cf`, and `p-value`) represent
+#'   computed values by the TopDom algorithm.
+#'   The columns are:
+#'   - `id`: Bin ID
+#'   - `chr`: Chromosome
+#'   - `from.coord`: Start coordination of bin
+#'   - `to.coord`: End coordination of bin
+#'   - `local.ext`:
+#'      + `-1`: Local minima.
+#'      + `-0.5`: Gap region.
+#'      + `0`: General bin.
+#'      + `1`: Local maxima.
+#'   - `mean.cf`: Average of contact frequencies between lower and upper
+#'     regions for bin _i = 1,2,...,N_.
+#'   - `p-value`: Computed p-value by Wilcox rank sum test.
+#'     See Shin et al. (2016) for more details.
+#' 
+#' * The `domain` data frame (D-by-7):
+#'   Every bin is categorized by basic building block, such as gap, domain,
+#'   or boundary.
+#'   Each row indicates a basic building block.
+#'   The first five columns include the basic information about the block,
+#'   'tag' column indicates the class of the building block.
+#'   - `id`: Identifier of block
+#'   - `chr`: Chromosome
+#'   - `from.id`: Start bin index of the block
+#'   - `from.coord`: Start coordination of the block
+#'   - `to.id`: End bin index of the block
+#'   - `to.coord`: End coordination of the block
+#'   - `tag`: Categorized name of the block. Three possible blocks exists:
+#'     + `gap`
+#'     + `domain`
+#'     + `boundary`
+#'   - `size`: size of the block
+#'
+#' * The `bed` data frame (D-by-4) is a representation of the `domain`
+#'   data frame in the
+#'   [BED file format](https://genome.ucsc.edu/FAQ/FAQformat.html#format1).
+#'   It has four columns:
+#'   - `chrom`: The name of the chromosome.
+#'   - `chromStart`: The starting position of the feature in the chromosome.
+#'      The first base in a chromosome is numbered 0.
+#'   - `chromEnd`: The ending position of the feature in the chromosome.
+#'      The `chromEnd` base is _not_ included in the feature. For example,
+#'      the first 100 bases of a chromosome are defined as `chromStart=0`,
+#'      `chromEnd=100`, and span the bases numbered 0-99.
+#'   - `name`: Defines the name of the BED line. This label is displayed to
+#'      the left of the BED line in the
+#'      [UCSC Genome Browser](https://genome.ucsc.edu/cgi-bin/hgGateway)
+#'      window when the track is open to full display mode or directly to
+#'      the left of the item in pack mode.
+#' 
+#' If argument `outFile` is non-`NULL`, then the three elements (`binSignal`,
+#' `domain`, and `bed`) returned are also written to tab-delimited files
+#' with file names \file{<outFile>.binSignal}, \file{<outFile>.domain}, and
 #' \file{<outFile>.bed}, respectively.  None of the files have row names,
 #' and all but the BED file have column names.
 #'
@@ -32,22 +89,24 @@
 #' * Shin et al.,
 #'   TopDom: an efficient and deterministic method for identifying
 #'   topological domains in genomes,
-#'   _Nucleic Acids Res._ 2016 Apr 20; 44(7): e70., 2015.
+#'   _Nucleic Acids Research_, 44(7): e70, April 2016.
 #'   doi: 10.1093/nar/gkv1505,
 #'   PMCID: [PMC4838359](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/),
-#'   PMID: 26704975.
-#'
+#'   PMID: [26704975](https://www.ncbi.nlm.nih.gov/pubmed/26704975).
 #' * Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017.
 #'   <http://zhoulab.usc.edu/TopDom/>.
+#' * Shin et al., TopDom Manual, 2016-07-08.
+#'   \url{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf}.
 #'
 #' @importFrom utils read.table write.table
 #' @export
-TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ...) {
+TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., debug = getOption("TopDom.debug", FALSE)) {
   window.size <- as.integer(window.size)
   stopifnot(is.numeric(window.size),
             length(window.size) == 1,
             !is.na(window.size),
             window.size >= 0)
+  stopifnot(is.logical(debug), length(debug) == 1L, !is.na(debug))
 
   if (is.character(data)) data <- readHiC(data, ...)
   stopifnot(inherits(data, "TopDomData"))
@@ -62,9 +121,11 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ...) {
   ## Gap region (== -0.5) by default
   local.ext <- rep(-0.5, times = n_bins)
 
-  mcat("#########################################################################")
-  mcat("Step 1 : Generating binSignals by computing bin-level contact frequencies")
-  mcat("#########################################################################")
+  if (debug) {
+    mcat("#########################################################################")
+    mcat("Step 1 : Generating binSignals by computing bin-level contact frequencies")
+    mcat("#########################################################################")
+  }
   ptm <- proc.time()
   for (i in seq_len(n_bins)) {
     diamond <- Get.Diamond.Matrix(mat.data = matrix.data, i = i, size = window.size)
@@ -72,12 +133,14 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ...) {
   }
 
   eltm <- proc.time() - ptm
-  mcat("Step 1 Running Time : ", eltm[3])
-  mcat("Step 1 : Done!")
+  if (debug) {
+    mcat("Step 1 Running Time : ", eltm[3])
+    mcat("Step 1 : Done!")
 
-  mcat("#########################################################################")
-  mcat("Step 2 : Detect TD boundaries based on binSignals")
-  mcat("#########################################################################")
+    mcat("#########################################################################")
+    mcat("Step 2 : Detect TD boundaries based on binSignals")
+    mcat("#########################################################################")
+  }
 
   ptm <- proc.time()
   # gap.idx <- Which.Gap.Region(matrix.data = matrix.data)
@@ -91,21 +154,25 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ...) {
   for (i in seq_len(nrow(proc.regions))) {
     start <- proc.regions[i, "start"]
     end   <- proc.regions[i,   "end"]
-    mcat("Process Region #", i, " from ", start, " to ", end)
+    if (debug) mcat("Process Region #", i, " from ", start, " to ", end)
     local.ext[start:end] <- Detect.Local.Extreme(x = mean.cf[start:end])
   }
 
   eltm <- proc.time() - ptm
-  mcat("Step 2 Running Time : ", eltm[3])
-  mcat("Step 2 : Done!")
-
+  if (debug) {
+    mcat("Step 2 Running Time : ", eltm[3])
+    mcat("Step 2 : Done!")
+  }
+  
   if (statFilter) {
-    mcat("#########################################################################")
-    mcat("Step 3 : Statistical Filtering of false positive TD boundaries")
-    mcat("#########################################################################")
-
+    if (debug) {
+      mcat("#########################################################################")
+      mcat("Step 3 : Statistical Filtering of false positive TD boundaries")
+      mcat("#########################################################################")
+    }
+    
     ptm <- proc.time()
-    mcat("-- Matrix Scaling....")
+    if (debug) mcat("-- Matrix Scaling....")
     scale.matrix.data <- matrix.data
     for (i in seq_len(2 * window.size)) {
       # diag(scale.matrix.data[, i:n_bins]) <- scale(diag(matrix.data[, i:n_bins]))
@@ -113,26 +180,26 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ...) {
     }
     rm(list = "matrix.data")
     
-    mcat("-- Compute p-values by Wilcox Ranksum Test")
+    if (debug) mcat("-- Compute p-values by Wilcox Ranksum Test")
     for (i in seq_len(nrow(proc.regions))) {
       start <- proc.regions[i, "start"]
       end <- proc.regions[i, "end"]
 
-      mcat("Process Region #", i, " from ", start, " to ", end)
+      if (debug) mcat("Process Region #", i, " from ", start, " to ", end)
 
       pvalue[start:end] <- Get.Pvalue(matrix.data = scale.matrix.data[start:end, start:end], size = window.size, scale = 1.0)
     }
-    mcat("-- Done!")
+    if (debug) mcat("-- Done!")
 
-    mcat("-- Filtering False Positives")
+    if (debug) mcat("-- Filtering False Positives")
     local.ext[intersect(union(which(local.ext == -1.0), which(local.ext == -1.0)), which(pvalue < 0.05))] <- -2.0
     local.ext[which(local.ext == -1.0)] <-  0.0
     local.ext[which(local.ext == -2.0)] <- -1.0
-    mcat("-- Done!")
+    if (debug) mcat("-- Done!")
 
     eltm <- proc.time() - ptm
-    mcat("Step 3 Running Time : ", eltm[3])
-    mcat("Step 3 : Done!")
+    if (debug) mcat("Step 3 Running Time : ", eltm[3])
+    if (debug) mcat("Step 3 : Done!")
   } else {
     rm(list = "matrix.data")
     pvalue <- 0
@@ -157,27 +224,33 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ...) {
   colnames(bedform) <- c("chrom", "chromStart", "chromEnd", "name")
 
   if (!is.null(outFile)) {
-    mcat("#########################################################################")
-    mcat("Writing Files")
-    mcat("#########################################################################")
+    if (debug) {
+      mcat("#########################################################################")
+      mcat("Writing Files")
+      mcat("#########################################################################")
+    }
 
     outBinSignal <- paste0(outFile, ".binSignal")
-    mcat("binSignal File : ", outBinSignal)
+    if (debug) mcat("binSignal File : ", outBinSignal)
     write.table(bins, file = outBinSignal, quote = FALSE, row.names = FALSE, col.names = TRUE, sep = "\t")
 
     outDomain <- paste0(outFile, ".domain")
-    mcat("Domain File : ", outDomain)
+    if (debug) mcat("Domain File : ", outDomain)
     write.table(domains, file = outDomain, quote = FALSE, row.names = FALSE, col.names = TRUE, sep = "\t")
 
     outBed <- paste0(outFile, ".bed")
-    mcat("Bed File : ", outBed)
+    if (debug) mcat("Bed File : ", outBed)
     write.table(bedform, file = outBed, quote = FALSE, row.names = FALSE, col.names = FALSE, sep = "\t")
   }
 
-  mcat("Done!")
+  if (debug) mcat("Done!")
 
-  mcat("Job Complete!")
-  list(binSignal = bins, domain = domains, bed = bedform)
+  if (debug) mcat("Job Complete!")
+  
+  structure(
+    list(binSignal = bins, domain = domains, bed = bedform),
+    class = "TopDom"
+  )
 }
 
 # @fn Get.Diamond.Matrix

@@ -4,30 +4,98 @@
 \alias{TopDom}
 \title{Identify topological domains for given Hi-C contact matrix}
 \usage{
-TopDom(data, window.size, outFile = NULL, statFilter = TRUE, ...)
+TopDom(data, window.size, outFile = NULL, statFilter = TRUE, ...,
+  debug = getOption("TopDom.debug", FALSE))
 }
 \arguments{
-\item{data}{A TopDomData object or the pathname to a normalized
-Hi-C contact matrix file as read by \link{readHiC}.}
+\item{data}{A TopDomData object, or the pathname to a normalized
+Hi-C contact matrix file as read by \code{\link[=readHiC]{readHiC()}}, that specify N bins.}
 
 \item{window.size}{The number of bins to extend (as a non-negative integer).
 Recommended range is in {5, ..., 20}.}
 
-\item{outFile}{(optional) The filename without extension of the two result
-files optionally produced.}
+\item{outFile}{(optional) The filename without extension of the three
+result files optionally produced. See details below.}
 
 \item{statFilter}{logical, ...}
 
-\item{...}{Additional arguments passed to \link{readHiC}.}
+\item{...}{Additional arguments passed to \code{\link[=readHiC]{readHiC()}}.}
+
+\item{debug}{If \code{TRUE}, debug output is produced.}
 }
 \value{
-A named list with data.frame elements \code{binSignal}, \code{domain},
-and \code{bed}.
-The \code{bed} data frame has columns \code{chrom}, \code{chromStart}, \code{chromEnd},
-and \code{name}.
-If argument \code{outFile} is non-\code{NULL}, then the three elements returned
-are also written to tab-delimited files with file names
-\file{<outFile>.binSignal}, \file{<outFile>.domain}, and
+A named list of class \code{TopDom} with data.frame elements
+\code{binSignal}, \code{domain}, and \code{bed}.
+\itemize{
+\item The \code{binSignal} data frame (N-by-7) holds mean contact frequency,
+local extreme, and p-value for every bin. The first four columns
+represent basic bin information given by matrix file, such as
+bin id (\code{id}), chromosome(\code{chr}), start coordination (\code{from.coord}),
+and end coordination (\code{to.coord}) for each bin.
+The last three columns (\code{local.ext}, \code{mean.cf}, and \code{p-value}) represent
+computed values by the TopDom algorithm.
+The columns are:
+\itemize{
+\item \code{id}: Bin ID
+\item \code{chr}: Chromosome
+\item \code{from.coord}: Start coordination of bin
+\item \code{to.coord}: End coordination of bin
+\item \code{local.ext}:
+\itemize{
+\item \code{-1}: Local minima.
+\item \code{-0.5}: Gap region.
+\item \code{0}: General bin.
+\item \code{1}: Local maxima.
+}
+\item \code{mean.cf}: Average of contact frequencies between lower and upper
+regions for bin \emph{i = 1,2,...,N}.
+\item \code{p-value}: Computed p-value by Wilcox rank sum test.
+See Shin et al. (2016) for more details.
+}
+\item The \code{domain} data frame (D-by-7):
+Every bin is categorized by basic building block, such as gap, domain,
+or boundary.
+Each row indicates a basic building block.
+The first five columns include the basic information about the block,
+'tag' column indicates the class of the building block.
+\itemize{
+\item \code{id}: Identifier of block
+\item \code{chr}: Chromosome
+\item \code{from.id}: Start bin index of the block
+\item \code{from.coord}: Start coordination of the block
+\item \code{to.id}: End bin index of the block
+\item \code{to.coord}: End coordination of the block
+\item \code{tag}: Categorized name of the block. Three possible blocks exists:
+\itemize{
+\item \code{gap}
+\item \code{domain}
+\item \code{boundary}
+}
+\item \code{size}: size of the block
+}
+\item The \code{bed} data frame (D-by-4) is a representation of the \code{domain}
+data frame in the
+\href{https://genome.ucsc.edu/FAQ/FAQformat.html#format1}{BED file format}.
+It has four columns:
+\itemize{
+\item \code{chrom}: The name of the chromosome.
+\item \code{chromStart}: The starting position of the feature in the chromosome.
+The first base in a chromosome is numbered 0.
+\item \code{chromEnd}: The ending position of the feature in the chromosome.
+The \code{chromEnd} base is \emph{not} included in the feature. For example,
+the first 100 bases of a chromosome are defined as \code{chromStart=0},
+\code{chromEnd=100}, and span the bases numbered 0-99.
+\item \code{name}: Defines the name of the BED line. This label is displayed to
+the left of the BED line in the
+\href{https://genome.ucsc.edu/cgi-bin/hgGateway}{UCSC Genome Browser}
+window when the track is open to full display mode or directly to
+the left of the item in pack mode.
+}
+}
+
+If argument \code{outFile} is non-\code{NULL}, then the three elements (\code{binSignal},
+\code{domain}, and \code{bed}) returned are also written to tab-delimited files
+with file names \file{<outFile>.binSignal}, \file{<outFile>.domain}, and
 \file{<outFile>.bed}, respectively.  None of the files have row names,
 and all but the BED file have column names.
 }
@@ -44,8 +112,8 @@ if (require("TopDomData")) {
   print(data)
 
   ## Find topological domains using TopDom method
-  fit <- TopDom(data, window.size = 5L)
-  str(fit$domain)
+  tds <- TopDom(data, window.size = 5L)
+  str(tds$domain)
 }
 }
 \references{
@@ -53,12 +121,14 @@ if (require("TopDomData")) {
 \item Shin et al.,
 TopDom: an efficient and deterministic method for identifying
 topological domains in genomes,
-\emph{Nucleic Acids Res.} 2016 Apr 20; 44(7): e70., 2015.
+\emph{Nucleic Acids Research}, 44(7): e70, April 2016.
 doi: 10.1093/nar/gkv1505,
 PMCID: \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/}{PMC4838359},
-PMID: 26704975.
+PMID: \href{https://www.ncbi.nlm.nih.gov/pubmed/26704975}{26704975}.
 \item Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017.
 \url{http://zhoulab.usc.edu/TopDom/}.
+\item Shin et al., TopDom Manual, 2016-07-08.
+\url{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf}.
 }
 }
 \author{
