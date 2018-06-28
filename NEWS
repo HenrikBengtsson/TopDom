@@ -5,24 +5,24 @@ Version: 0.1.1-9000 [2018-06-07]
 
 NOTE:
 
- o The license of the underlying TopDom R code/scripts is still unknown,
+ * The license of the underlying TopDom R code/scripts is still unknown,
    i.e. to be decided by the original authors of TopDom.  Any mentioning
    of code licenses in this package / git repository history is invalid.
    
 NEW FEATURES:
 
- o Add overlapScores().
+ * Add overlapScores().
 
- o Add image() for TopDomData.
+ * Add image() for TopDomData.
  
- o List returned by TopDom() gained class 'TopDom'.
+ * List returned by TopDom() gained class 'TopDom'.
 
- o Added logical option 'TopDom.debug', which controls whether functions
+ * Added logical option 'TopDom.debug', which controls whether functions
    produce debug output or not.  The default is FALSE.
 
 DOCUMENTATION:
 
- o Updated the 'Value' section of help("TopDom") with details from the
+ * Updated the 'Value' section of help("TopDom") with details from the
    TopDom Manual (an online PDF) provided by Shin et al.
  
 
@@ -30,52 +30,52 @@ Version: 0.1.1 [2018-05-04]
 
 NEW FEATURES:
 
- o Add print() method for TopDomData object.
+ * Add print() method for TopDomData object.
 
- o Reference the TopDom paper (Shin et al., 2016) in the help and the README.
+ * Reference the TopDom paper (Shin et al., 2016) in the help and the README.
  
 
 Version: 0.1.0 [2018-04-23]
 
 SIGNIFICANT CHANGES:
 
- o Turned the original TopDom R script into a package.
+ * Turned the original TopDom R script into a package.
 
- o All progress messages are outputted done to standard error.
+ * All progress messages are outputted done to standard error.
 
- o Add readHiC().
+ * Add readHiC().
 
 NEW FEATURES:
 
- o TopDom() can now read, via readHiC(), a pure count matrix file without bin
+ * TopDom() can now read, via readHiC(), a pure count matrix file without bin
    information.  To read such files, specify what chromosome is being read
    (argument 'chr') and the bin size of the count matrix (argument 'binSize').
 
- o If the matrix file is not of a known format, then TopDom() produces an
+ * If the matrix file is not of a known format, then TopDom() produces an
    informative error. Previously it gave a message on stdout and returned 0.
 
 CODE STYLE:
 
- o Tidied up code.
+ * Tidied up code.
 
 SOFTWARE QUALITY:
 
- o Added package tests.
+ * Added package tests.
  
 
 Version: 0.0.2 [2016-07-08]
 
- o TopDom v0.0.2 script from http://zhoulab.usc.edu/TopDom/ with the below
+ * TopDom v0.0.2 script from http://zhoulab.usc.edu/TopDom/ with the below
    entries from the official release note:
    
- o Gap Identification module is changed.
+ * Gap Identification module is changed.
    
- o Minor bug related to Change Points identificaiton in very small
+ * Minor bug related to Change Points identificaiton in very small
    regions is fixed.
      
- o bed format support.
+ * bed format support.
    
 
 Version: 0.0.1 [2015-11-09]
 
- o TopDom v0.0.1 script from http://zhoulab.usc.edu/TopDom/.
+ * TopDom v0.0.1 script from http://zhoulab.usc.edu/TopDom/.
