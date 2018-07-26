@@ -1,6 +1,23 @@
 Package: TopDom
 ===============
 
+Version: 0.2.0 [2018-07-26]
+
+SIGNIFICANT CHANGES:
+
+ * See 'BUG FIXES' below.
+ 
+NEW FEATURES:
+
+ * Add function legacy() for access to the original TopDom v0.0.1 and
+   TopDom v0.0.2 implementations, e.g. TopDom::legacy("0.0.1")$TopDom().
+
+BUG FIXES:
+
+ * All TopDom functions expect TopDom() itself were the ones from
+   TopDom v0.0.2.
+
+
 Version: 0.1.2 [2018-06-28]
 
 SIGNIFICANT CHANGES:
