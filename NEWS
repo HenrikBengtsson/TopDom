@@ -1,10 +1,13 @@
 Package: TopDom
 ===============
 
-Version: 0.1.2-9000 [2018-06-28]
+Version: 0.1.2-9000 [2018-07-26]
 
- * ...
- 
+NOTE:
+
+ * The original TopDom v0.0.1 and TopDom v0.0.2 functions are available
+   as TopDom:::TopDom_0.0.1() and TopDom:::TopDom_0.0.2(), respectively.
+
 
 Version: 0.1.2 [2018-06-28]
 
