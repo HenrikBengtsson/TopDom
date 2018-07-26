@@ -20,13 +20,35 @@ if (require("TopDomData")) {
   ## Find topological domains using TopDom method
   message("TopDom() ...")
   fit <- TopDom(data, window.size = 5L)
-  print(fit)
   str(fit$domain)
 
+  message("TopDom() v0.0.1 ...")
+  fit1 <- TopDom::legacy("0.0.1")$TopDom(data, window.size = 5L)
+  str(fit1$domain)
+
+  message("TopDom() v0.0.2 ...")
+  fit2 <- TopDom::legacy("0.0.2")$TopDom(data, window.size = 5L)
+  str(fit2$domain)
+
   if (requireNamespace("diffobj", quietly = TRUE)) {
-    message("TopDom versus published results ...")
-    diff <- diffobj::diffPrint(fit$domain, truth,
+    message("TopDom v0.0.1 versus published results ...")
+    diff <- diffobj::diffPrint(fit1$domain, truth,
                                extra = list(row.names = FALSE))
     print(diff)
-  }  
+
+    message("TopDom v0.0.2 versus published results ...")
+    diff <- diffobj::diffPrint(fit2$domain, truth,
+                               extra = list(row.names = FALSE))
+    print(diff)
+
+    message("TopDom v0.0.2 versus TopDom v0.0.1 results ...")
+    diff <- diffobj::diffPrint(fit2$domain, fit1$domain,
+                               extra = list(row.names = FALSE))
+    print(diff)
+
+    message("TopDom (package version) versus TopDom v0.0.2 results ...")
+    diff <- diffobj::diffPrint(fit$domain, fit2$domain,
+                               extra = list(row.names = FALSE))
+    print(diff)
+  }
 }

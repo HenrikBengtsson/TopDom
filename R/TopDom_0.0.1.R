@@ -9,24 +9,46 @@
 # @param out_binSignal : string, binSignal file address to write
 # @param out_ext : string, ext file address to write
 TopDom_0.0.1 <- local({
-TopDom <- function( matrix.file, window.size, outFile=NULL, statFilter=T, ...)
+TopDom <- function( matrix.file, window.size, outFile=NULL, statFilter=T)
 {
-  print("#########################################################################")
-  print("Step 0 : File Read ")
-  print("#########################################################################")
-  window.size = as.numeric(window.size)
-
-  if (is.character(data)) data <- readHiC(data, ...)
-  stopifnot(inherits(data, "TopDomData"))
-
-  bins <- data$bins
-  matrix.data <- data$counts
-  n_bins <- nrow(bins)
-
-  mean.cf <- rep(0, n_bins)
-  pvalue <- rep(1, n_bins)
-  
-  local.ext = rep(-0.5, n_bins)
+  if (inherits(matrix.file, "TopDomData")) {
+    bins <- matrix.file$bins
+    matrix.data <- matrix.file$counts
+    n_bins <- nrow(bins)
+    mean.cf <- rep(0, times = n_bins)
+    pvalue <- rep(1.0, times = n_bins)
+    local.ext <- rep(-0.5, times = n_bins)
+  } else {
+    print("#########################################################################")
+    print("Step 0 : File Read ")
+    print("#########################################################################")
+    matdf <- read.table(matrix.file, header=F)
+    
+    if( ncol(matdf) - nrow(matdf) == 3) {
+      colnames(matdf) <- c("chr", "from.coord", "to.coord")
+    } else if( ncol(matdf) - nrow(matdf) ==4 ) {
+      colnames(matdf) <- c("id", "chr", "from.coord", "to.coord")
+    } else {
+      print("Unknwon Type of matrix file")
+      return(0)
+    }
+    
+    n_bins = nrow(matdf)
+    mean.cf <- rep(0, n_bins)
+    pvalue <- rep(1, n_bins)
+    
+    local.ext = rep(-0.5, n_bins)
+    
+      
+    bins <- data.frame(id=1:n_bins, 
+                       chr=matdf[, "chr"], 
+                       from.coord=matdf[, "from.coord"], 
+                       to.coord=matdf[, "to.coord"] )
+    matrix.data <- as.matrix( matdf[, (ncol(matdf) - nrow(matdf)+1 ):ncol(matdf)] )
+    
+    print("-- Done!")
+    print("Step 0 : Done !!")
+  }
   
     
   print("#########################################################################")
