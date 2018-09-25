@@ -1,14 +1,15 @@
 Package: TopDom
 ===============
 
-Version: 0.2.0-9000 [2018-07-26]
+Version: 0.2.0-9000 [2018-09-25]
 
 NEW FEATURES:
 
  * The legacy TopDom() functions, available via legacy(), also accept
    'TopDomData' objects as returned by readHiC().  This is supported mostly
    to make it possible to efficiently compare the different implementations.
- 
+
+ * Added `[`() for TopDomData objects, e.g. tdd[1:100].
 
 Version: 0.2.0 [2018-07-26]
 
