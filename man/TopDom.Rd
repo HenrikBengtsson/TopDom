@@ -119,8 +119,11 @@ if (require("TopDomData")) {
   td <- subset(fit$domain, tag == "domain" & size == max(size))
   print(td)
   
-  data_s <- subsetByRegion(data, region = td, margin = 1/2)
-  image(data_s)
+  data_s <- subsetByRegion(data, region = td, margin = 0.9999)
+
+  gg <- countHeatmap(data_s)
+  vp <- grid::viewport(angle = -45, width = 0.7, y = 0.1)
+  print(gg, newpage = TRUE, vp = vp)
 }
 }
 \references{
