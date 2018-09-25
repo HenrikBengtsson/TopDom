@@ -23,7 +23,7 @@ NEW FEATURES:
 
 BUG FIXES:
 
- * All TopDom functions expect TopDom() itself were the ones from
+ * All TopDom functions except TopDom() itself were the ones from
    TopDom v0.0.2.
 
 
