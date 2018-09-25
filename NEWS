@@ -10,6 +10,9 @@ NEW FEATURES:
    to make it possible to efficiently compare the different implementations.
 
  * Added `[`() for TopDomData objects, e.g. tdd[1:100].
+ 
+ * Added subsetByRegion() for TopDomData objects.
+
 
 Version: 0.2.0 [2018-07-26]
 

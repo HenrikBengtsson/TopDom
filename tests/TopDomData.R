@@ -17,24 +17,17 @@ if (require("TopDomData")) {
   data <- readHiC(pathname, chr = "chr10", binSize = 40e3)
   str(data)
 
-  ## Find topological domains using TopDom method
-  message("TopDom() ...")
-  fit <- TopDom(data, window.size = 5L)
-  print(fit)
-  str(fit$domain)
+  ## print()
+  print(data)
+  
+  ## dim()
+  print(dim(data))
 
-  if (requireNamespace("diffobj", quietly = TRUE)) {
-    message("TopDom versus published results ...")
-    diff <- diffobj::diffPrint(fit$domain, truth,
-                               extra = list(row.names = FALSE))
-    print(diff)
-  }
+  ## Subsetting via [()
+  data_s <- data[101:200]
+  str(data_s)
+  stopifnot(identical(dim(data_s), c(100L, 100L)))
 
-  ## The largest domain found
-  td <- subset(fit$domain, tag == "domain" & size == max(size))
-  stopifnot(nrow(td) == 1L)
-
-  data_s <- subsetByRegion(data, region = td, margin = 1/2)
-  print(data_s)
+  ## image()
   image(data_s)
 }

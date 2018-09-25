@@ -7,6 +7,13 @@ if (require("TopDomData")) {
   print(data)
 
   ## Find topological domains using TopDom method
-  tds <- TopDom(data, window.size = 5L)
-  str(tds$domain)
+  fit <- TopDom(data, window.size = 5L)
+  str(fit$domain)
+
+  ## Display the largest domain
+  td <- subset(fit$domain, tag == "domain" & size == max(size))
+  print(td)
+  
+  data_s <- subsetByRegion(data, region = td, margin = 1/2)
+  image(data_s)
 }
