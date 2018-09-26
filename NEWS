@@ -13,7 +13,8 @@ NEW FEATURES:
  
  * Added subsetByRegion() for TopDomData objects.
 
- * Added countHeatmap()  for TopDomData objects.
+ * Added ggCountHeatmap() and ggDomain() for TopDomData objects.
+
 
 Version: 0.2.0 [2018-07-26]
 
