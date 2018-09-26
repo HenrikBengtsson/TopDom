@@ -29,7 +29,7 @@ cache:
 
 build_script:
   - echo Current directory=%CD%
-  - RScript -e "install.packages('stringi', type = 'binary')"
+  - RScript -e "install.packages('stringi', type = 'binary', repos = 'https://cloud.r-project.org')"
   - travis-tool.sh install_r grid ggplot2 reshape2 diffobj
   - travis-tool.sh install_github HenrikBengtsson/TopDomData
 
