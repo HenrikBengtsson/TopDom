@@ -64,11 +64,16 @@ if (require("TopDomData")) {
   ## Display the largest domain
   td <- subset(fit$domain, tag == "domain" & size == max(size))
   print(td)
-  
+
   data_s <- subsetByRegion(data, region = td, margin = 0.9999)
 
-  gg <- countHeatmap(data_s)
   vp <- grid::viewport(angle = -45, width = 0.7, y = 0.1)
+  gg <- ggCountHeatmap(data_s)
+  gg <- gg + ggDomain(td, color = "#cccc00")
+  print(gg, newpage = TRUE, vp = vp)
+
+  gg <- ggCountHeatmap(data_s, colors = list(mid = "white", high = "black"))
+  gg <- gg + ggDomain(td)
   print(gg, newpage = TRUE, vp = vp)
 }
 }
