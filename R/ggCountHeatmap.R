@@ -11,6 +11,8 @@
 #'
 #' @return A [ggplot2::ggplot] object.
 #'
+#' @author Henrik Bengtsson.
+#'
 #' @seealso See [TopDom] for an example.
 #'
 #' @export
@@ -23,7 +25,7 @@ ggCountHeatmap.TopDomData <- function(data, transform = function(x) log2(x + 1),
   ## To please R CMD check
   x <- y <- counts <- NULL
   
-  upper_tri <- function(x) {
+  keepUpperTriangle <- function(x) {
     x[lower.tri(x)] <- NA
     x
   }
@@ -33,7 +35,7 @@ ggCountHeatmap.TopDomData <- function(data, transform = function(x) log2(x + 1),
   keys <- keys[is.na(colors[keys])]
   colors[keys] <- cols[keys]
     
-  dd <- upper_tri(data$counts)
+  dd <- keepUpperTriangle(data$counts)
   dd <- melt(dd, varnames = c("x", "y"), na.rm = TRUE, value.name = "counts")
 
   ## Genomic coordinate system

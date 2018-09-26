@@ -11,6 +11,8 @@
 #'
 #' @return A TopDomData object.
 #'
+#' @author Henrik Bengtsson.
+#'
 #' @export
 subsetByRegion <- function(data, region, margin = 1/2) {
   UseMethod("subsetByRegion")

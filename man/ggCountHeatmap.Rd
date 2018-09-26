@@ -25,3 +25,6 @@ Produce a Count Heatmap
 \seealso{
 See \link{TopDom} for an example.
 }
+\author{
+Henrik Bengtsson.
+}

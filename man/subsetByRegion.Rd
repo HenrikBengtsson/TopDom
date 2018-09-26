@@ -22,3 +22,6 @@ A TopDomData object.
 \description{
 Subset a TopDomData object by region
 }
+\author{
+Henrik Bengtsson.
+}
