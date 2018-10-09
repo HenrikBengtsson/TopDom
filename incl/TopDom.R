@@ -18,7 +18,7 @@ if (require("TopDomData")) {
 
   vp <- grid::viewport(angle = -45, width = 0.7, y = 0.1)
   gg <- ggCountHeatmap(data_s)
-  gg <- gg + ggDomain(td, color = "#cccc00")
+  gg <- gg + ggDomain(td, color = "#cccc00") + ggDomainLabel(td)
   print(gg, newpage = TRUE, vp = vp)
 
   gg <- ggCountHeatmap(data_s, colors = list(mid = "white", high = "black"))
