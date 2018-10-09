@@ -77,6 +77,15 @@ if (require("TopDomData")) {
   gg <- gg + ggDomain(td) + ggDomainLabel(td)
   gg <- gg + ggDomain(td, vline = 2)
   print(gg, newpage = TRUE, vp = vp)
+
+  fit_s <- subsetByRegion(fit, region = td, margin = 0.9999)
+  dx <- 0.04 * (td$to.coord - td$from.coord)
+  print(fit_s)  ## a TopDom object
+  for (kk in seq_len(nrow(fit_s$domain))) {
+    gg <- gg + ggDomain(fit_s$domain[kk, ], dx = dx * (2 + kk \%\% 2), color = "red", size = 1)
+  }
+
+  print(gg, newpage = TRUE, vp = vp)
 }
 }
 \seealso{

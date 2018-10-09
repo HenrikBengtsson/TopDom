@@ -8,7 +8,7 @@ ggDomainLabel(td, fmt = "\%s: \%.2f - \%.2f Mbp", rot = 45,
   vjust = 2.5, cex = 1.5)
 }
 \arguments{
-\item{td}{A single-row TopDomData object.}
+\item{td}{A single-row data.frame.}
 
 \item{fmt}{The \link[base:sprintf]{base::sprintf}-format string taking (chromosome, start, stop) as
 (string, numeric, numeric) input.}

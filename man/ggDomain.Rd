@@ -4,16 +4,17 @@
 \alias{ggDomain}
 \title{Add a Topological Domain to a Count Heatmap}
 \usage{
-ggDomain(td, delta = 0.04, size = 2, vline = 0, color = "#666666")
+ggDomain(td, dx = NULL, delta = 0.04, vline = 0, size = 2,
+  color = "#666666")
 }
 \arguments{
-\item{td}{A single-row TopDomData object.}
+\item{td}{A single-row data.frame.}
 
-\item{delta}{Relative distance to heatmap.}
+\item{dx, delta, vline}{Absolute distance to heatmap.
+If \code{dx = NULL} (default), then \code{dx = delta * w + vline} where \code{w} is
+the width of the domain.}
 
 \item{size, color}{The thickness and color of the domain line.}
-
-\item{vline}{Additional absolute distance to heatmap.}
 }
 \value{
 A \link[ggplot2:geom_segment]{ggplot2::geom_segment} object to be added to the count heatmap.

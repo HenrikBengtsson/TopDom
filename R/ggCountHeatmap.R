@@ -56,11 +56,11 @@ ggCountHeatmap.TopDomData <- function(data, transform = function(x) log2(x + 1),
 
 #' Add a Topological Domain to a Count Heatmap
 #'
-#' @param td A single-row TopDomData object.
+#' @param td A single-row data.frame.
 #'
-#' @param delta Relative distance to heatmap.
-#'
-#' @param vline Additional absolute distance to heatmap.
+#' @param dx,delta,vline Absolute distance to heatmap.
+#'   If `dx = NULL` (default), then `dx = delta * w + vline` where `w` is
+#'   the width of the domain.
 #'
 #' @param size,color The thickness and color of the domain line.
 #'
@@ -68,10 +68,10 @@ ggCountHeatmap.TopDomData <- function(data, transform = function(x) log2(x + 1),
 #'
 #' @importFrom ggplot2 geom_segment
 #' @export
-ggDomain <- function(td, delta = 0.04, size = 2.0, vline = 0, color = "#666666") {
+ggDomain <- function(td, dx = NULL, delta = 0.04, vline = 0, size = 2.0, color = "#666666") {
   x0 <- td$from.coord
   x1 <- td$to.coord
-  dx <- delta * (x1 - x0) + vline
+  if (is.null(dx)) dx <- delta * (x1 - x0) + vline
   geom_segment(aes(x = x0+dx, y = x0-dx, xend = x1+dx, yend = x1-dx),
                color = color, size = size)
 }
@@ -79,7 +79,7 @@ ggDomain <- function(td, delta = 0.04, size = 2.0, vline = 0, color = "#666666")
 
 #' Add a Topological Domain Label to a Count Heatmap
 #'
-#' @param td A single-row TopDomData object.
+#' @param td A single-row data.frame.
 #'
 #' @param fmt The [base::sprintf]-format string taking (chromosome, start, stop) as
 #'        (string, numeric, numeric) input.
