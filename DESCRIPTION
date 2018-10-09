@@ -1,5 +1,5 @@
 Package: TopDom
-Version: 0.3.0
+Version: 0.3.0-9000
 Title: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes
 Depends: R (>= 3.3.0)
 Imports:
@@ -8,7 +8,7 @@ Imports:
     reshape2
 Suggests:
     TopDomData,
-    diffobj (>= 0.1.10)
+    diffobj (>= 0.1.11)
 Authors@R: c(person("Henrik", "Bengtsson", role = c("aut", "cre", "cph"),
                     email = "henrikb@braju.com"),
              person("Hanjun", "Shin", role = c("aut", "ctr", "cph"),
