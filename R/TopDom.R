@@ -739,3 +739,31 @@ Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues = NULL,
 
   ret
 }
+
+
+
+#' @importFrom utils str
+#' @export
+print.TopDom <- function(x, ...) {
+  cat(sprintf("%s:\n", class(x)))
+  cat("binSignal:\n")
+  str(x$binSignal)
+  cat("domain:\n")
+  str(x$domain)
+  cat("bed:\n")
+  str(x$bed)
+}
+
+#' @export
+dim.TopDom <- function(x) {
+  dim(x$domain)
+}
+
+#' @export
+`[.TopDom` <- function(x, i, ...) {
+  structure(list(
+    binSignal = x$binSignal,
+    domain    = x$domain[i, , drop = FALSE],
+    bed       = x$bed[i, , drop = FALSE]
+  ), class = "TopDom")
+}

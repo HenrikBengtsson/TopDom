@@ -1,9 +1,12 @@
 Package: TopDom
 ===============
 
-Version: 0.3.0-9000 [2018-10-08]
+Version: 0.3.0-9000 [2018-10-09]
 
- * ...
+NEW FEATURES:
+
+ * Add print(), dim(), `[()` and subsetByRegion() for TopDom objects where
+   the number of rows in the dimension reflect the number of TopDom domains.
  
 
 Version: 0.3.0 [2018-10-08]

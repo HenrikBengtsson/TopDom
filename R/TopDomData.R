@@ -26,4 +26,3 @@ dim.TopDomData <- function(x) {
 image.TopDomData <- function(x, transform = log2, ...) {
   image(transform(x$counts), ...)
 }
-

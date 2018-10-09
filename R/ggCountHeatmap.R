@@ -60,16 +60,18 @@ ggCountHeatmap.TopDomData <- function(data, transform = function(x) log2(x + 1),
 #'
 #' @param delta Relative distance to heatmap.
 #'
+#' @param vline Additional absolute distance to heatmap.
+#'
 #' @param size,color The thickness and color of the domain line.
 #'
 #' @return A [ggplot2::geom_segment] object to be added to the count heatmap.
 #'
 #' @importFrom ggplot2 geom_segment
 #' @export
-ggDomain <- function(td, delta = 0.04, size = 2.0, color = "#666666") {
+ggDomain <- function(td, delta = 0.04, size = 2.0, vline = 0, color = "#666666") {
   x0 <- td$from.coord
   x1 <- td$to.coord
-  dx <- delta * (x1 - x0)
+  dx <- delta * (x1 - x0) + vline
   geom_segment(aes(x = x0+dx, y = x0-dx, xend = x1+dx, yend = x1-dx),
                color = color, size = size)
 }
