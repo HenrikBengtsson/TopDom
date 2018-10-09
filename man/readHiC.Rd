@@ -73,7 +73,7 @@ if (require("TopDomData")) {
   print(gg, newpage = TRUE, vp = vp)
 
   gg <- ggCountHeatmap(data_s, colors = list(mid = "white", high = "black"))
-  gg <- gg + ggDomain(td)
+  gg <- gg + ggDomain(td) + ggDomainLabel(td)
   print(gg, newpage = TRUE, vp = vp)
 }
 }

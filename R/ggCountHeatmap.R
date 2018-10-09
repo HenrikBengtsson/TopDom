@@ -19,7 +19,7 @@
 ggCountHeatmap <- function(data, transform, colors, ...) UseMethod("ggCountHeatmap")
 
 #' @importFrom reshape2 melt
-#' @importFrom ggplot2 ggplot aes geom_raster geom_segment coord_fixed theme_void scale_fill_gradient2
+#' @importFrom ggplot2 ggplot aes geom_raster coord_fixed theme_void scale_fill_gradient2
 #' @export
 ggCountHeatmap.TopDomData <- function(data, transform = function(x) log2(x + 1), colors = c(na = "white", mid = "blue", high = "yellow"), ...) {
   ## To please R CMD check
@@ -64,6 +64,7 @@ ggCountHeatmap.TopDomData <- function(data, transform = function(x) log2(x + 1),
 #'
 #' @return A [ggplot2::geom_segment] object to be added to the count heatmap.
 #'
+#' @importFrom ggplot2 geom_segment
 #' @export
 ggDomain <- function(td, delta = 0.04, size = 2.0, color = "#666666") {
   x0 <- td$from.coord
@@ -71,4 +72,32 @@ ggDomain <- function(td, delta = 0.04, size = 2.0, color = "#666666") {
   dx <- delta * (x1 - x0)
   geom_segment(aes(x = x0+dx, y = x0-dx, xend = x1+dx, yend = x1-dx),
                color = color, size = size)
+}
+
+
+#' Add a Topological Domain Label to a Count Heatmap
+#'
+#' @param td A single-row TopDomData object.
+#'
+#' @param fmt The [base::sprintf]-format string taking (chromosome, start, stop) as
+#'        (string, numeric, numeric) input.
+#'
+#' @param rot The amount of rotation in \[0,360\] of label.
+#'
+#' @param vjust The vertical adjustment of the label (relative to rotation)
+#'
+#' @param cex The scale factor of the label.
+#'
+#' @return A [ggplot2::ggproto] object to be added to the count heatmap.
+#'
+#' @importFrom ggplot2 annotation_custom
+#' @importFrom grid gpar textGrob
+#' @export
+ggDomainLabel <- function(td, fmt = "%s: %.2f - %.2f Mbp", rot = 45, vjust = 2.5, cex = 1.5) {
+  chr <- td$chr
+  x0 <- td$from.coord
+  x1 <- td$to.coord
+  label <- sprintf(fmt, chr, x0/1e6, x1/1e6)
+  grob <- textGrob(label = label, rot = rot, hjust = 0.5, vjust = vjust, gp = gpar(cex = cex))
+  annotation_custom(grob = grob, ymin = x0, ymax = x1, xmin = x0, xmax = x1)
 }
