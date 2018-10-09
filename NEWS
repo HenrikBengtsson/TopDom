@@ -1,6 +1,21 @@
 Package: TopDom
 ===============
 
+Version: 0.3.0 [2018-10-08]
+
+NEW FEATURES:
+
+ * The legacy TopDom() functions, available via legacy(), also accept
+   'TopDomData' objects as returned by readHiC().  This is supported mostly
+   to make it possible to efficiently compare the different implementations.
+
+ * Added `[`() for TopDomData objects, e.g. tdd[1:100].
+ 
+ * Added subsetByRegion() for TopDomData objects.
+
+ * Added ggCountHeatmap(), ggDomain(), and ggDomainLabel() for TopDomData objects.
+
+
 Version: 0.2.0 [2018-07-26]
 
 SIGNIFICANT CHANGES:
@@ -14,7 +29,7 @@ NEW FEATURES:
 
 BUG FIXES:
 
- * All TopDom functions expect TopDom() itself were the ones from
+ * All TopDom functions except TopDom() itself were the ones from
    TopDom v0.0.2.
 
 
