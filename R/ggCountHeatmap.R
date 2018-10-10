@@ -72,8 +72,10 @@ ggDomain <- function(td, dx = NULL, delta = 0.04, vline = 0, size = 2.0, color =
   x0 <- td$from.coord
   x1 <- td$to.coord
   if (is.null(dx)) dx <- delta * (x1 - x0) + vline
-  geom_segment(aes(x = x0+dx, y = x0-dx, xend = x1+dx, yend = x1-dx),
-               color = color, size = size)
+  gg <- geom_segment(aes(x = x0+dx, y = x0-dx, xend = x1+dx, yend = x1-dx),
+                     color = color, size = size)
+  attr(gg, "gg_params") <- list(x0 = x0, x1 = x1, width = x1 - x0, dx = dx, delta = delta, vline = vline)
+  gg		     
 }
 
 

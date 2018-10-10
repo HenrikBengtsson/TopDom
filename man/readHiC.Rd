@@ -65,6 +65,7 @@ if (require("TopDomData")) {
   td <- subset(subset(fit$domain, tag == "domain"), size == max(size))
   print(td) ## a data.frame
 
+  ## Subset TopDomData object
   data_s <- subsetByRegion(data, region = td, margin = 0.9999)
   print(data_s)  ## a TopDomData object
   
@@ -78,6 +79,7 @@ if (require("TopDomData")) {
   gg <- gg + ggDomain(td, vline = 2)
   print(gg, newpage = TRUE, vp = vp)
 
+  ## Subset TopDom object
   fit_s <- subsetByRegion(fit, region = td, margin = 0.9999)
   dx <- 0.04 * (td$to.coord - td$from.coord)
   print(fit_s)  ## a TopDom object
