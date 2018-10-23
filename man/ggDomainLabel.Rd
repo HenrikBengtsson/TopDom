@@ -4,7 +4,7 @@
 \alias{ggDomainLabel}
 \title{Add a Topological Domain Label to a Count Heatmap}
 \usage{
-ggDomainLabel(td, fmt = "\%s: \%.2f - \%.2f Mbp", rot = 45,
+ggDomainLabel(td, fmt = "\%s: \%.2f - \%.2f Mbp", rot = 45, dx = 0,
   vjust = 2.5, cex = 1.5)
 }
 \arguments{
@@ -15,7 +15,7 @@ ggDomainLabel(td, fmt = "\%s: \%.2f - \%.2f Mbp", rot = 45,
 
 \item{rot}{The amount of rotation in [0,360] of label.}
 
-\item{vjust}{The vertical adjustment of the label (relative to rotation)}
+\item{dx, vjust}{The vertical adjustment of the label (relative to rotation)}
 
 \item{cex}{The scale factor of the label.}
 }

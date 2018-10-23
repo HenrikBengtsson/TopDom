@@ -3,6 +3,7 @@ Version: 0.3.0-9000
 Title: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes
 Depends: R (>= 3.3.0)
 Imports:
+    matrixStats,
     grid,
     ggplot2,
     reshape2

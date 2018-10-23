@@ -88,7 +88,7 @@ ggDomain <- function(td, dx = NULL, delta = 0.04, vline = 0, size = 2.0, color =
 #'
 #' @param rot The amount of rotation in \[0,360\] of label.
 #'
-#' @param vjust The vertical adjustment of the label (relative to rotation)
+#' @param dx,vjust The vertical adjustment of the label (relative to rotation)
 #'
 #' @param cex The scale factor of the label.
 #'
@@ -97,10 +97,10 @@ ggDomain <- function(td, dx = NULL, delta = 0.04, vline = 0, size = 2.0, color =
 #' @importFrom ggplot2 annotation_custom
 #' @importFrom grid gpar textGrob
 #' @export
-ggDomainLabel <- function(td, fmt = "%s: %.2f - %.2f Mbp", rot = 45, vjust = 2.5, cex = 1.5) {
+ggDomainLabel <- function(td, fmt = "%s: %.2f - %.2f Mbp", rot = 45, dx = 0, vjust = 2.5, cex = 1.5) {
   chr <- td$chr
-  x0 <- td$from.coord
-  x1 <- td$to.coord
+  x0 <- td$from.coord + dx
+  x1 <- td$to.coord + dx
   label <- sprintf(fmt, chr, x0/1e6, x1/1e6)
   grob <- textGrob(label = label, rot = rot, hjust = 0.5, vjust = vjust, gp = gpar(cex = cex))
   annotation_custom(grob = grob, ymin = x0, ymax = x1, xmin = x0, xmax = x1)

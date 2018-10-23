@@ -69,22 +69,34 @@ if (require("TopDomData")) {
   data_s <- subsetByRegion(data, region = td, margin = 0.9999)
   print(data_s)  ## a TopDomData object
   
-  vp <- grid::viewport(angle = -45, width = 0.7, y = 0.1)
+  vp <- grid::viewport(angle = -45, width = 0.7, y = 0.3)
   gg <- ggCountHeatmap(data_s)
   gg <- gg + ggDomain(td, color = "#cccc00") + ggDomainLabel(td)
   print(gg, newpage = TRUE, vp = vp)
 
   gg <- ggCountHeatmap(data_s, colors = list(mid = "white", high = "black"))
-  gg <- gg + ggDomain(td) + ggDomainLabel(td)
-  gg <- gg + ggDomain(td, vline = 2)
+  gg_td <- ggDomain(td, delta = 0.08)
+  dx <- attr(gg_td, "gg_params")$dx
+  gg <- gg + gg_td + ggDomainLabel(td, vjust = 2.5)
   print(gg, newpage = TRUE, vp = vp)
 
   ## Subset TopDom object
   fit_s <- subsetByRegion(fit, region = td, margin = 0.9999)
-  dx <- 0.04 * (td$to.coord - td$from.coord)
   print(fit_s)  ## a TopDom object
   for (kk in seq_len(nrow(fit_s$domain))) {
-    gg <- gg + ggDomain(fit_s$domain[kk, ], dx = dx * (2 + kk \%\% 2), color = "red", size = 1)
+    gg <- gg + ggDomain(fit_s$domain[kk, ], dx = dx * (4 + kk \%\% 2), color = "red", size = 1)
+  }
+
+  print(gg, newpage = TRUE, vp = vp)
+
+
+  gg <- ggCountHeatmap(data_s)
+  gg_td <- ggDomain(td, delta = 0.08)
+  dx <- attr(gg_td, "gg_params")$dx
+  gg <- gg + gg_td + ggDomainLabel(td, vjust = 2.5)
+  fit_s <- subsetByRegion(fit, region = td, margin = 0.9999)
+  for (kk in seq_len(nrow(fit_s$domain))) {
+    gg <- gg + ggDomain(fit_s$domain[kk, ], dx = dx * (4 + kk \%\% 2), color = "blue", size = 1)
   }
 
   print(gg, newpage = TRUE, vp = vp)
