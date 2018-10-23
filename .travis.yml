@@ -24,7 +24,7 @@ matrix:
     - os: linux
       r: release
       r_packages:
-        - jimhester/covr
+        - covr
       after_success:
         - Rscript -e 'covr::codecov(quiet = FALSE)'
     - os: linux
