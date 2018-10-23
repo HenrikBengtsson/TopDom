@@ -19,19 +19,18 @@ r_github_packages:
 
 matrix:
   include:
-    - os: linux
-      r: oldrel
+#    - os: linux
+#      r: oldrel
     - os: linux
       r: release
-      r_github_packages:
+      r_packages:
         - jimhester/covr
-        - HenrikBengtsson/TopDomData
       after_success:
         - Rscript -e 'covr::codecov(quiet = FALSE)'
     - os: linux
       r: devel
-    - os: osx
-      r: oldrel
+#    - os: osx
+#      r: oldrel
     - os: osx
       r: release
 
