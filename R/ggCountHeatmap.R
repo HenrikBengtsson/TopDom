@@ -56,9 +56,11 @@ ggCountHeatmap.TopDomData <- function(data, transform = function(x) log2(x + 1),
 
 #' Add a Topological Domain to a Count Heatmap
 #'
-#' @param td A single-row TopDomData object.
+#' @param td A single-row data.frame.
 #'
-#' @param delta Relative distance to heatmap.
+#' @param dx,delta,vline Absolute distance to heatmap.
+#'   If `dx = NULL` (default), then `dx = delta * w + vline` where `w` is
+#'   the width of the domain.
 #'
 #' @param size,color The thickness and color of the domain line.
 #'
@@ -66,25 +68,27 @@ ggCountHeatmap.TopDomData <- function(data, transform = function(x) log2(x + 1),
 #'
 #' @importFrom ggplot2 geom_segment
 #' @export
-ggDomain <- function(td, delta = 0.04, size = 2.0, color = "#666666") {
+ggDomain <- function(td, dx = NULL, delta = 0.04, vline = 0, size = 2.0, color = "#666666") {
   x0 <- td$from.coord
   x1 <- td$to.coord
-  dx <- delta * (x1 - x0)
-  geom_segment(aes(x = x0+dx, y = x0-dx, xend = x1+dx, yend = x1-dx),
-               color = color, size = size)
+  if (is.null(dx)) dx <- delta * (x1 - x0) + vline
+  gg <- geom_segment(aes(x = x0+dx, y = x0-dx, xend = x1+dx, yend = x1-dx),
+                     color = color, size = size)
+  attr(gg, "gg_params") <- list(x0 = x0, x1 = x1, width = x1 - x0, dx = dx, delta = delta, vline = vline)
+  gg		     
 }
 
 
 #' Add a Topological Domain Label to a Count Heatmap
 #'
-#' @param td A single-row TopDomData object.
+#' @param td A single-row data.frame.
 #'
 #' @param fmt The [base::sprintf]-format string taking (chromosome, start, stop) as
 #'        (string, numeric, numeric) input.
 #'
 #' @param rot The amount of rotation in \[0,360\] of label.
 #'
-#' @param vjust The vertical adjustment of the label (relative to rotation)
+#' @param dx,vjust The vertical adjustment of the label (relative to rotation)
 #'
 #' @param cex The scale factor of the label.
 #'
@@ -93,10 +97,10 @@ ggDomain <- function(td, delta = 0.04, size = 2.0, color = "#666666") {
 #' @importFrom ggplot2 annotation_custom
 #' @importFrom grid gpar textGrob
 #' @export
-ggDomainLabel <- function(td, fmt = "%s: %.2f - %.2f Mbp", rot = 45, vjust = 2.5, cex = 1.5) {
+ggDomainLabel <- function(td, fmt = "%s: %.2f - %.2f Mbp", rot = 45, dx = 0, vjust = 2.5, cex = 1.5) {
   chr <- td$chr
-  x0 <- td$from.coord
-  x1 <- td$to.coord
+  x0 <- td$from.coord + dx
+  x1 <- td$to.coord + dx
   label <- sprintf(fmt, chr, x0/1e6, x1/1e6)
   grob <- textGrob(label = label, rot = rot, hjust = 0.5, vjust = vjust, gp = gpar(cex = cex))
   annotation_custom(grob = grob, ymin = x0, ymax = x1, xmin = x0, xmax = x1)

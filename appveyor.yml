@@ -10,11 +10,11 @@ environment:
   - R_VERSION: devel
     R_ARCH: x64
 
-  - R_VERSION: devel
-    R_ARCH: i386
+#  - R_VERSION: devel
+#    R_ARCH: i386
 
-  - R_VERSION: release
-    R_ARCH: x64
+#  - R_VERSION: release
+#    R_ARCH: x64
 
 init:
   ps: |
@@ -30,7 +30,7 @@ cache:
 build_script:
   - echo Current directory=%CD%
   - RScript -e "install.packages('stringi', type = 'binary', repos = 'https://cloud.r-project.org')"
-  - travis-tool.sh install_r grid ggplot2 reshape2 diffobj
+  - travis-tool.sh install_r matrixStats grid ggplot2 reshape2 diffobj
   - travis-tool.sh install_github HenrikBengtsson/TopDomData
 
 test_script:

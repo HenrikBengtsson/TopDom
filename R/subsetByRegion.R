@@ -32,3 +32,18 @@ subsetByRegion.TopDomData <- function(data, region, margin = 1/2) {
   
   data[idxs]
 }
+
+
+#' @export
+subsetByRegion.TopDom <- function(data, region, margin = 1/2) {
+  stopifnot(is.data.frame(region))
+  stopifnot(margin >= 0)
+  
+  if (margin < 1) {
+    margin <- margin * (region$to.coord - region$from.coord)
+  }
+
+  idxs <- with(data$domain, which(chr == region$chr & from.coord >= region$from.coord - margin & to.coord <= region$to.coord + margin))
+  
+  data[idxs, ]
+}

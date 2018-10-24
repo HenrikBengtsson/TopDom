@@ -1,6 +1,17 @@
 Package: TopDom
 ===============
 
+Version: 0.4.0 [2018-10-23]
+
+NEW FEATURES:
+
+ * Add countsPerRegion() for calculating the total contact-frequency counts
+   per region specified, e.g. per domain.
+
+ * Add print(), dim(), `[()` and subsetByRegion() for TopDom objects where
+   the number of rows in the dimension reflect the number of TopDom domains.
+ 
+
 Version: 0.3.0 [2018-10-08]
 
 NEW FEATURES:

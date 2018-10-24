@@ -31,7 +31,7 @@ if (require("TopDomData")) {
   }
 
   ## The largest domain found
-  td <- subset(fit$domain, tag == "domain" & size == max(size))
+  td <- subset(subset(fit$domain, tag == "domain"), size == max(size))
   stopifnot(nrow(td) == 1L)
 
   data_s <- subsetByRegion(data, region = td, margin = 1/2)
