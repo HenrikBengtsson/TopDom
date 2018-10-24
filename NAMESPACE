@@ -2,6 +2,7 @@
 
 S3method("[",TopDom)
 S3method("[",TopDomData)
+S3method(countsPerRegion,TopDomData)
 S3method(dim,TopDom)
 S3method(dim,TopDomData)
 S3method(ggCountHeatmap,TopDomData)

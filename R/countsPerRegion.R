@@ -15,6 +15,7 @@ countsPerRegion <- function(data, regions) {
 
 
 #' @importFrom matrixStats colSums2
+#' @export
 countsPerRegion.TopDomData <- function(data, regions) {
   chr <- NULL  ## To please R CMD check
   
