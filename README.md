@@ -1,11 +1,12 @@
 # TopDom - An efficient and Deterministic Method for identifying Topological Domains in Genomes
 
-This is an R package that originates from the original [TopDom](http://zhoulab.usc.edu/TopDom/) R script by Shin et al.  This package was put together by Henrik Bengtsson independently of the TopDom authors - please see the [TopDom website] for the original code.  The TopDom article is:
+This is an R package that originates from the original [TopDom](http://zhoulab.usc.edu/TopDom/) R script by Shin et al.  This package was put together by Henrik Bengtsson independently of the TopDom authors - please see the [TopDom website] for the original code.
 
-Shin et al., TopDom: an efficient and deterministic method for identifying topological domains in genomes, Nucleic Acids Res. 2016 Apr 20; 44(7): e70., 2015.
-doi: 10.1093/nar/gkv1505, PMCID: [PMC4838359](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/), PMID: 26704975.
+When using the TopDom method, or this TopDom package, please cite:
 
-_Note_, the license for the original TopDom code is ~~unknown~~ to be decided by Shin et al. (private conversation on 2017-11-21).
+* Hanjun Shin, Yi Shi, Chao Dai, Harianto Tjong, Ke Gong, Frank Alber, Xianghong Jasmine Zhou; TopDom: an efficient and deterministic method for identifying topological domains in genomes, Nucleic Acids Research, Volume 44, Issue 7, 20 April 2016, Pages e70, [10.1093/nar/gkv1505](https://doi.org/10.1093/nar/gkv1505). PMCID: [PMC4838359](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/), PMID: 26704975.
+
+This package is licensed under the [GNU Public License (GPL)](https://www.gnu.org/licenses/gpl.html) (per email from XJ Zhou on 2018-11-12).
 
 
 ## Installation
