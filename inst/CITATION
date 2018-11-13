@@ -1,0 +1,39 @@
+citHeader("When using the TopDom method, or this TopDom package, please cite:");
+
+citEntry(
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # BibTeX entry:
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  entry="Article",
+  author = "Hanjun Shin and Yi Shi and Chao Dai and Harianto Tjong and Ke Gong and Frank Alber and Xianghong Jasmine Zhou",
+  title = "TopDom: an efficient and deterministic method for identifying topological domains in genomes",
+  journal = "Nucleic Acids Research",
+  volume = "44",
+  number = "7",
+  pages = "e70",
+  year = "2016",
+  doi = "10.1093/nar/gkv1505",
+  URL = "http://dx.doi.org/10.1093/nar/gkv1505",
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Plain-text citation:
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  textVersion = "Hanjun Shin, Yi Shi, Chao Dai, Harianto Tjong, Ke Gong, Frank Alber, Xianghong Jasmine Zhou; TopDom: an efficient and deterministic method for identifying topological domains in genomes, Nucleic Acids Research, Volume 44, Issue 7, 20 April 2016, Pages e70, 10.1093/nar/gkv1505. PMCID: PMC4838359, PMID: 26704975."
+)
+
+citEntry(
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # BibTeX entry:
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  entry="Manual",
+  title = "R Package TopDom: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes",
+  author = "Henrik Bengtsson and Hanjun Shin",
+  year = "2018",
+  note = "R package version 0.5.0",
+  url = "https://github.com/HenrikBengtsson/TopDom",
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Plain-text citation:
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  textVersion = "Henrik Bengtsson and Hanjun Shin (2018). R Package TopDom: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes. R package version 0.5.0. https://github.com/HenrikBengtsson/TopDom"
+)
