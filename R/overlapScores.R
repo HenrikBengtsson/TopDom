@@ -11,9 +11,9 @@
 #' Returns a named list of class `TopDomOverlapScores`, where the names
 #' correspond to the chromosomes in domain set \eqn{A}.
 #' Each of these chromosome elements contains a named list of elements
-#' `best_score` (\eqn{D_A_c} numerics in \eqn{[0,1]}) and
-#' `best_sets' (\eqn{D_A_c} list of index vectors), where
-#' \eqn{D_A_c} is the number of TDs in chromosome \eqn{c} in set \eqn{A}.
+#' `best_score` (\eqn{D_{A,c}} numerics in \eqn{[0,1]}) and
+#' `best_sets' (\eqn{D_{A,c}} list of index vectors), where
+#' \eqn{D_{A,c}} is the number of TDs in chromosome \eqn{c} in set \eqn{A}.
 #'
 #' @details
 #' The _overlap score_, \eqn{overlap(a_i, B')}, represents how well topological

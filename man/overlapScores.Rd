@@ -18,9 +18,9 @@ as returned by \code{\link[=TopDom]{TopDom()}}.}
 Returns a named list of class \code{TopDomOverlapScores}, where the names
 correspond to the chromosomes in domain set \eqn{A}.
 Each of these chromosome elements contains a named list of elements
-\code{best_score} (\eqn{D_A_c} numerics in \eqn{[0,1]}) and
-`best_sets' (\eqn{D_A_c} list of index vectors), where
-\eqn{D_A_c} is the number of TDs in chromosome \eqn{c} in set \eqn{A}.
+\code{best_score} (\eqn{D_{A,c}} numerics in \eqn{[0,1]}) and
+`best_sets' (\eqn{D_{A,c}} list of index vectors), where
+\eqn{D_{A,c}} is the number of TDs in chromosome \eqn{c} in set \eqn{A}.
 }
 \description{
 Calculates Overlap Scores between Two Sets of Topological Domains
