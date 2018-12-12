@@ -120,9 +120,13 @@ overlapScoresOneChromosome <- function(doms_A, doms_B, ..., debug = getOption("T
       is_inside <- (doms$from.coord >= td$from.coord &
                     doms$to.coord <= td$to.coord)
       idxs_t <- c(before, which(is_inside), after)
-      caps <- doms$cap[idxs_t]
-      cups <- doms$length[idxs_t]
       n <- length(idxs_t)
+      stop_if_not(n > 0L)
+      caps <- doms$cap[idxs_t]
+      stop_if_not(length(caps) > 0L, !any(is.finite(caps)))
+      stop_if_not(!anyNA(caps))
+      cups <- doms$length[idxs_t]
+      stop_if_not(length(cups) > 0L, !any(is.finite(cups)))
       if (n == 1L) {
         idxs_u <- list(1L)
         max_score <- caps / cups
@@ -131,9 +135,11 @@ overlapScoresOneChromosome <- function(doms_A, doms_B, ..., debug = getOption("T
       } else if (n >= 3L) {
         idxs_u <- list(1L, 1L:(n-1L), 2L:(n-1L), 2L:n, n)
       }
+      stop_if_not(!anyNA(scores))
       scores <- sapply(idxs_u, FUN = function(idxs) {
         sum(caps[idxs]) / sum(cups[idxs])
       })
+      stop_if_not(!any(is.finite(scores)))
       max_idx <- which.max(scores)
 
       max_score <- scores[max_idx]
