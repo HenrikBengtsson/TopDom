@@ -17,18 +17,24 @@ as returned by \code{\link[=TopDom]{TopDom()}}.}
 \value{
 Returns a named list of class \code{TopDomOverlapScores}, where the names
 correspond to the chromosomes in domain set \eqn{A}.
-Each of these chromosome elements contains a named list of elements
-\code{best_score} (\eqn{D_{A,c}} numerics in \eqn{[0,1]}) and
-`best_sets' (\eqn{D_{A,c}} list of index vectors), where
-\eqn{D_{A,c}} is the number of TDs in chromosome \eqn{c} in set \eqn{A}.
+Each of these chromosome elements contains a named list of elements:
+\itemize{
+\item \code{best_score} - \eqn{D_{A,c}} numerics in \eqn{[0,1]}
+\item \code{best_sets}  - list of \eqn{D_{A,c}} index vectors
+}
+
+where \eqn{D_{A,c}} is the number of TDs in set \eqn{A} on chromosome
+\eqn{c}.  If a TD in \eqn{A} is a not a \code{"domain"}, then the corresponding
+\code{best_score} is \code{NA_real_} and the corresponding \code{best_set} is an empty
+list.
 }
 \description{
 Calculates Overlap Scores between Two Sets of Topological Domains
 }
 \details{
-The \emph{overlap score}, \eqn{overlap(a_i, B')}, represents how well topological
-domain (TD) \eqn{a_i} in set \eqn{A} overlap with a \emph{consecutive} subset
-\eqn{B'} of TDs in \eqn{B}.
+The \emph{overlap score}, \eqn{overlap(a_i, B')}, represents how well a
+\emph{consecutive} subset \eqn{B'} of topological domains (TDs) in \eqn{B}
+overlap with topologial domain \eqn{a_i} in set \eqn{A}.
 For each TD \eqn{a_i}, the \emph{best match} \eqn{B'_max} is identified, that
 is, the \eqn{B'} subset that maximize \eqn{overlap(a_i, B')}.
 For exact definitions, see Page 8 in Shin et al. (2016).

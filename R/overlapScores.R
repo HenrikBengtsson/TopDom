@@ -10,15 +10,20 @@
 #' @return
 #' Returns a named list of class `TopDomOverlapScores`, where the names
 #' correspond to the chromosomes in domain set \eqn{A}.
-#' Each of these chromosome elements contains a named list of elements
-#' `best_score` (\eqn{D_{A,c}} numerics in \eqn{[0,1]}) and
-#' `best_sets' (\eqn{D_{A,c}} list of index vectors), where
-#' \eqn{D_{A,c}} is the number of TDs in chromosome \eqn{c} in set \eqn{A}.
+#' Each of these chromosome elements contains a named list of elements:
+#'
+#' * `best_score` - \eqn{D_{A,c}} numerics in \eqn{[0,1]}
+#' * `best_sets`  - list of \eqn{D_{A,c}} index vectors
+#'
+#' where \eqn{D_{A,c}} is the number of TDs in set \eqn{A} on chromosome
+#' \eqn{c}.  If a TD in \eqn{A} is a not a `"domain"`, then the corresponding
+#' `best_score` is `NA_real_` and the corresponding `best_set` is an empty
+#' list.
 #'
 #' @details
-#' The _overlap score_, \eqn{overlap(a_i, B')}, represents how well topological
-#' domain (TD) \eqn{a_i} in set \eqn{A} overlap with a _consecutive_ subset
-#' \eqn{B'} of TDs in \eqn{B}.
+#' The _overlap score_, \eqn{overlap(a_i, B')}, represents how well a
+#' _consecutive_ subset \eqn{B'} of topological domains (TDs) in \eqn{B}
+#' overlap with topologial domain \eqn{a_i} in set \eqn{A}.
 #' For each TD \eqn{a_i}, the _best match_ \eqn{B'_max} is identified, that
 #' is, the \eqn{B'} subset that maximize \eqn{overlap(a_i, B')}.
 #' For exact definitions, see Page 8 in Shin et al. (2016).
@@ -156,7 +161,7 @@ overlapScoresOneChromosome <- function(doms_A, doms_B, ..., debug = getOption("T
   } ## for (ii ...)
 
   list(best_scores = best_scores, best_sets = best_sets)
-} ## overlapScores()
+} ## overlapScoresOneChromosome()
 
 
 #' @export
