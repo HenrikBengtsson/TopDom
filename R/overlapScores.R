@@ -90,7 +90,7 @@ overlapScoresOneChromosome <- function(doms_A, doms_B, ..., debug = getOption("T
   idxs_td <- which(doms_A$tag == "domain")
   for (ii in seq_along(idxs_td)) {
     idx_td <- idxs_td[ii]
-    if (debug) message(sprintf("TD #%d of %d ...", ii, length(idxs_td)))
+    if (debug) message(sprintf("TD \"domain\" #%d of %d ...", ii, length(idxs_td)))
     td <- doms_A[idx_td, ]
     
     ## Identify sets to consider
@@ -128,10 +128,10 @@ overlapScoresOneChromosome <- function(doms_A, doms_B, ..., debug = getOption("T
       n <- length(idxs_t)
       stop_if_not(n > 0L)
       caps <- doms$cap[idxs_t]
-      stop_if_not(length(caps) > 0L, !any(is.finite(caps)))
+      stop_if_not(length(caps) > 0L, any(is.finite(caps)))
       stop_if_not(!anyNA(caps))
       cups <- doms$length[idxs_t]
-      stop_if_not(length(cups) > 0L, !any(is.finite(cups)))
+      stop_if_not(length(cups) > 0L, any(is.finite(cups)))
       if (n == 1L) {
         idxs_u <- list(1L)
         max_score <- caps / cups
@@ -140,11 +140,11 @@ overlapScoresOneChromosome <- function(doms_A, doms_B, ..., debug = getOption("T
       } else if (n >= 3L) {
         idxs_u <- list(1L, 1L:(n-1L), 2L:(n-1L), 2L:n, n)
       }
-      stop_if_not(!anyNA(scores))
+      stop_if_not(!anyNA(idxs_u))
       scores <- sapply(idxs_u, FUN = function(idxs) {
         sum(caps[idxs]) / sum(cups[idxs])
       })
-      stop_if_not(!any(is.finite(scores)))
+      stop_if_not(any(is.finite(scores)))
       max_idx <- which.max(scores)
 
       max_score <- scores[max_idx]
@@ -157,7 +157,7 @@ overlapScoresOneChromosome <- function(doms_A, doms_B, ..., debug = getOption("T
     best_scores[ii] <- best_score
     best_sets[[ii]] <- best_set
     
-    if (debug) message(sprintf("TD #%d of %d ... done", ii, length(idxs_td)))
+    if (debug) message(sprintf("TD \"domain\" #%d of %d ... done", ii, length(idxs_td)))
   } ## for (ii ...)
 
   list(best_scores = best_scores, best_sets = best_sets)
