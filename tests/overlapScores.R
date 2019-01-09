@@ -24,7 +24,7 @@ if (require("TopDomData")) {
     names(tds) <- sprintf("window.size=%d", window.size)
   
     ## Overlap scores relative to the first window.size
-    overlaps <- lapply(tds, FUN = overlapScores, tds[[1]])
+    overlaps <- lapply(tds, FUN = overlapScores, reference = tds[[1]])
     print(overlaps)
   
     scores <- lapply(overlaps, FUN = function(overlaps) {
