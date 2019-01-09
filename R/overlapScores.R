@@ -3,8 +3,6 @@
 #' @param reference,b Topological domain (TD) sets \eqn{R} and \eqn{B}
 #' as returned by [TopDom()].
 #'
-#' @param \ldots ...
-#'
 #' @param debug If `TRUE`, debug output is produced.
 #' 
 #' @return
@@ -48,7 +46,7 @@
 #' @seealso [TopDom].
 #'
 #' @export
-overlapScores <- function(reference, b, ..., debug = getOption("TopDom.debug", FALSE)) {
+overlapScores <- function(reference, b, debug = getOption("TopDom.debug", FALSE)) {
   stopifnot(inherits(reference, "TopDom"), inherits(b, "TopDom"))
   stopifnot(is.logical(debug), length(debug) == 1L, !is.na(debug))
 
@@ -62,8 +60,7 @@ overlapScores <- function(reference, b, ..., debug = getOption("TopDom.debug", F
     if (debug) message(sprintf("Chromosome %s ...", chr))
     doms_R <- domains_R[domains_R$chr == chr, ]
     doms_B <- domains_B[domains_B$chr == chr, ]
-    scores[[chr]] <- overlapScoresOneChromosome(doms_R, doms_B, ...,
-                                                debug = debug)
+    scores[[chr]] <- overlapScoresOneChromosome(doms_R, doms_B, debug = debug)
     if (debug) message(sprintf("Chromosome %s ... done", chr))
   }
 
@@ -71,7 +68,7 @@ overlapScores <- function(reference, b, ..., debug = getOption("TopDom.debug", F
 }
 
 
-overlapScoresOneChromosome <- function(doms_R, doms_B, ..., debug = getOption("TopDom.debug", FALSE)) {
+overlapScoresOneChromosome <- function(doms_R, doms_B, debug = getOption("TopDom.debug", FALSE)) {
   stopifnot(is.logical(debug), length(debug) == 1L, !is.na(debug))
   ## FIXME: Assert that reference R and B are sorted by (chr, pos)
 

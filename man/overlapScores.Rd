@@ -4,16 +4,13 @@
 \alias{overlapScores}
 \title{Calculates Overlap Scores between Two Sets of Topological Domains}
 \usage{
-overlapScores(reference, b, ..., debug = getOption("TopDom.debug",
-  FALSE))
+overlapScores(reference, b, debug = getOption("TopDom.debug", FALSE))
 }
 \arguments{
 \item{reference, b}{Topological domain (TD) sets \eqn{R} and \eqn{B}
 as returned by \code{\link[=TopDom]{TopDom()}}.}
 
 \item{debug}{If \code{TRUE}, debug output is produced.}
-
-\item{\ldots}{...}
 }
 \value{
 Returns a named list of class \code{TopDomOverlapScores}, where the names
