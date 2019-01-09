@@ -4,11 +4,11 @@
 \alias{overlapScores}
 \title{Calculates Overlap Scores between Two Sets of Topological Domains}
 \usage{
-overlapScores(reference, b, debug = getOption("TopDom.debug", FALSE))
+overlapScores(a, reference, debug = getOption("TopDom.debug", FALSE))
 }
 \arguments{
-\item{reference, b}{Topological domain (TD) sets \eqn{R} and \eqn{B}
-as returned by \code{\link[=TopDom]{TopDom()}}.}
+\item{a, reference}{Topological domain (TD) set \eqn{A} and TD reference
+set \eqn{R} both in a format as returned by \code{\link[=TopDom]{TopDom()}}.}
 
 \item{debug}{If \code{TRUE}, debug output is produced.}
 }
@@ -30,12 +30,12 @@ then the corresponding \code{best_score} is \code{NA_real_} and the correspondin
 Calculates Overlap Scores between Two Sets of Topological Domains
 }
 \details{
-The \emph{overlap score}, \eqn{overlap(r_i, B')}, represents how well a
-\emph{consecutive} subset \eqn{B'} of topological domains (TDs) in \eqn{B}
-overlap with topologial domain \eqn{r_i} in set \eqn{R}.
-For each reference TD \eqn{r_i}, the \emph{best match} \eqn{B'_max} is
-identified, that is, the \eqn{B'} subset that maximize
-\eqn{overlap(r_i, B')}.
+The \emph{overlap score}, \eqn{overlap(A', r_i)}, represents how well a
+\emph{consecutive} subset \eqn{A'} of topological domains (TDs) in \eqn{A}
+overlap with topologial domain \eqn{r_i} in reference set \eqn{R}.
+For each reference TD \eqn{r_i}, the \emph{best match} \eqn{A'_max} is
+identified, that is, the \eqn{A'} subset that maximize
+\eqn{overlap(A', r_i)}.
 For exact definitions, see Page 8 in Shin et al. (2016).
 
 Note that the overlap score is an asymmetric score, which means that

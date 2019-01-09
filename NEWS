@@ -1,9 +1,14 @@
 Package: TopDom
 ===============
 
-Version: 0.5.0-9000 [2018-11-27]
+Version: 0.5.0-9000 [2019-01-08]
 
- * ...
+SIGNIFICANT CHANGES:
+
+ * Renamed and swapped the order of the first two arguments of overlapScores()
+   and renamed the second argument to 'reference'.  This was done in order to
+   make it clear which set of topological domains the overlap scores are
+   calculated relative to.
  
 
 Version: 0.5.0 [2018-11-12]

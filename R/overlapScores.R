@@ -1,7 +1,7 @@
 #' Calculates Overlap Scores between Two Sets of Topological Domains
 #' 
-#' @param reference,b Topological domain (TD) sets \eqn{R} and \eqn{B}
-#' as returned by [TopDom()].
+#' @param a,reference Topological domain (TD) set \eqn{A} and TD reference
+#' set \eqn{R} both in a format as returned by [TopDom()].
 #'
 #' @param debug If `TRUE`, debug output is produced.
 #' 
@@ -19,12 +19,12 @@
 #' `best_set` is an empty list.
 #'
 #' @details
-#' The _overlap score_, \eqn{overlap(r_i, B')}, represents how well a
-#' _consecutive_ subset \eqn{B'} of topological domains (TDs) in \eqn{B}
-#' overlap with topologial domain \eqn{r_i} in set \eqn{R}.
-#' For each reference TD \eqn{r_i}, the _best match_ \eqn{B'_max} is
-#' identified, that is, the \eqn{B'} subset that maximize
-#' \eqn{overlap(r_i, B')}.
+#' The _overlap score_, \eqn{overlap(A', r_i)}, represents how well a
+#' _consecutive_ subset \eqn{A'} of topological domains (TDs) in \eqn{A}
+#' overlap with topologial domain \eqn{r_i} in reference set \eqn{R}.
+#' For each reference TD \eqn{r_i}, the _best match_ \eqn{A'_max} is
+#' identified, that is, the \eqn{A'} subset that maximize
+#' \eqn{overlap(A', r_i)}.
 #' For exact definitions, see Page 8 in Shin et al. (2016).
 #'
 #' Note that the overlap score is an asymmetric score, which means that
@@ -46,12 +46,12 @@
 #' @seealso [TopDom].
 #'
 #' @export
-overlapScores <- function(reference, b, debug = getOption("TopDom.debug", FALSE)) {
-  stopifnot(inherits(reference, "TopDom"), inherits(b, "TopDom"))
+overlapScores <- function(a, reference, debug = getOption("TopDom.debug", FALSE)) {
+  stopifnot(inherits(reference, "TopDom"), inherits(a, "TopDom"))
   stopifnot(is.logical(debug), length(debug) == 1L, !is.na(debug))
 
   domains_R <- reference$domain
-  domains_B <- b$domain
+  domains_A <- a$domain
   
   chromosomes <- unique(domains_R$chr)
   scores <- vector("list", length = length(chromosomes))
@@ -59,8 +59,8 @@ overlapScores <- function(reference, b, debug = getOption("TopDom.debug", FALSE)
   for (chr in chromosomes) {
     if (debug) message(sprintf("Chromosome %s ...", chr))
     doms_R <- domains_R[domains_R$chr == chr, ]
-    doms_B <- domains_B[domains_B$chr == chr, ]
-    scores[[chr]] <- overlapScoresOneChromosome(doms_R, doms_B, debug = debug)
+    doms_A <- domains_A[domains_A$chr == chr, ]
+    scores[[chr]] <- overlapScoresOneChromosome(doms_A, doms_R = doms_R, debug = debug)
     if (debug) message(sprintf("Chromosome %s ... done", chr))
   }
 
@@ -68,20 +68,20 @@ overlapScores <- function(reference, b, debug = getOption("TopDom.debug", FALSE)
 }
 
 
-overlapScoresOneChromosome <- function(doms_R, doms_B, debug = getOption("TopDom.debug", FALSE)) {
+overlapScoresOneChromosome <- function(doms_A, doms_R, debug = getOption("TopDom.debug", FALSE)) {
   stopifnot(is.logical(debug), length(debug) == 1L, !is.na(debug))
-  ## FIXME: Assert that reference R and B are sorted by (chr, pos)
+  ## FIXME: Assert that A and reference R are sorted by (chr, pos)
 
-  dtags <- diff(c(0L, as.integer(doms_B$tag == "domain"), 0L))
+  dtags <- diff(c(0L, as.integer(doms_A$tag == "domain"), 0L))
   sets <- data.frame(
     first = which(dtags == +1L),
     last  = which(dtags == -1L) - 1L
   )
-  sets$from.coord <- doms_B$from.coord[sets$first]
-  sets$to.coord <- doms_B$to.coord[sets$last]
+  sets$from.coord <- doms_A$from.coord[sets$first]
+  sets$to.coord <- doms_A$to.coord[sets$last]
 
   doms_R$length <- doms_R$to.coord - doms_R$from.coord
-  doms_B$length <- doms_B$to.coord - doms_B$from.coord
+  doms_A$length <- doms_A$to.coord - doms_A$from.coord
 
   best_scores <- rep(NA_real_, length = nrow(doms_R))
   best_sets <- vector("list", length = nrow(doms_R))
@@ -99,27 +99,27 @@ overlapScoresOneChromosome <- function(doms_R, doms_B, debug = getOption("TopDom
     best_score <- 0.0
     best_set <- integer(0L)
     
-    ## For each possible B' set ...
+    ## For each possible A' set ...
     for (kk in seq_len(nrow(sets_t))) {
       set <- sets_t[kk,]
-      doms <- doms_B[set$first:set$last,]
+      doms <- doms_A[set$first:set$last,]
       doms$cap <- doms$length
       
-      ## TD in B' that is overlapping part of the beginning of reference R 
+      ## TD in A' that is overlapping part of the beginning of reference R 
       before <- which(doms$from.coord <= td$from.coord)
       if (length(before) > 0L) {
         before <- before[length(before)]
         doms$cap[before] <- doms$to.coord[before] - td$from.coord
       }
       
-      ## TD in B' that is overlapping part of the end of reference R
+      ## TD in A' that is overlapping part of the end of reference R
       after <- which(doms$to.coord >= td$to.coord)
       if (length(after) > 0L) {
         after <- after[1L]
         doms$cap[after] <- td$to.coord - doms$from.coord[after]
       }
       
-      ## TDs in B' that are strictly overlapping with reference R
+      ## TDs in A' that are strictly overlapping with reference R
       is_inside <- (doms$from.coord >= td$from.coord &
                     doms$to.coord <= td$to.coord)
       idxs_t <- c(before, which(is_inside), after)
