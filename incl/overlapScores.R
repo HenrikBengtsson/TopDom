@@ -11,9 +11,9 @@ if (require("TopDomData")) {
   tds_6 <- TopDom(data, window.size = 6L)
 
   ## Overlap scores (in both directions)
-  overlap_56 <- overlapScores(tds_5, tds_6)
+  overlap_56 <- overlapScores(tds_6, reference = tds_5)
   print(overlap_56)
   
-  overlap_65 <- overlapScores(tds_6, tds_5)
+  overlap_65 <- overlapScores(tds_5, reference = tds_6)
   print(overlap_65)
 }

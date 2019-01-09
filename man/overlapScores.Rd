@@ -4,10 +4,11 @@
 \alias{overlapScores}
 \title{Calculates Overlap Scores between Two Sets of Topological Domains}
 \usage{
-overlapScores(a, b, ..., debug = getOption("TopDom.debug", FALSE))
+overlapScores(reference, b, ..., debug = getOption("TopDom.debug",
+  FALSE))
 }
 \arguments{
-\item{a, b}{Topological domain (TD) sets \eqn{A} and \eqn{B}
+\item{reference, b}{Topological domain (TD) sets \eqn{R} and \eqn{B}
 as returned by \code{\link[=TopDom]{TopDom()}}.}
 
 \item{debug}{If \code{TRUE}, debug output is produced.}
@@ -16,27 +17,28 @@ as returned by \code{\link[=TopDom]{TopDom()}}.}
 }
 \value{
 Returns a named list of class \code{TopDomOverlapScores}, where the names
-correspond to the chromosomes in domain set \eqn{A}.
+correspond to the chromosomes in domain reference set \eqn{R}.
 Each of these chromosome elements contains a named list of elements:
 \itemize{
-\item \code{best_score} - \eqn{D_{A,c}} numerics in \eqn{[0,1]}
-\item \code{best_sets}  - list of \eqn{D_{A,c}} index vectors
+\item \code{best_score} - \eqn{D_{R,c}} numerics in \eqn{[0,1]}
+\item \code{best_sets}  - list of \eqn{D_{R,c}} index vectors
 }
 
-where \eqn{D_{A,c}} is the number of TDs in set \eqn{A} on chromosome
-\eqn{c}.  If a TD in \eqn{A} is a not a \code{"domain"}, then the corresponding
-\code{best_score} is \code{NA_real_} and the corresponding \code{best_set} is an empty
-list.
+where \eqn{D_{R,c}} is the number of TDs in reference set \eqn{R} on
+chromosome \eqn{c}.  If a TD in reference \eqn{R} is a not a \code{"domain"},
+then the corresponding \code{best_score} is \code{NA_real_} and the corresponding
+\code{best_set} is an empty list.
 }
 \description{
 Calculates Overlap Scores between Two Sets of Topological Domains
 }
 \details{
-The \emph{overlap score}, \eqn{overlap(a_i, B')}, represents how well a
+The \emph{overlap score}, \eqn{overlap(r_i, B')}, represents how well a
 \emph{consecutive} subset \eqn{B'} of topological domains (TDs) in \eqn{B}
-overlap with topologial domain \eqn{a_i} in set \eqn{A}.
-For each TD \eqn{a_i}, the \emph{best match} \eqn{B'_max} is identified, that
-is, the \eqn{B'} subset that maximize \eqn{overlap(a_i, B')}.
+overlap with topologial domain \eqn{r_i} in set \eqn{R}.
+For each reference TD \eqn{r_i}, the \emph{best match} \eqn{B'_max} is
+identified, that is, the \eqn{B'} subset that maximize
+\eqn{overlap(r_i, B')}.
 For exact definitions, see Page 8 in Shin et al. (2016).
 
 Note that the overlap score is an asymmetric score, which means that
@@ -56,10 +58,10 @@ if (require("TopDomData")) {
   tds_6 <- TopDom(data, window.size = 6L)
 
   ## Overlap scores (in both directions)
-  overlap_56 <- overlapScores(tds_5, tds_6)
+  overlap_56 <- overlapScores(tds_6, reference = tds_5)
   print(overlap_56)
   
-  overlap_65 <- overlapScores(tds_6, tds_5)
+  overlap_65 <- overlapScores(tds_5, reference = tds_6)
   print(overlap_65)
 }
 }

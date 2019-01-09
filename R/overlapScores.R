@@ -1,6 +1,6 @@
 #' Calculates Overlap Scores between Two Sets of Topological Domains
 #' 
-#' @param a,b Topological domain (TD) sets \eqn{A} and \eqn{B}
+#' @param reference,b Topological domain (TD) sets \eqn{R} and \eqn{B}
 #' as returned by [TopDom()].
 #'
 #' @param \ldots ...
@@ -9,23 +9,24 @@
 #' 
 #' @return
 #' Returns a named list of class `TopDomOverlapScores`, where the names
-#' correspond to the chromosomes in domain set \eqn{A}.
+#' correspond to the chromosomes in domain reference set \eqn{R}.
 #' Each of these chromosome elements contains a named list of elements:
 #'
-#' * `best_score` - \eqn{D_{A,c}} numerics in \eqn{[0,1]}
-#' * `best_sets`  - list of \eqn{D_{A,c}} index vectors
+#' * `best_score` - \eqn{D_{R,c}} numerics in \eqn{[0,1]}
+#' * `best_sets`  - list of \eqn{D_{R,c}} index vectors
 #'
-#' where \eqn{D_{A,c}} is the number of TDs in set \eqn{A} on chromosome
-#' \eqn{c}.  If a TD in \eqn{A} is a not a `"domain"`, then the corresponding
-#' `best_score` is `NA_real_` and the corresponding `best_set` is an empty
-#' list.
+#' where \eqn{D_{R,c}} is the number of TDs in reference set \eqn{R} on
+#' chromosome \eqn{c}.  If a TD in reference \eqn{R} is a not a `"domain"`,
+#' then the corresponding `best_score` is `NA_real_` and the corresponding
+#' `best_set` is an empty list.
 #'
 #' @details
-#' The _overlap score_, \eqn{overlap(a_i, B')}, represents how well a
+#' The _overlap score_, \eqn{overlap(r_i, B')}, represents how well a
 #' _consecutive_ subset \eqn{B'} of topological domains (TDs) in \eqn{B}
-#' overlap with topologial domain \eqn{a_i} in set \eqn{A}.
-#' For each TD \eqn{a_i}, the _best match_ \eqn{B'_max} is identified, that
-#' is, the \eqn{B'} subset that maximize \eqn{overlap(a_i, B')}.
+#' overlap with topologial domain \eqn{r_i} in set \eqn{R}.
+#' For each reference TD \eqn{r_i}, the _best match_ \eqn{B'_max} is
+#' identified, that is, the \eqn{B'} subset that maximize
+#' \eqn{overlap(r_i, B')}.
 #' For exact definitions, see Page 8 in Shin et al. (2016).
 #'
 #' Note that the overlap score is an asymmetric score, which means that
@@ -47,21 +48,21 @@
 #' @seealso [TopDom].
 #'
 #' @export
-overlapScores <- function(a, b, ..., debug = getOption("TopDom.debug", FALSE)) {
-  stopifnot(inherits(a, "TopDom"), inherits(b, "TopDom"))
+overlapScores <- function(reference, b, ..., debug = getOption("TopDom.debug", FALSE)) {
+  stopifnot(inherits(reference, "TopDom"), inherits(b, "TopDom"))
   stopifnot(is.logical(debug), length(debug) == 1L, !is.na(debug))
 
-  domains_A <- a$domain
+  domains_R <- reference$domain
   domains_B <- b$domain
   
-  chromosomes <- unique(domains_A$chr)
+  chromosomes <- unique(domains_R$chr)
   scores <- vector("list", length = length(chromosomes))
   names(scores) <- chromosomes
   for (chr in chromosomes) {
     if (debug) message(sprintf("Chromosome %s ...", chr))
-    doms_A <- domains_A[domains_A$chr == chr, ]
+    doms_R <- domains_R[domains_R$chr == chr, ]
     doms_B <- domains_B[domains_B$chr == chr, ]
-    scores[[chr]] <- overlapScoresOneChromosome(doms_A, doms_B, ...,
+    scores[[chr]] <- overlapScoresOneChromosome(doms_R, doms_B, ...,
                                                 debug = debug)
     if (debug) message(sprintf("Chromosome %s ... done", chr))
   }
@@ -70,9 +71,9 @@ overlapScores <- function(a, b, ..., debug = getOption("TopDom.debug", FALSE)) {
 }
 
 
-overlapScoresOneChromosome <- function(doms_A, doms_B, ..., debug = getOption("TopDom.debug", FALSE)) {
+overlapScoresOneChromosome <- function(doms_R, doms_B, ..., debug = getOption("TopDom.debug", FALSE)) {
   stopifnot(is.logical(debug), length(debug) == 1L, !is.na(debug))
-  ## FIXME: Assert that A and B are sorted by (chr, pos)
+  ## FIXME: Assert that reference R and B are sorted by (chr, pos)
 
   dtags <- diff(c(0L, as.integer(doms_B$tag == "domain"), 0L))
   sets <- data.frame(
@@ -82,16 +83,16 @@ overlapScoresOneChromosome <- function(doms_A, doms_B, ..., debug = getOption("T
   sets$from.coord <- doms_B$from.coord[sets$first]
   sets$to.coord <- doms_B$to.coord[sets$last]
 
-  doms_A$length <- doms_A$to.coord - doms_A$from.coord
+  doms_R$length <- doms_R$to.coord - doms_R$from.coord
   doms_B$length <- doms_B$to.coord - doms_B$from.coord
 
-  best_scores <- rep(NA_real_, length = nrow(doms_A))
-  best_sets <- vector("list", length = nrow(doms_A))
-  idxs_td <- which(doms_A$tag == "domain")
+  best_scores <- rep(NA_real_, length = nrow(doms_R))
+  best_sets <- vector("list", length = nrow(doms_R))
+  idxs_td <- which(doms_R$tag == "domain")
   for (ii in seq_along(idxs_td)) {
     idx_td <- idxs_td[ii]
     if (debug) message(sprintf("TD \"domain\" #%d of %d ...", ii, length(idxs_td)))
-    td <- doms_A[idx_td, ]
+    td <- doms_R[idx_td, ]
     
     ## Identify sets to consider
     ## Q. Now many sets can match this? [0,1], [0,2], [0,3], or even more?
@@ -107,21 +108,21 @@ overlapScoresOneChromosome <- function(doms_A, doms_B, ..., debug = getOption("T
       doms <- doms_B[set$first:set$last,]
       doms$cap <- doms$length
       
-      ## TD in B' that is overlapping part of the beginning of A 
+      ## TD in B' that is overlapping part of the beginning of reference R 
       before <- which(doms$from.coord <= td$from.coord)
       if (length(before) > 0L) {
         before <- before[length(before)]
         doms$cap[before] <- doms$to.coord[before] - td$from.coord
       }
       
-      ## TD in B' that is overlapping part of the end of A 
+      ## TD in B' that is overlapping part of the end of reference R
       after <- which(doms$to.coord >= td$to.coord)
       if (length(after) > 0L) {
         after <- after[1L]
         doms$cap[after] <- td$to.coord - doms$from.coord[after]
       }
       
-      ## TDs in B' that are strictly overlapping with A
+      ## TDs in B' that are strictly overlapping with reference R
       is_inside <- (doms$from.coord >= td$from.coord &
                     doms$to.coord <= td$to.coord)
       idxs_t <- c(before, which(is_inside), after)
