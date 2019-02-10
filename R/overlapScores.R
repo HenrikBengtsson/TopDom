@@ -89,12 +89,12 @@ overlapScoresOneChromosome <- function(doms_A, doms_R, debug = getOption("TopDom
   for (ii in seq_along(idxs_td)) {
     idx_td <- idxs_td[ii]
     if (debug) message(sprintf("TD \"domain\" #%d of %d ...", ii, length(idxs_td)))
-    td <- doms_R[idx_td, ]
+    td_R <- doms_R[idx_td, ]
     
     ## Identify sets to consider
-    ## Q. Now many sets can match this? [0,1], [0,2], [0,3], or even more?
-    sets_t <- sets[(sets$to.coord >= td$from.coord &
-                    sets$from.coord <= td$to.coord), ]
+    ## Q. How many sets can match this? [0,1], [0,2], [0,3], or even more?
+    sets_t <- sets[(sets$to.coord >= td_R$from.coord &
+                    sets$from.coord <= td_R$to.coord), ]
 
     best_score <- 0.0
     best_set <- integer(0L)
@@ -106,22 +106,22 @@ overlapScoresOneChromosome <- function(doms_A, doms_R, debug = getOption("TopDom
       doms$cap <- doms$length
       
       ## TD in A' that is overlapping part of the beginning of reference R 
-      before <- which(doms$from.coord <= td$from.coord)
+      before <- which(doms$from.coord <= td_R$from.coord)
       if (length(before) > 0L) {
         before <- before[length(before)]
-        doms$cap[before] <- doms$to.coord[before] - td$from.coord
+        doms$cap[before] <- doms$to.coord[before] - td_R$from.coord
       }
       
       ## TD in A' that is overlapping part of the end of reference R
-      after <- which(doms$to.coord >= td$to.coord)
+      after <- which(doms$to.coord >= td_R$to.coord)
       if (length(after) > 0L) {
         after <- after[1L]
-        doms$cap[after] <- td$to.coord - doms$from.coord[after]
+        doms$cap[after] <- td_R$to.coord - doms$from.coord[after]
       }
       
       ## TDs in A' that are strictly overlapping with reference R
-      is_inside <- (doms$from.coord >= td$from.coord &
-                    doms$to.coord <= td$to.coord)
+      is_inside <- (doms$from.coord >= td_R$from.coord &
+                    doms$to.coord <= td_R$to.coord)
       idxs_t <- c(before, which(is_inside), after)
       n <- length(idxs_t)
       stop_if_not(n > 0L)
