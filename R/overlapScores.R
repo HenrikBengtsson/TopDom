@@ -84,6 +84,7 @@ overlapScoresOneChromosome <- function(doms_A, doms_R, debug = getOption("TopDom
   doms_A$length <- doms_A$to.coord - doms_A$from.coord
 
   best_scores <- rep(NA_real_, length = nrow(doms_R))
+  best_lengths <- rep(NA_integer_, length = nrow(doms_R))
   best_sets <- vector("list", length = nrow(doms_R))
   idxs_td <- which(doms_R$tag == "domain")
   for (ii in seq_along(idxs_td)) {
@@ -150,15 +151,16 @@ overlapScoresOneChromosome <- function(doms_A, doms_R, debug = getOption("TopDom
         best_score <- max_score
         best_set <- idxs_u[[max_idx]]
       }
-    }
+    } ## for (kk ...)
 
     best_scores[ii] <- best_score
+    best_lengths[ii] <- td_R$length
     best_sets[[ii]] <- best_set
     
     if (debug) message(sprintf("TD \"domain\" #%d of %d ... done", ii, length(idxs_td)))
   } ## for (ii ...)
 
-  list(best_scores = best_scores, best_sets = best_sets)
+  list(best_scores = best_scores, best_lengths = best_lengths, best_sets = best_sets)
 } ## overlapScoresOneChromosome()
 
 
@@ -167,11 +169,21 @@ print.TopDomOverlapScores <- function(x, ...) {
   cat(sprintf("%s:\n", class(x)))
   cat(sprintf("Chromosomes: [n = %d] %s\n",
               length(x), paste(sQuote(names(x)), collapse = ", ")))
+	      
+  lengths <- lapply(x, FUN = `[[`, "best_lengths")
+  lengths[["whole genome"]] <- unlist(lengths, use.names = FALSE)
+  cat("Summary of reference domain lengths:\n")
+  t <- t(sapply(lengths, FUN = function(x) {
+    c(summary(x), count = length(x))
+  }))
+  print(t)
+  
   scores <- lapply(x, FUN = `[[`, "best_scores")
   scores[["whole genome"]] <- unlist(scores, use.names = FALSE)
   cat("Summary of best scores:\n")
   t <- t(sapply(scores, FUN = function(x) {
     c(summary(x), count = length(x))
   }))
+  
   print(t)
 }
