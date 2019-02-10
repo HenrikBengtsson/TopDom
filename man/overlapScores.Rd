@@ -15,16 +15,18 @@ set \eqn{R} both in a format as returned by \code{\link[=TopDom]{TopDom()}}.}
 \value{
 Returns a named list of class \code{TopDomOverlapScores}, where the names
 correspond to the chromosomes in domain reference set \eqn{R}.
-Each of these chromosome elements contains a named list of elements:
+Each of these chromosome elements contains a data.frame with fields:
 \itemize{
-\item \code{best_score} - \eqn{D_{R,c}} numerics in \eqn{[0,1]}
-\item \code{best_sets}  - list of \eqn{D_{R,c}} index vectors
+\item \code{best_score}  - \eqn{D_{R,c}} numerics in \eqn{[0,1]}
+\item \code{best_length} - \eqn{D_{R,c}} positive integers
+\item \code{best_set}    - list of \eqn{D_{R,c}} index vectors
 }
 
 where \eqn{D_{R,c}} is the number of TDs in reference set \eqn{R} on
 chromosome \eqn{c}.  If a TD in reference \eqn{R} is a not a \code{"domain"},
-then the corresponding \code{best_score} is \code{NA_real_} and the corresponding
-\code{best_set} is an empty list.
+then the corresponding \code{best_score} and \code{best_length} values are
+\code{NA_real_} and \code{NA_integer_}, respectively, while \code{best_set} is an empty
+list.
 }
 \description{
 Calculates Overlap Scores between Two Sets of Topological Domains

@@ -28,7 +28,7 @@ if (require("TopDomData")) {
     print(overlaps)
   
     scores <- lapply(overlaps, FUN = function(overlaps) {
-      unlist(lapply(overlaps, FUN = `[[`, "best_scores"), use.names = FALSE)
+      unlist(lapply(overlaps, FUN = `[[`, "best_score"), use.names = FALSE)
     })
   
     avg_scores <- sapply(scores, FUN = mean, na.rm = TRUE)
