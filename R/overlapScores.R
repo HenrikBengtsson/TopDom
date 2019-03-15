@@ -8,15 +8,17 @@
 #' @return
 #' Returns a named list of class `TopDomOverlapScores`, where the names
 #' correspond to the chromosomes in domain reference set \eqn{R}.
-#' Each of these chromosome elements contains a named list of elements:
+#' Each of these chromosome elements contains a data.frame with fields:
 #'
-#' * `best_score` - \eqn{D_{R,c}} numerics in \eqn{[0,1]}
-#' * `best_sets`  - list of \eqn{D_{R,c}} index vectors
+#' * `best_score`  - \eqn{D_{R,c}} numerics in \eqn{[0,1]}
+#' * `best_length` - \eqn{D_{R,c}} positive integers
+#' * `best_set`    - list of \eqn{D_{R,c}} index vectors
 #'
 #' where \eqn{D_{R,c}} is the number of TDs in reference set \eqn{R} on
 #' chromosome \eqn{c}.  If a TD in reference \eqn{R} is a not a `"domain"`,
-#' then the corresponding `best_score` is `NA_real_` and the corresponding
-#' `best_set` is an empty list.
+#' then the corresponding `best_score` and `best_length` values are
+#' `NA_real_` and `NA_integer_`, respectively, while `best_set` is an empty
+#' list.
 #'
 #' @details
 #' The _overlap score_, \eqn{overlap(A', r_i)}, represents how well a
@@ -80,21 +82,22 @@ overlapScoresOneChromosome <- function(doms_A, doms_R, debug = getOption("TopDom
   sets$from.coord <- doms_A$from.coord[sets$first]
   sets$to.coord <- doms_A$to.coord[sets$last]
 
-  doms_R$length <- doms_R$to.coord - doms_R$from.coord
-  doms_A$length <- doms_A$to.coord - doms_A$from.coord
+  doms_R$length <- as.integer(doms_R$to.coord - doms_R$from.coord)
+  doms_A$length <- as.integer(doms_A$to.coord - doms_A$from.coord)
 
   best_scores <- rep(NA_real_, length = nrow(doms_R))
+  best_lengths <- rep(NA_integer_, length = nrow(doms_R))
   best_sets <- vector("list", length = nrow(doms_R))
   idxs_td <- which(doms_R$tag == "domain")
   for (ii in seq_along(idxs_td)) {
     idx_td <- idxs_td[ii]
     if (debug) message(sprintf("TD \"domain\" #%d of %d ...", ii, length(idxs_td)))
-    td <- doms_R[idx_td, ]
+    td_R <- doms_R[idx_td, ]
     
     ## Identify sets to consider
-    ## Q. Now many sets can match this? [0,1], [0,2], [0,3], or even more?
-    sets_t <- sets[(sets$to.coord >= td$from.coord &
-                    sets$from.coord <= td$to.coord), ]
+    ## Q. How many sets can match this? [0,1], [0,2], [0,3], or even more?
+    sets_t <- sets[(sets$to.coord >= td_R$from.coord &
+                    sets$from.coord <= td_R$to.coord), ]
 
     best_score <- 0.0
     best_set <- integer(0L)
@@ -106,22 +109,22 @@ overlapScoresOneChromosome <- function(doms_A, doms_R, debug = getOption("TopDom
       doms$cap <- doms$length
       
       ## TD in A' that is overlapping part of the beginning of reference R 
-      before <- which(doms$from.coord <= td$from.coord)
+      before <- which(doms$from.coord <= td_R$from.coord)
       if (length(before) > 0L) {
         before <- before[length(before)]
-        doms$cap[before] <- doms$to.coord[before] - td$from.coord
+        doms$cap[before] <- doms$to.coord[before] - td_R$from.coord
       }
       
       ## TD in A' that is overlapping part of the end of reference R
-      after <- which(doms$to.coord >= td$to.coord)
+      after <- which(doms$to.coord >= td_R$to.coord)
       if (length(after) > 0L) {
         after <- after[1L]
-        doms$cap[after] <- td$to.coord - doms$from.coord[after]
+        doms$cap[after] <- td_R$to.coord - doms$from.coord[after]
       }
       
       ## TDs in A' that are strictly overlapping with reference R
-      is_inside <- (doms$from.coord >= td$from.coord &
-                    doms$to.coord <= td$to.coord)
+      is_inside <- (doms$from.coord >= td_R$from.coord &
+                    doms$to.coord <= td_R$to.coord)
       idxs_t <- c(before, which(is_inside), after)
       n <- length(idxs_t)
       stop_if_not(n > 0L)
@@ -150,15 +153,19 @@ overlapScoresOneChromosome <- function(doms_A, doms_R, debug = getOption("TopDom
         best_score <- max_score
         best_set <- idxs_u[[max_idx]]
       }
-    }
+    } ## for (kk ...)
 
     best_scores[ii] <- best_score
+    best_lengths[ii] <- td_R$length
     best_sets[[ii]] <- best_set
     
     if (debug) message(sprintf("TD \"domain\" #%d of %d ... done", ii, length(idxs_td)))
   } ## for (ii ...)
 
-  list(best_scores = best_scores, best_sets = best_sets)
+  res <- data.frame(best_score = best_scores, best_length = best_lengths)
+  res$best_set <- best_sets
+
+  res
 } ## overlapScoresOneChromosome()
 
 
@@ -167,11 +174,21 @@ print.TopDomOverlapScores <- function(x, ...) {
   cat(sprintf("%s:\n", class(x)))
   cat(sprintf("Chromosomes: [n = %d] %s\n",
               length(x), paste(sQuote(names(x)), collapse = ", ")))
-  scores <- lapply(x, FUN = `[[`, "best_scores")
+	      
+  lengths <- lapply(x, FUN = `[[`, "best_length")
+  lengths[["whole genome"]] <- unlist(lengths, use.names = FALSE)
+  cat("Summary of reference domain lengths:\n")
+  t <- t(sapply(lengths, FUN = function(x) {
+    c(summary(x), count = length(x))
+  }))
+  print(t)
+  
+  scores <- lapply(x, FUN = `[[`, "best_score")
   scores[["whole genome"]] <- unlist(scores, use.names = FALSE)
   cat("Summary of best scores:\n")
   t <- t(sapply(scores, FUN = function(x) {
     c(summary(x), count = length(x))
   }))
+  
   print(t)
 }
