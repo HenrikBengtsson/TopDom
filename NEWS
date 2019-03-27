@@ -1,10 +1,17 @@
 Package: TopDom
 ===============
 
-Version: 0.7.0-9000 [2019-03-15]
+Version: 0.7.0-9000 [2019-03-26]
 
  * ...
  
+BUG FIXES:
+
+ o Internal Convert.Bin.To.Domain.TMP() used by TopDom() could produce 'Error
+   in `[<-.data.frame`(`*tmp*`, , "to.coord", value = c(NA, 2500, 247500 : 
+   replacement has 3 rows, data has 1' because it assumed at least one domain
+   was identified.
+
 
 Version: 0.7.0 [2019-03-15]
 

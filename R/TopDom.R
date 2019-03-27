@@ -205,6 +205,12 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     pvalue <- 0
   }
 
+  if (debug) {
+    mcat("#########################################################################")
+    mcat("Step 4 : Convert bins to domains (internal step)")
+    mcat("#########################################################################")
+  }
+  
   domains <- Convert.Bin.To.Domain.TMP(
     bins = bins,
     signal.idx = which(local.ext == -1.0),
@@ -718,21 +724,26 @@ Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues = NULL,
     ret <- rbind(ret, boundary)
   }
 
-  ret <- rbind(gap, domain)
-  ret <- ret[order(ret[, 3]), ]
+  if (nrow(domain) == 0L) {
+    ret <- gap
+  } else {
+    ret <- rbind(gap, domain)
+    ret <- ret[order(ret[, 3]), ]
 
-  ret[, "to.coord"] <- c(ret[2:nrow(ret), "from.coord"], bins[n_bins, "to.coord"])
-  ret[, "from.id"] <- match(ret[, "from.coord"], table = bins[, "from.coord"])
-  ret[, "to.id"] <- match(ret[, "to.coord"], table = bins[, "to.coord"])
-  ret[, "size"] <- ret[, "to.coord"] - ret[, "from.coord"]
+    ## FIXME: Below code assumes nrow(ret) >= 2
+    ret[, "to.coord"] <- c(ret[2:nrow(ret), "from.coord"], bins[n_bins, "to.coord"])
+    ret[, "from.id"] <- match(ret[, "from.coord"], table = bins[, "from.coord"])
+    ret[, "to.id"] <- match(ret[, "to.coord"], table = bins[, "to.coord"])
+    ret[, "size"] <- ret[, "to.coord"] - ret[, "from.coord"]
 
-  if (!is.null(pvalues) && !is.null(pvalue.cut)) {
-    for (i in seq_len(nrow(ret))) {
-      if (ret[i, "tag"] == "domain") {
-        domain.bins.idx <- ret[i, "from.id"]:ret[i, "to.id"]
-        p.value.constr <- which(pvalues[domain.bins.idx] < pvalue.cut)
-
-        if (length(domain.bins.idx) == length(p.value.constr)) ret[i, "tag"] <- "boundary"
+    if (!is.null(pvalues) && !is.null(pvalue.cut)) {
+      for (i in seq_len(nrow(ret))) {
+        if (ret[i, "tag"] == "domain") {
+          domain.bins.idx <- ret[i, "from.id"]:ret[i, "to.id"]
+          p.value.constr <- which(pvalues[domain.bins.idx] < pvalue.cut)
+  
+          if (length(domain.bins.idx) == length(p.value.constr)) ret[i, "tag"] <- "boundary"
+        }
       }
     }
   }
