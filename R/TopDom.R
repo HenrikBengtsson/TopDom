@@ -119,7 +119,7 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
   pvalue <- rep(1.0, times = n_bins)
 
   ## Gap region (== -0.5) by default
-  local.ext <- rep(-0.5, times = n_bins)
+  local.ext <- rep(-0.5, times = n_bins)  ## gap region
 
   if (debug) {
     mcat("#########################################################################")
@@ -193,8 +193,9 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
 
     if (debug) mcat("-- Filtering False Positives")
     local.ext[intersect(union(which(local.ext == -1.0), which(local.ext == -1.0)), which(pvalue < 0.05))] <- -2.0
-    local.ext[which(local.ext == -1.0)] <-  0.0
-    local.ext[which(local.ext == -2.0)] <- -1.0
+    local.ext[which(local.ext == -1.0)] <-  0.0  ## general bin
+    local.ext[which(local.ext == -2.0)] <- -1.0  ## local minima
+    
     if (debug) mcat("-- Done!")
 
     eltm <- proc.time() - ptm
@@ -213,8 +214,8 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
   
   domains <- Convert.Bin.To.Domain.TMP(
     bins = bins,
-    signal.idx = which(local.ext == -1.0),
-    gap.idx = which(local.ext == -0.5),
+    signal.idx = which(local.ext == -1.0),  ## local minima
+    gap.idx = which(local.ext == -0.5),     ## gap region
     pvalues = pvalue,
     pvalue.cut = 0.05
   )
@@ -377,12 +378,12 @@ Which.Gap.Region2 <- function(matrix.data, w) {
 # @return vector of local extrme, -1 if the index is local minimum, +1 if the index is local maxima, 0 otherwise.
 Detect.Local.Extreme <- function(x) {
   n_bins <- length(x)
-  ret <- rep(0, times = n_bins)
-  x[is.na(x)] <- 0
+  ret <- rep(0, times = n_bins)  ## general bin (default)
+  x[is.na(x)] <- 0               ## general bin
 
   if (n_bins <= 3) {
-    ret[which.min(x)] <- -1
-    ret[which.max(x)] <- +1
+    ret[which.min(x)] <- -1      ## local minima
+    ret[which.max(x)] <- +1      ## local maxima
     return(ret)
   }
   
@@ -396,14 +397,14 @@ Detect.Local.Extreme <- function(x) {
   if (length(cp$cp) == n_bins) return(ret)
   for (i in 2:(length(cp$cp) - 1)) {
     if (x[cp$cp[i]] >= x[cp$cp[i] - 1] && x[cp$cp[i]] >= x[cp$cp[i] + 1]) {
-      ret[cp$cp[i]] <- +1
-    } else if (x[cp$cp[i]] < x[cp$cp[i] - 1] && x[cp$cp[i]] < x[cp$cp[i] + 1]) ret[cp$cp[i]] <- -1
+      ret[cp$cp[i]] <- +1  ## local maxima
+    } else if (x[cp$cp[i]] < x[cp$cp[i] - 1] && x[cp$cp[i]] < x[cp$cp[i] + 1]) ret[cp$cp[i]] <- -1  ## local minima
 
     min.val <- min(x[cp$cp[i - 1]], x[cp$cp[i]])
     max.val <- max(x[cp$cp[i - 1]], x[cp$cp[i]])
 
-    if (min(x[cp$cp[i - 1]:cp$cp[i]]) < min.val) ret[cp$cp[i - 1] - 1 + which.min(x[cp$cp[i - 1]:cp$cp[i]])] <- -1
-    if (max(x[cp$cp[i - 1]:cp$cp[i]]) > max.val) ret[cp$cp[i - 1] - 1 + which.max(x[cp$cp[i - 1]:cp$cp[i]])] <- +1
+    if (min(x[cp$cp[i - 1]:cp$cp[i]]) < min.val) ret[cp$cp[i - 1] - 1 + which.min(x[cp$cp[i - 1]:cp$cp[i]])] <- -1  ## local minima
+    if (max(x[cp$cp[i - 1]:cp$cp[i]]) > max.val) ret[cp$cp[i - 1] - 1 + which.max(x[cp$cp[i - 1]:cp$cp[i]])] <- +1  ## local maxima
   }
 
   ret
