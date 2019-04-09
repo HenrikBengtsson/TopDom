@@ -28,7 +28,7 @@ Contributing to this package is easy.  Just send a [pull request](https://help.g
 
 ## Software status
 
-| Resource:     | CRAN                | Travis CI       | Appveyor         |
+| Resource:     | CRAN                | Travis CI       | AppVeyor         |
 | ------------- | ------------------- | --------------- | ---------------- |
 | _Platforms:_  | _Multiple_          | _Linux & macOS_ | _Windows_        |
 | R CMD check   | | <a href="https://travis-ci.org/HenrikBengtsson/TopDom"><img src="https://travis-ci.org/HenrikBengtsson/TopDom.svg" alt="Build status"></a>   | <a href="https://ci.appveyor.com/project/HenrikBengtsson/TopDom"><img src="https://ci.appveyor.com/api/projects/status/github/HenrikBengtsson/TopDom?svg=true" alt="Build status"></a> |

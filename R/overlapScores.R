@@ -23,7 +23,7 @@
 #' @details
 #' The _overlap score_, \eqn{overlap(A', r_i)}, represents how well a
 #' _consecutive_ subset \eqn{A'} of topological domains (TDs) in \eqn{A}
-#' overlap with topologial domain \eqn{r_i} in reference set \eqn{R}.
+#' overlap with topological domain \eqn{r_i} in reference set \eqn{R}.
 #' For each reference TD \eqn{r_i}, the _best match_ \eqn{A'_max} is
 #' identified, that is, the \eqn{A'} subset that maximize
 #' \eqn{overlap(A', r_i)}.
