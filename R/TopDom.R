@@ -197,6 +197,9 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     if (debug) mcat("-- Done!")
 
     if (debug) mcat("-- Filtering False Positives")
+    ## NOTE: The below duplication is left on purpose until we fully
+    ##       understand why it is there in the first place, cf.
+    ##       https://github.com/HenrikBengtsson/TopDom/issues/3
     local.ext[((local.ext == -1.0) | (local.ext == -1.0)) & (pvalue < 0.05)] <- -2.0
     local.ext[local.ext == -1.0] <-  0.0  ## general bin
     local.ext[local.ext == -2.0] <- -1.0  ## local minima
