@@ -1,6 +1,21 @@
 Package: TopDom
 ===============
 
+Version: 0.7.1 [2019-04-09]
+
+ROBUSTNESS:
+
+ * Add internal sanity checks to TopDom() asserting that the intermediate and
+   final results are of proper length and does not contain missing values.
+ 
+BUG FIXES:
+
+ o Internal Convert.Bin.To.Domain.TMP() used by TopDom() could produce 'Error
+   in `[<-.data.frame`(`*tmp*`, , "to.coord", value = c(NA, 2500, 247500 : 
+   replacement has 3 rows, data has 1' because it assumed at least one domain
+   was identified.
+
+
 Version: 0.7.0 [2019-03-15]
 
 SIGNIFICANT CHANGES:

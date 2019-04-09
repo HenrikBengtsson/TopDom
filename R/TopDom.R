@@ -83,7 +83,7 @@
 #' @example incl/TopDom.R
 #' 
 #' @author Hanjun Shin, Harris Lazaris, and Gangqing Hu.
-#' \R package, help, and code refactorization by Henrik Bengtsson.
+#' \R package, help, and code refactoring by Henrik Bengtsson.
 #'
 #' @references
 #' * Shin et al.,
@@ -119,7 +119,7 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
   pvalue <- rep(1.0, times = n_bins)
 
   ## Gap region (== -0.5) by default
-  local.ext <- rep(-0.5, times = n_bins)
+  local.ext <- rep(-0.5, times = n_bins)  ## gap region
 
   if (debug) {
     mcat("#########################################################################")
@@ -131,6 +131,7 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     diamond <- Get.Diamond.Matrix(mat.data = matrix.data, i = i, size = window.size)
     mean.cf[i] <- mean(diamond)
   }
+  stop_if_not(length(mean.cf) == n_bins)
 
   eltm <- proc.time() - ptm
   if (debug) {
@@ -148,6 +149,8 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
   gap.idx <- Which.Gap.Region2(matrix.data = matrix.data, w = window.size)
 
   proc.regions <- Which.process.region(rmv.idx = gap.idx, n_bins = n_bins, min.size = 3L)
+  stop_if_not(!anyNA(proc.regions[["start"]]), all(proc.regions[["start"]] >= 1), all(proc.regions[["start"]] <= n_bins))
+  stop_if_not(!anyNA(proc.regions[["end"]]), all(proc.regions[["end"]] >= 1), all(proc.regions[["end"]] <= n_bins))
 
   # mcat(proc.regions)
 
@@ -155,8 +158,9 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     start <- proc.regions[i, "start"]
     end   <- proc.regions[i,   "end"]
     if (debug) mcat("Process Region #", i, " from ", start, " to ", end)
-    local.ext[start:end] <- Detect.Local.Extreme(x = mean.cf[start:end])
+    local.ext[start:end] <- Detect.Local.Extreme(x = mean.cf[start:end])  ## assigns values (-1,0,+1)
   }
+  stop_if_not(!anyNA(local.ext), length(local.ext) == n_bins, all(local.ext %in% c(-0.5, -1, 0, +1)))
 
   eltm <- proc.time() - ptm
   if (debug) {
@@ -189,12 +193,28 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
 
       pvalue[start:end] <- Get.Pvalue(matrix.data = scale.matrix.data[start:end, start:end], size = window.size, scale = 1.0)
     }
+    stop_if_not(length(pvalue) == n_bins)
     if (debug) mcat("-- Done!")
 
     if (debug) mcat("-- Filtering False Positives")
-    local.ext[intersect(union(which(local.ext == -1.0), which(local.ext == -1.0)), which(pvalue < 0.05))] <- -2.0
-    local.ext[which(local.ext == -1.0)] <-  0.0
-    local.ext[which(local.ext == -2.0)] <- -1.0
+    ## "Finally, we filter out local minima with P-values larger than 0.05. [...]
+    ##  Given all identified local minima and the P-values of all bins along the
+    ##  chromosome, we use the following rule to annotate TDs and boundary 
+    ##  regions: given two consecutive local minima, if any bin does not show a
+    ##  significant difference between the contact frequencies of 
+    ##  _within.interactions_ and _between.interactions_ (P-value > 0.05), we
+    ##  classify the region between the minima as a TD; otherwise, we classify
+    ##  it as a boundary region. The boundary regions represent TD-free chromatin
+    ##  at the given sequencing resolution and current parameter settings."
+    ##  (Page 4 in Shin et al. 2016)
+    ## NOTE: The below duplication is left on purpose until we fully
+    ##       understand why it is there in the first place, cf.
+    ##       https://github.com/HenrikBengtsson/TopDom/issues/3
+    local.ext[((local.ext == -1.0) | (local.ext == -1.0)) & (pvalue < 0.05)] <- -2.0
+    local.ext[local.ext == -1.0] <-  0.0  ## general bin
+    local.ext[local.ext == -2.0] <- -1.0  ## local minima
+    stop_if_not(!anyNA(local.ext), length(local.ext) == n_bins, all(local.ext %in% c(-0.5, -1, 0, +1)))
+    
     if (debug) mcat("-- Done!")
 
     eltm <- proc.time() - ptm
@@ -205,10 +225,16 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     pvalue <- 0
   }
 
+  if (debug) {
+    mcat("#########################################################################")
+    mcat("Step 4 : Convert bins to domains (internal step)")
+    mcat("#########################################################################")
+  }
+  
   domains <- Convert.Bin.To.Domain.TMP(
     bins = bins,
-    signal.idx = which(local.ext == -1.0),
-    gap.idx = which(local.ext == -0.5),
+    signal.idx = which(local.ext == -1.0),  ## local minima
+    gap.idx = which(local.ext == -0.5),     ## gap region
     pvalues = pvalue,
     pvalue.cut = 0.05
   )
@@ -254,10 +280,14 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
 }
 
 # @fn Get.Diamond.Matrix
-# @param mat.data : N by N matrix, where each element indicate contact frequency
-# @param i :integer, bin index
-# @param size : integer, window size to expand from bin
-# @retrun : matrix.
+#
+# @param mat.data N-by-N numeric matrix, where each element indicate contact frequency
+#
+# @param i (integer) a bin index
+#
+# @param size (integer) the window size to expand from bin `i`
+#
+# @return A subset of the `mat.data` matrix.  If `i` == N, then a missing value is returned.
 Get.Diamond.Matrix <- function(mat.data, i, size) {
   n_bins <- nrow(mat.data)
   if (i == n_bins) {
@@ -306,7 +336,7 @@ Which.process.region <- function(rmv.idx, n_bins, min.size = 3L) {
   }
 
   colnames(proc.regions) <- c("start", "end")
-  proc.regions <- proc.regions[which(abs(proc.regions[, "end"] - proc.regions[, "start"]) >= min.size), ]
+  proc.regions <- proc.regions[abs(proc.regions[, "end"] - proc.regions[, "start"]) >= min.size, ]
 
   proc.regions
 }
@@ -368,15 +398,15 @@ Which.Gap.Region2 <- function(matrix.data, w) {
 
 # @fn Detect.Local.Extreme
 # @param x : original signal to find local minima
-# @return vector of local extrme, -1 if the index is local minimum, +1 if the index is local maxima, 0 otherwise.
+# @return vector of local extremes, -1 if the index is local minimum, +1 if the index is local maxima, 0 otherwise.
 Detect.Local.Extreme <- function(x) {
   n_bins <- length(x)
-  ret <- rep(0, times = n_bins)
-  x[is.na(x)] <- 0
+  ret <- rep(0, times = n_bins)  ## general bin (default)
+  x[is.na(x)] <- 0               ## general bin
 
   if (n_bins <= 3) {
-    ret[which.min(x)] <- -1
-    ret[which.max(x)] <- +1
+    ret[which.min(x)] <- -1      ## local minima
+    ret[which.max(x)] <- +1      ## local maxima
     return(ret)
   }
   
@@ -390,14 +420,14 @@ Detect.Local.Extreme <- function(x) {
   if (length(cp$cp) == n_bins) return(ret)
   for (i in 2:(length(cp$cp) - 1)) {
     if (x[cp$cp[i]] >= x[cp$cp[i] - 1] && x[cp$cp[i]] >= x[cp$cp[i] + 1]) {
-      ret[cp$cp[i]] <- +1
-    } else if (x[cp$cp[i]] < x[cp$cp[i] - 1] && x[cp$cp[i]] < x[cp$cp[i] + 1]) ret[cp$cp[i]] <- -1
+      ret[cp$cp[i]] <- +1  ## local maxima
+    } else if (x[cp$cp[i]] < x[cp$cp[i] - 1] && x[cp$cp[i]] < x[cp$cp[i] + 1]) ret[cp$cp[i]] <- -1  ## local minima
 
     min.val <- min(x[cp$cp[i - 1]], x[cp$cp[i]])
     max.val <- max(x[cp$cp[i - 1]], x[cp$cp[i]])
 
-    if (min(x[cp$cp[i - 1]:cp$cp[i]]) < min.val) ret[cp$cp[i - 1] - 1 + which.min(x[cp$cp[i - 1]:cp$cp[i]])] <- -1
-    if (max(x[cp$cp[i - 1]:cp$cp[i]]) > max.val) ret[cp$cp[i - 1] - 1 + which.max(x[cp$cp[i - 1]:cp$cp[i]])] <- +1
+    if (min(x[cp$cp[i - 1]:cp$cp[i]]) < min.val) ret[cp$cp[i - 1] - 1 + which.min(x[cp$cp[i - 1]:cp$cp[i]])] <- -1  ## local minima
+    if (max(x[cp$cp[i - 1]:cp$cp[i]]) > max.val) ret[cp$cp[i - 1] - 1 + which.max(x[cp$cp[i - 1]:cp$cp[i]])] <- +1  ## local maxima
   }
 
   ret
@@ -718,21 +748,26 @@ Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues = NULL,
     ret <- rbind(ret, boundary)
   }
 
-  ret <- rbind(gap, domain)
-  ret <- ret[order(ret[, 3]), ]
+  if (nrow(domain) == 0L) {
+    ret <- gap
+  } else {
+    ret <- rbind(gap, domain)
+    ret <- ret[order(ret[, 3]), ]
 
-  ret[, "to.coord"] <- c(ret[2:nrow(ret), "from.coord"], bins[n_bins, "to.coord"])
-  ret[, "from.id"] <- match(ret[, "from.coord"], table = bins[, "from.coord"])
-  ret[, "to.id"] <- match(ret[, "to.coord"], table = bins[, "to.coord"])
-  ret[, "size"] <- ret[, "to.coord"] - ret[, "from.coord"]
+    ## FIXME: Below code assumes nrow(ret) >= 2
+    ret[, "to.coord"] <- c(ret[2:nrow(ret), "from.coord"], bins[n_bins, "to.coord"])
+    ret[, "from.id"] <- match(ret[, "from.coord"], table = bins[, "from.coord"])
+    ret[, "to.id"] <- match(ret[, "to.coord"], table = bins[, "to.coord"])
+    ret[, "size"] <- ret[, "to.coord"] - ret[, "from.coord"]
 
-  if (!is.null(pvalues) && !is.null(pvalue.cut)) {
-    for (i in seq_len(nrow(ret))) {
-      if (ret[i, "tag"] == "domain") {
-        domain.bins.idx <- ret[i, "from.id"]:ret[i, "to.id"]
-        p.value.constr <- which(pvalues[domain.bins.idx] < pvalue.cut)
-
-        if (length(domain.bins.idx) == length(p.value.constr)) ret[i, "tag"] <- "boundary"
+    if (!is.null(pvalues) && !is.null(pvalue.cut)) {
+      for (i in seq_len(nrow(ret))) {
+        if (ret[i, "tag"] == "domain") {
+          domain.bins.idx <- ret[i, "from.id"]:ret[i, "to.id"]
+          p.value.constr <- which(pvalues[domain.bins.idx] < pvalue.cut)
+  
+          if (length(domain.bins.idx) == length(p.value.constr)) ret[i, "tag"] <- "boundary"
+        }
       }
     }
   }

@@ -173,5 +173,5 @@ PMID: \href{https://www.ncbi.nlm.nih.gov/pubmed/26704975}{26704975}.
 }
 \author{
 Hanjun Shin, Harris Lazaris, and Gangqing Hu.
-\R package, help, and code refactorization by Henrik Bengtsson.
+\R package, help, and code refactoring by Henrik Bengtsson.
 }
