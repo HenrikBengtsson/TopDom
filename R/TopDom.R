@@ -158,9 +158,11 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     start <- proc.regions[i, "start"]
     end   <- proc.regions[i,   "end"]
     if (debug) mcat("Process Region #", i, " from ", start, " to ", end)
-    local.ext[start:end] <- Detect.Local.Extreme(x = mean.cf[start:end])  ## assigns values (-1,0,+1)
+    idxs <- start:end
+    local.ext[idxs] <- Detect.Local.Extreme(x = mean.cf[idxs])  ## assigns values (-1,0,+1)
   }
   stop_if_not(!anyNA(local.ext), length(local.ext) == n_bins, all(local.ext %in% c(-0.5, -1, 0, +1)))
+  rm(list = "idxs")
 
   eltm <- proc.time() - ptm
   if (debug) {
@@ -180,9 +182,10 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     scale.matrix.data <- matrix.data
     for (i in seq_len(2 * window.size)) {
       # diag(scale.matrix.data[, i:n_bins]) <- scale(diag(matrix.data[, i:n_bins]))
-      scale.matrix.data[seq(from = 1 + (n_bins * i), to = n_bins * n_bins, by = 1 + n_bins)] <- scale(matrix.data[seq(from = 1 + (n_bins * i), to = n_bins * n_bins, by = 1 + n_bins)])
+      idxs <- seq(from = 1 + (n_bins * i), to = n_bins * n_bins, by = 1 + n_bins)
+      scale.matrix.data[idxs] <- scale(matrix.data[idxs])
     }
-    rm(list = "matrix.data")
+    rm(list = c("idxs", "matrix.data"))
     
     if (debug) mcat("-- Compute p-values by Wilcox Ranksum Test")
     for (i in seq_len(nrow(proc.regions))) {
@@ -191,8 +194,10 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
 
       if (debug) mcat("Process Region #", i, " from ", start, " to ", end)
 
-      pvalue[start:end] <- Get.Pvalue(matrix.data = scale.matrix.data[start:end, start:end], size = window.size, scale = 1.0)
+      idxs <- start:end
+      pvalue[idxs] <- Get.Pvalue(matrix.data = scale.matrix.data[idxs, idxs], size = window.size, scale = 1.0)
     }
+    rm(list = "idxs")
     stop_if_not(length(pvalue) == n_bins)
     if (debug) mcat("-- Done!")
 
@@ -353,10 +358,11 @@ Which.Gap.Region <- function(matrix.data) {
   while (i < n_bins) {
     j <- i + 1
     while (j <= n_bins) {
-      if (sum(matrix.data[i:j, i:j]) == 0) {
-        gap[i:j] <- -0.5
+      idxs <- i:j
+      if (sum(matrix.data[idxs, idxs]) == 0) {
+        gap[idxs] <- -0.5
         j <- j + 1
-        # if (j-i > 1) gap[i:j] <- -0.5
+        # if (j-i > 1) gap[idxs] <- -0.5
         # j <- j+1
       } else {
         break
@@ -466,9 +472,12 @@ Data.Norm <- function(x, y) {
   # mcat(scale.x)
   # mcat(scale.y)
 
+  diff.x <- diff.x * scale.x
+  diff.y <- diff.y * scale.y
+  
   for (i in 2:length(x)) {
-    ret.x[i] <- ret.x[i - 1] + (diff.x[i - 1] * scale.x)
-    ret.y[i] <- ret.y[i - 1] + (diff.y[i - 1] * scale.y)
+    ret.x[i] <- ret.x[i - 1] + diff.x[i - 1]
+    ret.y[i] <- ret.y[i - 1] + diff.y[i - 1]
   }
 
   list(x = ret.x, y = ret.y)
@@ -501,10 +510,8 @@ Change.Point <- function(x, y) {
       k <- (i + 1):(j - 1)
       dx_ji <- x[j] - x[i]
       dy_ji <- y[j] - y[i]
-      xy_ij <- x[i] * y[j]
-      xy_ji <- x[j] * y[i]
       A <- sqrt(dx_ji^2 + dy_ji^2)
-      Ev_j <- sum(abs(dy_ji*x[k] - dx_ji*y[k] - xy_ij + xy_ji)) / A
+      Ev_j <- sum(abs(dy_ji*x[k] - dx_ji*y[k] - x[i]*y[j] + x[j]*y[i])) / A
       Ev[j] <-     Ev_j
       Fv[j] <- A - Ev_j
 
@@ -564,7 +571,8 @@ Get.Upstream.Triangle <- function(mat.data, i, size) {
   n_bins <- nrow(mat.data)
 
   lower <- max(1, i - size)
-  tmp.mat <- mat.data[lower:i, lower:i]
+  idxs <- lower:i
+  tmp.mat <- mat.data[idxs, idxs]
   tmp.mat[upper.tri(tmp.mat, diag = FALSE)]
 }
 
@@ -582,7 +590,8 @@ Get.Downstream.Triangle <- function(mat.data, i, size) {
   }
 
   upperbound <- min(i + size, n_bins)
-  tmp.mat <- mat.data[(i + 1):upperbound, (i + 1):upperbound]
+  idxs <- (i + 1):upperbound
+  tmp.mat <- mat.data[idxs, idxs]
   tmp.mat[upper.tri(tmp.mat, diag = FALSE)]
 }
 
