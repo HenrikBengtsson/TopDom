@@ -415,19 +415,32 @@ Detect.Local.Extreme <- function(x) {
   x <- new.point$y
   ##################################################
   cp <- Change.Point(x = seq_len(n_bins), y = x)
+  cp <- cp$cp
 
-  if (length(cp$cp) <= 2) return(ret)
-  if (length(cp$cp) == n_bins) return(ret)
-  for (i in 2:(length(cp$cp) - 1)) {
-    if (x[cp$cp[i]] >= x[cp$cp[i] - 1] && x[cp$cp[i]] >= x[cp$cp[i] + 1]) {
-      ret[cp$cp[i]] <- +1  ## local maxima
-    } else if (x[cp$cp[i]] < x[cp$cp[i] - 1] && x[cp$cp[i]] < x[cp$cp[i] + 1]) ret[cp$cp[i]] <- -1  ## local minima
+  ncp <- length(cp)
+  if (ncp <= 2) return(ret)
+  if (ncp == n_bins) return(ret)
+  
+  for (i in 2:(ncp-1)) {
+    cp_b <- cp[i]
+    cp_c <- cp[i-1]
 
-    min.val <- min(x[cp$cp[i - 1]], x[cp$cp[i]])
-    max.val <- max(x[cp$cp[i - 1]], x[cp$cp[i]])
+    x_a <- x[cp_b-1]
+    x_b <- x[cp_b]
+    x_c <- x[cp_b+1]
+    
+    if (x_b >= x_a && x_b >= x_c) {
+      ret[cp_b] <- +1  ## local maxima
+    } else if (x_b < x_a && x_b < x_c) {
+      ret[cp_b] <- -1  ## local minima
+    }
 
-    if (min(x[cp$cp[i - 1]:cp$cp[i]]) < min.val) ret[cp$cp[i - 1] - 1 + which.min(x[cp$cp[i - 1]:cp$cp[i]])] <- -1  ## local minima
-    if (max(x[cp$cp[i - 1]:cp$cp[i]]) > max.val) ret[cp$cp[i - 1] - 1 + which.max(x[cp$cp[i - 1]:cp$cp[i]])] <- +1  ## local maxima
+    min.val <- min(x[cp_c], x_b)
+    max.val <- max(x[cp_c], x_b)
+
+    x_r <- x[cp_c:cp_b]
+    if (min(x_r) < min.val) ret[cp_c-1 + which.min(x_r)] <- -1  ## local minima
+    if (max(x_r) > max.val) ret[cp_c-1 + which.max(x_r)] <- +1  ## local maxima
   }
 
   ret
