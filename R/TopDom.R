@@ -499,8 +499,14 @@ Change.Point <- function(x, y) {
     while (j < n_bins) {
       j <- j + 1
       k <- (i + 1):(j - 1)
-      Ev[j] <- (sum(abs((y[j] - y[i]) * x[k] - (x[j] - x[i]) * y[k] - (x[i] * y[j]) + (x[j] * y[i]))) / sqrt((x[j] - x[i]) ^ 2 + (y[j] - y[i]) ^ 2))
-      Fv[j] <- sqrt((x[j] - x[i]) ^ 2 + (y[j] - y[i]) ^ 2) - (sum(abs((y[j] - y[i]) * x[k] - (x[j] - x[i]) * y[k] - (x[i] * y[j]) + (x[j] * y[i]))) / sqrt((x[j] - x[i]) ^ 2 + (y[j] - y[i]) ^ 2))
+      dx_ji <- x[j] - x[i]
+      dy_ji <- y[j] - y[i]
+      xy_ij <- x[i] * y[j]
+      xy_ji <- x[j] * y[i]
+      A <- sqrt(dx_ji^2 + dy_ji^2)
+      Ev_j <- sum(abs(dy_ji*x[k] - dx_ji*y[k] - xy_ij + xy_ji)) / A
+      Ev[j] <-     Ev_j
+      Fv[j] <- A - Ev_j
 
       #################################################
       # Not Original Code
