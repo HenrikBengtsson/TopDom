@@ -1,9 +1,12 @@
 Package: TopDom
 ===============
 
-Version: 0.7.0-9000 [2019-03-26]
+Version: 0.7.0-9000 [2019-04-09]
 
- * ...
+NEW FEATURES:
+
+ * Add internal sanity checks to TopDom() asserting that the intermediate and
+   final results are of proper length and does not contain missing values.
  
 BUG FIXES:
 

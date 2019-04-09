@@ -160,7 +160,7 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     if (debug) mcat("Process Region #", i, " from ", start, " to ", end)
     local.ext[start:end] <- Detect.Local.Extreme(x = mean.cf[start:end])
   }
-  stop_if_not(length(local.ext) == n_bins)
+  stop_if_not(length(local.ext) == n_bins, !anyNA(local.ext))
 
   eltm <- proc.time() - ptm
   if (debug) {
