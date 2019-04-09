@@ -319,7 +319,7 @@ Which.process.region <- function(rmv.idx, n_bins, min.size = 3L) {
   }
 
   colnames(proc.regions) <- c("start", "end")
-  proc.regions <- proc.regions[which(abs(proc.regions[, "end"] - proc.regions[, "start"]) >= min.size), ]
+  proc.regions <- proc.regions[abs(proc.regions[, "end"] - proc.regions[, "start"]) >= min.size, ]
 
   proc.regions
 }
