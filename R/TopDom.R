@@ -197,9 +197,9 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     if (debug) mcat("-- Done!")
 
     if (debug) mcat("-- Filtering False Positives")
-    local.ext[intersect(union(which(local.ext == -1.0), which(local.ext == -1.0)), which(pvalue < 0.05))] <- -2.0
-    local.ext[which(local.ext == -1.0)] <-  0.0  ## general bin
-    local.ext[which(local.ext == -2.0)] <- -1.0  ## local minima
+    local.ext[((local.ext == -1.0) | (local.ext == -1.0)) & (pvalue < 0.05)] <- -2.0
+    local.ext[local.ext == -1.0] <-  0.0  ## general bin
+    local.ext[local.ext == -2.0] <- -1.0  ## local minima
     stop_if_not(!anyNA(local.ext), length(local.ext) == n_bins)
     
     if (debug) mcat("-- Done!")
