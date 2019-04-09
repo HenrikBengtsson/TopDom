@@ -83,7 +83,7 @@
 #' @example incl/TopDom.R
 #' 
 #' @author Hanjun Shin, Harris Lazaris, and Gangqing Hu.
-#' \R package, help, and code refactorization by Henrik Bengtsson.
+#' \R package, help, and code refactoring by Henrik Bengtsson.
 #'
 #' @references
 #' * Shin et al.,
@@ -197,6 +197,16 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     if (debug) mcat("-- Done!")
 
     if (debug) mcat("-- Filtering False Positives")
+    ## "Finally, we filter out local minima with P-values larger than 0.05. [...]
+    ##  Given all identified local minima and the P-values of all bins along the
+    ##  chromosome, we use the following rule to annotate TDs and boundary 
+    ##  regions: given two consecutive local minima, if any bin does not show a
+    ##  significant difference between the contact frequencies of 
+    ##  _within.interactions_ and _between.interactions_ (P-value > 0.05), we
+    ##  classify the region between the minima as a TD; otherwise, we classify
+    ##  it as a boundary region. The boundary regions represent TD-free chromatin
+    ##  at the given sequencing resolution and current parameter settings."
+    ##  (Page 4 in Shin et al. 2016)
     ## NOTE: The below duplication is left on purpose until we fully
     ##       understand why it is there in the first place, cf.
     ##       https://github.com/HenrikBengtsson/TopDom/issues/3
@@ -270,10 +280,14 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
 }
 
 # @fn Get.Diamond.Matrix
-# @param mat.data : N by N matrix, where each element indicate contact frequency
-# @param i :integer, bin index
-# @param size : integer, window size to expand from bin
-# @retrun : matrix.
+#
+# @param mat.data N-by-N numeric matrix, where each element indicate contact frequency
+#
+# @param i (integer) a bin index
+#
+# @param size (integer) the window size to expand from bin `i`
+#
+# @return A subset of the `mat.data` matrix.  If `i` == N, then a missing value is returned.
 Get.Diamond.Matrix <- function(mat.data, i, size) {
   n_bins <- nrow(mat.data)
   if (i == n_bins) {
