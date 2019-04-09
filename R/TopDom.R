@@ -149,8 +149,8 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
   gap.idx <- Which.Gap.Region2(matrix.data = matrix.data, w = window.size)
 
   proc.regions <- Which.process.region(rmv.idx = gap.idx, n_bins = n_bins, min.size = 3L)
-  stop_if_not(all(proc.regions[["start"]] >= 1) && all(proc.regions[["start"]] <= n_bins))
-  stop_if_not(all(proc.regions[["end"]] >= 1) && all(proc.regions[["end"]] <= n_bins))
+  stop_if_not(!anyNA(proc.regions[["start"]]), all(proc.regions[["start"]] >= 1), all(proc.regions[["start"]] <= n_bins))
+  stop_if_not(!anyNA(proc.regions[["end"]]), all(proc.regions[["end"]] >= 1), all(proc.regions[["end"]] <= n_bins))
 
   # mcat(proc.regions)
 
@@ -160,7 +160,7 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     if (debug) mcat("Process Region #", i, " from ", start, " to ", end)
     local.ext[start:end] <- Detect.Local.Extreme(x = mean.cf[start:end])
   }
-  stop_if_not(length(local.ext) == n_bins, !anyNA(local.ext))
+  stop_if_not(!anyNA(local.ext), length(local.ext) == n_bins)
 
   eltm <- proc.time() - ptm
   if (debug) {
@@ -200,7 +200,7 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     local.ext[intersect(union(which(local.ext == -1.0), which(local.ext == -1.0)), which(pvalue < 0.05))] <- -2.0
     local.ext[which(local.ext == -1.0)] <-  0.0  ## general bin
     local.ext[which(local.ext == -2.0)] <- -1.0  ## local minima
-    stop_if_not(length(local.ext) == n_bins)
+    stop_if_not(!anyNA(local.ext), length(local.ext) == n_bins)
     
     if (debug) mcat("-- Done!")
 
