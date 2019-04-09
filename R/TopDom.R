@@ -158,9 +158,9 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     start <- proc.regions[i, "start"]
     end   <- proc.regions[i,   "end"]
     if (debug) mcat("Process Region #", i, " from ", start, " to ", end)
-    local.ext[start:end] <- Detect.Local.Extreme(x = mean.cf[start:end])
+    local.ext[start:end] <- Detect.Local.Extreme(x = mean.cf[start:end])  ## assigns values (-1,0,+1)
   }
-  stop_if_not(!anyNA(local.ext), length(local.ext) == n_bins)
+  stop_if_not(!anyNA(local.ext), length(local.ext) == n_bins, all(local.ext %in% c(-0.5, -1, 0, +1)))
 
   eltm <- proc.time() - ptm
   if (debug) {
@@ -200,7 +200,7 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     local.ext[((local.ext == -1.0) | (local.ext == -1.0)) & (pvalue < 0.05)] <- -2.0
     local.ext[local.ext == -1.0] <-  0.0  ## general bin
     local.ext[local.ext == -2.0] <- -1.0  ## local minima
-    stop_if_not(!anyNA(local.ext), length(local.ext) == n_bins)
+    stop_if_not(!anyNA(local.ext), length(local.ext) == n_bins, all(local.ext %in% c(-0.5, -1, 0, +1)))
     
     if (debug) mcat("-- Done!")
 
@@ -381,7 +381,7 @@ Which.Gap.Region2 <- function(matrix.data, w) {
 
 # @fn Detect.Local.Extreme
 # @param x : original signal to find local minima
-# @return vector of local extrme, -1 if the index is local minimum, +1 if the index is local maxima, 0 otherwise.
+# @return vector of local extremes, -1 if the index is local minimum, +1 if the index is local maxima, 0 otherwise.
 Detect.Local.Extreme <- function(x) {
   n_bins <- length(x)
   ret <- rep(0, times = n_bins)  ## general bin (default)
