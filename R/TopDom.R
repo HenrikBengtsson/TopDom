@@ -281,10 +281,16 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
 
   if (debug) mcat("Job Complete!")
   
-  structure(
+  res <- structure(
     list(binSignal = bins, domain = domains, bed = bedform),
     class = "TopDom"
   )
+  attr(res, "parameters") <- list(
+    window.size = window.size,
+    statFilter = statFilter
+  )
+  
+  res
 }
 
 # @fn Get.Diamond.Matrix
@@ -812,6 +818,14 @@ Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues = NULL,
 #' @export
 print.TopDom <- function(x, ...) {
   cat(sprintf("%s:\n", class(x)))
+  cat("Parameters:\n")
+  params <- attr(x, "parameters")
+  if (length(params) > 0L) {
+    cat(sprintf("- window.size: %d\n", params$window.size))
+    cat(sprintf("- statFilter: %s\n", params$statFilter))
+  } else {
+    cat(" - N/A\n")
+  }
   cat("binSignal:\n")
   str(x$binSignal)
   cat("domain:\n")

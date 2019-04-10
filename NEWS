@@ -3,7 +3,12 @@ Package: TopDom
 
 Version: 0.7.1-9000 [2019-04-09]
 
- * ...
+NEW FEATURES:
+
+ * The TopDom object returned by TopDom() now has an attribute 'parameters'
+   which records the value of arguments 'window.size' and 'statFilter'.
+
+ * Made TopDom() faster and more memory efficient.
  
 
 Version: 0.7.1 [2019-04-09]
