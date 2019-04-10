@@ -198,7 +198,7 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
       pvalue[idxs] <- Get.Pvalue(matrix.data = scale.matrix.data[idxs, idxs], size = window.size, scale = 1.0)
     }
     rm(list = "idxs")
-    stop_if_not(length(pvalue) == n_bins)
+    stop_if_not(length(pvalue) == n_bins, !anyNA(pvalue))
     if (debug) mcat("-- Done!")
 
     if (debug) mcat("-- Filtering False Positives")
@@ -215,9 +215,12 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     ## NOTE: The below duplication is left on purpose until we fully
     ##       understand why it is there in the first place, cf.
     ##       https://github.com/HenrikBengtsson/TopDom/issues/3
-    local.ext[((local.ext == -1.0) | (local.ext == -1.0)) & (pvalue < 0.05)] <- -2.0
-    local.ext[local.ext == -1.0] <-  0.0  ## general bin
-    local.ext[local.ext == -2.0] <- -1.0  ## local minima
+#    local.ext[((local.ext == -1.0) | (local.ext == -1.0)) & (pvalue < 0.05)] <- -2.0
+#    local.ext[local.ext == -1.0] <-  0.0  ## general bin
+#    local.ext[local.ext == -2.0] <- -1.0  ## local minima
+
+    local.ext[local.ext == -1.0 & pvalue >= 0.05] <- 0.0  ## drop non-significant local minima
+    
     stop_if_not(!anyNA(local.ext), length(local.ext) == n_bins, all(local.ext %in% c(-0.5, -1, 0, +1)))
     
     if (debug) mcat("-- Done!")
