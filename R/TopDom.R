@@ -202,23 +202,14 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     if (debug) mcat("-- Done!")
 
     if (debug) mcat("-- Filtering False Positives")
-    ## "Finally, we filter out local minima with P-values larger than 0.05. [...]
-    ##  Given all identified local minima and the P-values of all bins along the
-    ##  chromosome, we use the following rule to annotate TDs and boundary 
-    ##  regions: given two consecutive local minima, if any bin does not show a
-    ##  significant difference between the contact frequencies of 
-    ##  _within.interactions_ and _between.interactions_ (P-value > 0.05), we
-    ##  classify the region between the minima as a TD; otherwise, we classify
-    ##  it as a boundary region. The boundary regions represent TD-free chromatin
-    ##  at the given sequencing resolution and current parameter settings."
-    ##  (Page 4 in Shin et al. 2016)
     ## NOTE: The below duplication is left on purpose until we fully
     ##       understand why it is there in the first place, cf.
     ##       https://github.com/HenrikBengtsson/TopDom/issues/3
 #    local.ext[((local.ext == -1.0) | (local.ext == -1.0)) & (pvalue < 0.05)] <- -2.0
 #    local.ext[local.ext == -1.0] <-  0.0  ## general bin
 #    local.ext[local.ext == -2.0] <- -1.0  ## local minima
-
+    ## "Finally, we filter out local minima with P-values larger than 0.05. [...]"
+    ##  (Page 4 in Shin et al. 2016)
     local.ext[local.ext == -1.0 & pvalue >= 0.05] <- 0.0  ## drop non-significant local minima
     
     stop_if_not(!anyNA(local.ext), length(local.ext) == n_bins, all(local.ext %in% c(-0.5, -1, 0, +1)))

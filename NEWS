@@ -8,7 +8,8 @@ NEW FEATURES:
  * The TopDom object returned by TopDom() now has an attribute 'parameters'
    which records the value of arguments 'window.size' and 'statFilter'.
 
- * Made TopDom() faster and more memory efficient.
+ * Made TopDom() faster and more memory efficient by lower the number of
+   replicated computations.
  
 
 Version: 0.7.1 [2019-04-09]
