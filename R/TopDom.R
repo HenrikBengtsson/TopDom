@@ -158,9 +158,11 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     start <- proc.regions[i, "start"]
     end   <- proc.regions[i,   "end"]
     if (debug) mcat("Process Region #", i, " from ", start, " to ", end)
-    local.ext[start:end] <- Detect.Local.Extreme(x = mean.cf[start:end])  ## assigns values (-1,0,+1)
+    idxs <- start:end
+    local.ext[idxs] <- Detect.Local.Extreme(x = mean.cf[idxs])  ## assigns values (-1,0,+1)
   }
   stop_if_not(!anyNA(local.ext), length(local.ext) == n_bins, all(local.ext %in% c(-0.5, -1, 0, +1)))
+  rm(list = "idxs")
 
   eltm <- proc.time() - ptm
   if (debug) {
@@ -180,9 +182,10 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     scale.matrix.data <- matrix.data
     for (i in seq_len(2 * window.size)) {
       # diag(scale.matrix.data[, i:n_bins]) <- scale(diag(matrix.data[, i:n_bins]))
-      scale.matrix.data[seq(from = 1 + (n_bins * i), to = n_bins * n_bins, by = 1 + n_bins)] <- scale(matrix.data[seq(from = 1 + (n_bins * i), to = n_bins * n_bins, by = 1 + n_bins)])
+      idxs <- seq(from = 1 + (n_bins * i), to = n_bins * n_bins, by = 1 + n_bins)
+      scale.matrix.data[idxs] <- scale(matrix.data[idxs])
     }
-    rm(list = "matrix.data")
+    rm(list = c("idxs", "matrix.data"))
     
     if (debug) mcat("-- Compute p-values by Wilcox Ranksum Test")
     for (i in seq_len(nrow(proc.regions))) {
@@ -191,28 +194,24 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
 
       if (debug) mcat("Process Region #", i, " from ", start, " to ", end)
 
-      pvalue[start:end] <- Get.Pvalue(matrix.data = scale.matrix.data[start:end, start:end], size = window.size, scale = 1.0)
+      idxs <- start:end
+      pvalue[idxs] <- Get.Pvalue(matrix.data = scale.matrix.data[idxs, idxs], size = window.size, scale = 1.0)
     }
-    stop_if_not(length(pvalue) == n_bins)
+    rm(list = "idxs")
+    stop_if_not(length(pvalue) == n_bins, !anyNA(pvalue))
     if (debug) mcat("-- Done!")
 
     if (debug) mcat("-- Filtering False Positives")
-    ## "Finally, we filter out local minima with P-values larger than 0.05. [...]
-    ##  Given all identified local minima and the P-values of all bins along the
-    ##  chromosome, we use the following rule to annotate TDs and boundary 
-    ##  regions: given two consecutive local minima, if any bin does not show a
-    ##  significant difference between the contact frequencies of 
-    ##  _within.interactions_ and _between.interactions_ (P-value > 0.05), we
-    ##  classify the region between the minima as a TD; otherwise, we classify
-    ##  it as a boundary region. The boundary regions represent TD-free chromatin
-    ##  at the given sequencing resolution and current parameter settings."
-    ##  (Page 4 in Shin et al. 2016)
     ## NOTE: The below duplication is left on purpose until we fully
     ##       understand why it is there in the first place, cf.
     ##       https://github.com/HenrikBengtsson/TopDom/issues/3
-    local.ext[((local.ext == -1.0) | (local.ext == -1.0)) & (pvalue < 0.05)] <- -2.0
-    local.ext[local.ext == -1.0] <-  0.0  ## general bin
-    local.ext[local.ext == -2.0] <- -1.0  ## local minima
+#    local.ext[((local.ext == -1.0) | (local.ext == -1.0)) & (pvalue < 0.05)] <- -2.0
+#    local.ext[local.ext == -1.0] <-  0.0  ## general bin
+#    local.ext[local.ext == -2.0] <- -1.0  ## local minima
+    ## "Finally, we filter out local minima with P-values larger than 0.05. [...]"
+    ##  (Page 4 in Shin et al. 2016)
+    local.ext[local.ext == -1.0 & pvalue >= 0.05] <- 0.0  ## drop non-significant local minima
+    
     stop_if_not(!anyNA(local.ext), length(local.ext) == n_bins, all(local.ext %in% c(-0.5, -1, 0, +1)))
     
     if (debug) mcat("-- Done!")
@@ -273,10 +272,16 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
 
   if (debug) mcat("Job Complete!")
   
-  structure(
+  res <- structure(
     list(binSignal = bins, domain = domains, bed = bedform),
     class = "TopDom"
   )
+  attr(res, "parameters") <- list(
+    window.size = window.size,
+    statFilter = statFilter
+  )
+  
+  res
 }
 
 # @fn Get.Diamond.Matrix
@@ -353,10 +358,11 @@ Which.Gap.Region <- function(matrix.data) {
   while (i < n_bins) {
     j <- i + 1
     while (j <= n_bins) {
-      if (sum(matrix.data[i:j, i:j]) == 0) {
-        gap[i:j] <- -0.5
+      idxs <- i:j
+      if (sum(matrix.data[idxs, idxs]) == 0) {
+        gap[idxs] <- -0.5
         j <- j + 1
-        # if (j-i > 1) gap[i:j] <- -0.5
+        # if (j-i > 1) gap[idxs] <- -0.5
         # j <- j+1
       } else {
         break
@@ -415,19 +421,32 @@ Detect.Local.Extreme <- function(x) {
   x <- new.point$y
   ##################################################
   cp <- Change.Point(x = seq_len(n_bins), y = x)
+  cp <- cp$cp
 
-  if (length(cp$cp) <= 2) return(ret)
-  if (length(cp$cp) == n_bins) return(ret)
-  for (i in 2:(length(cp$cp) - 1)) {
-    if (x[cp$cp[i]] >= x[cp$cp[i] - 1] && x[cp$cp[i]] >= x[cp$cp[i] + 1]) {
-      ret[cp$cp[i]] <- +1  ## local maxima
-    } else if (x[cp$cp[i]] < x[cp$cp[i] - 1] && x[cp$cp[i]] < x[cp$cp[i] + 1]) ret[cp$cp[i]] <- -1  ## local minima
+  ncp <- length(cp)
+  if (ncp <= 2) return(ret)
+  if (ncp == n_bins) return(ret)
+  
+  for (i in 2:(ncp-1)) {
+    cp_b <- cp[i]
+    cp_c <- cp[i-1]
 
-    min.val <- min(x[cp$cp[i - 1]], x[cp$cp[i]])
-    max.val <- max(x[cp$cp[i - 1]], x[cp$cp[i]])
+    x_a <- x[cp_b-1]
+    x_b <- x[cp_b]
+    x_c <- x[cp_b+1]
+    
+    if (x_b >= x_a && x_b >= x_c) {
+      ret[cp_b] <- +1  ## local maxima
+    } else if (x_b < x_a && x_b < x_c) {
+      ret[cp_b] <- -1  ## local minima
+    }
 
-    if (min(x[cp$cp[i - 1]:cp$cp[i]]) < min.val) ret[cp$cp[i - 1] - 1 + which.min(x[cp$cp[i - 1]:cp$cp[i]])] <- -1  ## local minima
-    if (max(x[cp$cp[i - 1]:cp$cp[i]]) > max.val) ret[cp$cp[i - 1] - 1 + which.max(x[cp$cp[i - 1]:cp$cp[i]])] <- +1  ## local maxima
+    min.val <- min(x[cp_c], x_b)
+    max.val <- max(x[cp_c], x_b)
+
+    x_r <- x[cp_c:cp_b]
+    if (min(x_r) < min.val) ret[cp_c-1 + which.min(x_r)] <- -1  ## local minima
+    if (max(x_r) > max.val) ret[cp_c-1 + which.max(x_r)] <- +1  ## local maxima
   }
 
   ret
@@ -453,9 +472,12 @@ Data.Norm <- function(x, y) {
   # mcat(scale.x)
   # mcat(scale.y)
 
+  diff.x <- diff.x * scale.x
+  diff.y <- diff.y * scale.y
+  
   for (i in 2:length(x)) {
-    ret.x[i] <- ret.x[i - 1] + (diff.x[i - 1] * scale.x)
-    ret.y[i] <- ret.y[i - 1] + (diff.y[i - 1] * scale.y)
+    ret.x[i] <- ret.x[i - 1] + diff.x[i - 1]
+    ret.y[i] <- ret.y[i - 1] + diff.y[i - 1]
   }
 
   list(x = ret.x, y = ret.y)
@@ -486,8 +508,12 @@ Change.Point <- function(x, y) {
     while (j < n_bins) {
       j <- j + 1
       k <- (i + 1):(j - 1)
-      Ev[j] <- (sum(abs((y[j] - y[i]) * x[k] - (x[j] - x[i]) * y[k] - (x[i] * y[j]) + (x[j] * y[i]))) / sqrt((x[j] - x[i]) ^ 2 + (y[j] - y[i]) ^ 2))
-      Fv[j] <- sqrt((x[j] - x[i]) ^ 2 + (y[j] - y[i]) ^ 2) - (sum(abs((y[j] - y[i]) * x[k] - (x[j] - x[i]) * y[k] - (x[i] * y[j]) + (x[j] * y[i]))) / sqrt((x[j] - x[i]) ^ 2 + (y[j] - y[i]) ^ 2))
+      dx_ji <- x[j] - x[i]
+      dy_ji <- y[j] - y[i]
+      A <- sqrt(dx_ji^2 + dy_ji^2)
+      Ev_j <- sum(abs(dy_ji*x[k] - dx_ji*y[k] - x[i]*y[j] + x[j]*y[i])) / A
+      Ev[j] <-     Ev_j
+      Fv[j] <- A - Ev_j
 
       #################################################
       # Not Original Code
@@ -545,7 +571,8 @@ Get.Upstream.Triangle <- function(mat.data, i, size) {
   n_bins <- nrow(mat.data)
 
   lower <- max(1, i - size)
-  tmp.mat <- mat.data[lower:i, lower:i]
+  idxs <- lower:i
+  tmp.mat <- mat.data[idxs, idxs]
   tmp.mat[upper.tri(tmp.mat, diag = FALSE)]
 }
 
@@ -563,7 +590,8 @@ Get.Downstream.Triangle <- function(mat.data, i, size) {
   }
 
   upperbound <- min(i + size, n_bins)
-  tmp.mat <- mat.data[(i + 1):upperbound, (i + 1):upperbound]
+  idxs <- (i + 1):upperbound
+  tmp.mat <- mat.data[idxs, idxs]
   tmp.mat[upper.tri(tmp.mat, diag = FALSE)]
 }
 
@@ -781,6 +809,14 @@ Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues = NULL,
 #' @export
 print.TopDom <- function(x, ...) {
   cat(sprintf("%s:\n", class(x)))
+  cat("Parameters:\n")
+  params <- attr(x, "parameters")
+  if (length(params) > 0L) {
+    cat(sprintf("- window.size: %d\n", params$window.size))
+    cat(sprintf("- statFilter: %s\n", params$statFilter))
+  } else {
+    cat(" - N/A\n")
+  }
   cat("binSignal:\n")
   str(x$binSignal)
   cat("domain:\n")
