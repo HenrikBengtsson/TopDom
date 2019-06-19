@@ -1,8 +1,10 @@
 # TopDom - An efficient and Deterministic Method for identifying Topological Domains in Genomes
 
-This is an R package that originates from the original TopDom R script(*) by Shin et al. (2016).  This package was put together by Henrik Bengtsson independently of the TopDom authors based on that original TopDom R script (titled `TopDom.R`) and the original TopDom documentation (a PDF document titled 'TopDom Manual" from 2016-07-08).
+This is an R package that originates from the original TopDom R script by Shin et al. (2016).  This package was put together by Henrik Bengtsson independently of the TopDom authors based on that original TopDom R script and the original TopDom PDF documentation.
 
-(*) The original R script (versions 0.0.1 and 0.0.2) and the TopDom documentation was available on one of the TopDom author's websites (http://zhoulab.usc.edu/TopDom/).  As of 2019, that website is no longer available.  This Git repository holds verbatim copies of the two iterations of the original `TopDom.R` script: [v0.0.1](https://github.com/HenrikBengtsson/TopDom/tree/0.0.1/R) and [v0.0.2](https://github.com/HenrikBengtsson/TopDom/tree/0.0.2/R).  The original TopDom documentation (`TopDom Manual_v0.0.2.pdf`) is _not_ available in this Git repository.
+The original R script (versions 0.0.1 and 0.0.2) and the TopDom documentation were made available on a website of the TopDom author (http://zhoulab.usc.edu/TopDom/).  As of 2019, that website is no longer available.  This Git repository holds verbatim copies of the two iterations of the original TopDom R script: [TopDom_v0.0.1.R](https://github.com/HenrikBengtsson/TopDom/tree/0.0.1/R/TopDom.R) and [TopDom_v0.0.2.R](https://github.com/HenrikBengtsson/TopDom/tree/0.0.2/R/TopDom.R), as well as the original TopDom documentation [TopDom Manual_v0.0.2.pdf](https://github.com/HenrikBengtsson/TopDom/blob/0.0.2/docs/TopDom%20Manual_v0.0.2.pdf).
+
+The **TopDom** package is licensed under the [GNU Public License (GPL)](https://www.gnu.org/licenses/gpl.html) (per email from XJ Zhou on 2018-11-12).
 
 
 ## Installation
@@ -13,10 +15,6 @@ remotes::install_github("HenrikBengtsson/TopDom")
 ```
 
 To get the example data, install the [TopDomData] package.
-
-
-The **TopDom** package is licensed under the [GNU Public License (GPL)](https://www.gnu.org/licenses/gpl.html) (per email from XJ Zhou on 2018-11-12).
-
 
 
 ## Citing TopDom - the method and the package
