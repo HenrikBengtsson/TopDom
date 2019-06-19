@@ -1,6 +1,13 @@
 Package: TopDom
 ===============
 
+Version: 0.8.1 [2019-06-17]
+
+SOFTWARE QUALITY:
+
+ * Fix two cases of partial argument name.
+
+
 Version: 0.8.0 [2019-04-11]
 
 NEW FEATURES:
