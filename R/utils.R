@@ -13,6 +13,8 @@ mcat <- function(...) {
 #'
 #' @details
 #' A bare bone, faster version of [base::stopifnot].
+#'
+#' @keywords internal
 stop_if_not <- function(...) {
   res <- list(...)
   for (ii in seq_along(res)) {
