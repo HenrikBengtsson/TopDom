@@ -17,7 +17,8 @@ Recommended range is in {5, ..., 20}.}
 \item{outFile}{(optional) The filename without extension of the three
 result files optionally produced. See details below.}
 
-\item{statFilter}{logical, ...}
+\item{statFilter}{(logical) Specifies whether non-significant
+topological-domain boundaries should be dropped or not.}
 
 \item{...}{Additional arguments passed to \code{\link[=readHiC]{readHiC()}}.}
 

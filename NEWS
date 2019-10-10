@@ -1,9 +1,11 @@
 Package: TopDom
 ===============
 
-Version: 0.8.1-9000 [2019-06-19]
+Version: 0.8.1-9000 [2019-10-10]
 
- * ...
+DOCUMENTATION:
+
+ * Improved help on overlapScores() and TopDom().
  
 
 Version: 0.8.1 [2019-06-19]

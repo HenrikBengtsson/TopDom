@@ -9,7 +9,8 @@
 #' @param outFile (optional) The filename without extension of the three
 #' result files optionally produced. See details below.
 #' 
-#' @param statFilter logical, ...
+#' @param statFilter (logical) Specifies whether non-significant
+#' topological-domain boundaries should be dropped or not.
 #' 
 #' @param ... Additional arguments passed to [readHiC()].
 #' 

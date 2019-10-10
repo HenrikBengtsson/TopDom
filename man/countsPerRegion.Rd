@@ -2,7 +2,7 @@
 % Please edit documentation in R/countsPerRegion.R
 \name{countsPerRegion}
 \alias{countsPerRegion}
-\title{Subset a TopDomData object by region}
+\title{Calculates counts per region in a TopDomData object}
 \usage{
 countsPerRegion(data, regions)
 }
@@ -15,7 +15,7 @@ countsPerRegion(data, regions)
 A numeric vector of length \code{nrow(regions)}.
 }
 \description{
-Subset a TopDomData object by region
+Calculates counts per region in a TopDomData object
 }
 \author{
 Henrik Bengtsson.
