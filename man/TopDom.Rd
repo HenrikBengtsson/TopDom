@@ -4,8 +4,14 @@
 \alias{TopDom}
 \title{Identify topological domains for given Hi-C contact matrix}
 \usage{
-TopDom(data, window.size, outFile = NULL, statFilter = TRUE, ...,
-  debug = getOption("TopDom.debug", FALSE))
+TopDom(
+  data,
+  window.size,
+  outFile = NULL,
+  statFilter = TRUE,
+  ...,
+  debug = getOption("TopDom.debug", FALSE)
+)
 }
 \arguments{
 \item{data}{A TopDomData object, or the pathname to a normalized
@@ -103,6 +109,15 @@ and all but the BED file have column names.
 \description{
 Identify topological domains for given Hi-C contact matrix
 }
+\section{Windows size}{
+
+The \code{window.size} parameter is by design the only tuning parameter for the
+TopDom method (Shin et al., 2016). The default value, which is \emph{5} bins, is
+argued for in Shin et al. (2016) as: "Considering the previously reported
+minimum TD size (approx. 200 kb) (Dixon et al., 2012) and our bin size of
+40 kb, \emph{w}\link{indow.size} = 5 is a reasonable setting."
+}
+
 \examples{
 if (require("TopDomData")) {
   path <- system.file("exdata", package = "TopDomData", mustWork = TRUE)
@@ -163,13 +178,19 @@ if (require("TopDomData")) {
 TopDom: an efficient and deterministic method for identifying
 topological domains in genomes,
 \emph{Nucleic Acids Research}, 44(7): e70, April 2016.
-doi: 10.1093/nar/gkv1505,
+DOI: 10.1093/nar/gkv1505,
 PMCID: \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/}{PMC4838359},
 PMID: \href{https://www.ncbi.nlm.nih.gov/pubmed/26704975}{26704975}
 \item Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017 (original from
 \code{http://zhoulab.usc.edu/TopDom/})
 \item Shin et al., TopDom Manual, 2016-07-08 (original from
 \code{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf})
+\item Dixon JR, Selvaraj S, Yue F, Kim A, et al. Topological domains in
+mammalian genomes identified by analysis of chromatin interactions.
+\emph{Nature}; 485(7398):376-80, April 2012.
+DOI: 10.1038/nature11082,
+PMCID: \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3356448/}{PMC3356448},
+PMID: 22495300.
 }
 }
 \author{

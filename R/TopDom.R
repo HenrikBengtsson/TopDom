@@ -81,23 +81,40 @@
 #' \file{<outFile>.bed}, respectively.  None of the files have row names,
 #' and all but the BED file have column names.
 #'
+#' @section Windows size:
+#' The `window.size` parameter is by design the only tuning parameter for the
+#' TopDom method (Shin et al., 2016). The default value, which is _5_ bins, is
+#' argued for in Shin et al. (2016) as: "Considering the previously reported 
+#' minimum TD size (approx. 200 kb) (Dixon et al., 2012) and our bin size of
+#' 40 kb, _w_[indow.size] = 5 is a reasonable setting."
+#'
 #' @example incl/TopDom.R
 #' 
 #' @author Hanjun Shin, Harris Lazaris, and Gangqing Hu.
 #' \R package, help, and code refactoring by Henrik Bengtsson.
 #'
 #' @references
+#'
 #' * Shin et al.,
 #'   TopDom: an efficient and deterministic method for identifying
 #'   topological domains in genomes,
 #'   _Nucleic Acids Research_, 44(7): e70, April 2016.
-#'   doi: 10.1093/nar/gkv1505,
+#'   DOI: 10.1093/nar/gkv1505,
 #'   PMCID: [PMC4838359](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/),
 #'   PMID: [26704975](https://www.ncbi.nlm.nih.gov/pubmed/26704975)
+#'
 #' * Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017 (original from
 #'   \code{http://zhoulab.usc.edu/TopDom/})
+#'
 #' * Shin et al., TopDom Manual, 2016-07-08 (original from
 #'   \code{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf})
+#'
+#' * Dixon JR, Selvaraj S, Yue F, Kim A, et al. Topological domains in
+#'   mammalian genomes identified by analysis of chromatin interactions.
+#'   _Nature_; 485(7398):376-80, April 2012.
+#'   DOI: 10.1038/nature11082,
+#'   PMCID: [PMC3356448](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3356448/),
+#'   PMID: 22495300.
 #'
 #' @importFrom utils read.table write.table
 #' @export

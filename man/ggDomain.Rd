@@ -4,8 +4,7 @@
 \alias{ggDomain}
 \title{Add a Topological Domain to a Count Heatmap}
 \usage{
-ggDomain(td, dx = NULL, delta = 0.04, vline = 0, size = 2,
-  color = "#666666")
+ggDomain(td, dx = NULL, delta = 0.04, vline = 0, size = 2, color = "#666666")
 }
 \arguments{
 \item{td}{A single-row data.frame.}

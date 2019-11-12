@@ -1,11 +1,13 @@
 Package: TopDom
 ===============
 
-Version: 0.8.1-9000 [2019-10-10]
+Version: 0.8.1-9000 [2019-11-12]
 
 DOCUMENTATION:
 
  * Improved help on overlapScores() and TopDom().
+
+ * Provide a reference for the default value for `window.size` of TopDom().
  
 
 Version: 0.8.1 [2019-06-19]

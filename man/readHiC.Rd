@@ -4,8 +4,12 @@
 \alias{readHiC}
 \title{Reads a Hi-C contact data file}
 \usage{
-readHiC(file, chr = NULL, binSize = NULL,
-  debug = getOption("TopDom.debug", FALSE))
+readHiC(
+  file,
+  chr = NULL,
+  binSize = NULL,
+  debug = getOption("TopDom.debug", FALSE)
+)
 }
 \arguments{
 \item{file}{The pathname of a normalize Hi-C contact matrix file
