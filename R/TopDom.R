@@ -86,7 +86,7 @@
 #' TopDom method (Shin et al., 2016). The default value, which is _5_ bins, is
 #' argued for in Shin et al. (2016) as: "Considering the previously reported 
 #' minimum TD size (approx. 200 kb) (Dixon et al., 2012) and our bin size of
-#' 40 kb, _w_[indow.size] = 5 is a reasonable setting."
+#' 40 kb, _w_\[indow.size\] = 5 is a reasonable setting."
 #'
 #' @example incl/TopDom.R
 #' 
