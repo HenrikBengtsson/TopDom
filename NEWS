@@ -42,7 +42,7 @@ ROBUSTNESS:
  
 BUG FIXES:
 
- o Internal Convert.Bin.To.Domain.TMP() used by TopDom() could produce 'Error
+ * Internal Convert.Bin.To.Domain.TMP() used by TopDom() could produce 'Error
    in `[<-.data.frame`(`*tmp*`, , "to.coord", value = c(NA, 2500, 247500 : 
    replacement has 3 rows, data has 1' because it assumed at least one domain
    was identified.
