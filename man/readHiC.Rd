@@ -36,7 +36,7 @@ table where the first three columns correspond to \code{chr} (string),
 \code{from.coord} (integer position), and \code{to.coord} (integer position).
 These column defines the genomic location of the N Hi-C bins (in order).
 The last N columns should contain normalized contact counts (float) such
-that element (r, 3+c) in this table corresponds to count (r,c) in the
+that element (r,3+c) in this table corresponds to count (r,c) in the
 normalized contact matrix.
 
 If an N-by-(4+N) table, then the first column is assumed to contain an
