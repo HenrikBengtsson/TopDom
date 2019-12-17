@@ -1,5 +1,5 @@
 Package: TopDom
-Version: 0.8.1
+Version: 0.8.2
 Title: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes
 Depends: R (>= 3.3.0)
 Imports:
@@ -23,5 +23,5 @@ License: GPL
 LazyLoad: TRUE
 URL: https://github.com/HenrikBengtsson/TopDom
 BugReports: https://github.com/HenrikBengtsson/TopDom/issues
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 Roxygen: list(markdown = TRUE)

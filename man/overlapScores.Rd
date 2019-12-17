@@ -43,6 +43,16 @@ For exact definitions, see Page 8 in Shin et al. (2016).
 Note that the overlap score is an asymmetric score, which means that
 \code{overlapScores(a, b) != overlapScores(b, a)}.
 }
+\section{Warning - This might differ not be the correct implementation}{
+
+The original TopDom scripts do not provide an implementation for
+calculating overlap scores.  Instead, the implementation of
+\code{TopDom::overlapScores()} is based on the textual description of
+overlap scores provided in Shin et al. (2016).  It is not known if this
+is the exact same algorithm and implementation as the authors of the
+TopDom article used.
+}
+
 \examples{
 if (require("TopDomData")) {
   path <- system.file("exdata", package = "TopDomData", mustWork = TRUE)

@@ -4,8 +4,14 @@
 \alias{ggDomainLabel}
 \title{Add a Topological Domain Label to a Count Heatmap}
 \usage{
-ggDomainLabel(td, fmt = "\%s: \%.2f - \%.2f Mbp", rot = 45, dx = 0,
-  vjust = 2.5, cex = 1.5)
+ggDomainLabel(
+  td,
+  fmt = "\%s: \%.2f - \%.2f Mbp",
+  rot = 45,
+  dx = 0,
+  vjust = 2.5,
+  cex = 1.5
+)
 }
 \arguments{
 \item{td}{A single-row data.frame.}

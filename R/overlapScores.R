@@ -31,7 +31,15 @@
 #'
 #' Note that the overlap score is an asymmetric score, which means that
 #' `overlapScores(a, b) != overlapScores(b, a)`.
-#' 
+#'
+#' @section Warning - This might differ not be the correct implementation:
+#' The original TopDom scripts do not provide an implementation for
+#' calculating overlap scores.  Instead, the implementation of
+#' `TopDom::overlapScores()` is based on the textual description of
+#' overlap scores provided in Shin et al. (2016).  It is not known if this
+#' is the exact same algorithm and implementation as the authors of the
+#' TopDom article used.
+#'
 #' @example incl/overlapScores.R
 #' 
 #' @references

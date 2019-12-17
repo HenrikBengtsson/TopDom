@@ -18,3 +18,4 @@ Asserts the Truth of R Expressions
 \details{
 A bare bone, faster version of \link[base:stopifnot]{base::stopifnot}.
 }
+\keyword{internal}

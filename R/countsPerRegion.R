@@ -1,4 +1,4 @@
-#' Subset a TopDomData object by region
+#' Calculates counts per region in a TopDomData object
 #'
 #' @param data A TopDomData object.
 #'
