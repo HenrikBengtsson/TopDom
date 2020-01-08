@@ -37,16 +37,16 @@ A named list of class \code{TopDom} with data.frame elements
 \item The \code{binSignal} data frame (N-by-7) holds mean contact frequency,
 local extreme, and p-value for every bin. The first four columns
 represent basic bin information given by matrix file, such as
-bin id (\code{id}), chromosome(\code{chr}), start coordination (\code{from.coord}),
-and end coordination (\code{to.coord}) for each bin.
+bin id (\code{id}), chromosome(\code{chr}), start coordinate (\code{from.coord}),
+and end coordinate (\code{to.coord}) for each bin.
 The last three columns (\code{local.ext}, \code{mean.cf}, and \code{p-value}) represent
 computed values by the TopDom algorithm.
 The columns are:
 \itemize{
 \item \code{id}: Bin ID
 \item \code{chr}: Chromosome
-\item \code{from.coord}: Start coordination of bin
-\item \code{to.coord}: End coordination of bin
+\item \code{from.coord}: Start coordinate of bin
+\item \code{to.coord}: End coordinate of bin
 \item \code{local.ext}:
 \itemize{
 \item \code{-1}: Local minima.
@@ -69,9 +69,9 @@ The first five columns include the basic information about the block,
 \item \code{id}: Identifier of block
 \item \code{chr}: Chromosome
 \item \code{from.id}: Start bin index of the block
-\item \code{from.coord}: Start coordination of the block
+\item \code{from.coord}: Start coordinate of the block
 \item \code{to.id}: End bin index of the block
-\item \code{to.coord}: End coordination of the block
+\item \code{to.coord}: End coordinate of the block
 \item \code{tag}: Categorized name of the block. Three possible blocks exists:
 \itemize{
 \item \code{gap}

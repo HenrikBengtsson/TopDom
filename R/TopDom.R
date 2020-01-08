@@ -21,15 +21,15 @@
 #' * The `binSignal` data frame (N-by-7) holds mean contact frequency,
 #'   local extreme, and p-value for every bin. The first four columns
 #'   represent basic bin information given by matrix file, such as
-#'   bin id (`id`), chromosome(`chr`), start coordination (`from.coord`),
-#'   and end coordination (`to.coord`) for each bin.
+#'   bin id (`id`), chromosome(`chr`), start coordinate (`from.coord`),
+#'   and end coordinate (`to.coord`) for each bin.
 #'   The last three columns (`local.ext`, `mean.cf`, and `p-value`) represent
 #'   computed values by the TopDom algorithm.
 #'   The columns are:
 #'   - `id`: Bin ID
 #'   - `chr`: Chromosome
-#'   - `from.coord`: Start coordination of bin
-#'   - `to.coord`: End coordination of bin
+#'   - `from.coord`: Start coordinate of bin
+#'   - `to.coord`: End coordinate of bin
 #'   - `local.ext`:
 #'      + `-1`: Local minima.
 #'      + `-0.5`: Gap region.
@@ -49,9 +49,9 @@
 #'   - `id`: Identifier of block
 #'   - `chr`: Chromosome
 #'   - `from.id`: Start bin index of the block
-#'   - `from.coord`: Start coordination of the block
+#'   - `from.coord`: Start coordinate of the block
 #'   - `to.id`: End bin index of the block
-#'   - `to.coord`: End coordination of the block
+#'   - `to.coord`: End coordinate of the block
 #'   - `tag`: Categorized name of the block. Three possible blocks exists:
 #'     + `gap`
 #'     + `domain`
