@@ -82,11 +82,18 @@
 #' and all but the BED file have column names.
 #'
 #' @section Windows size:
-#' The `window.size` parameter is by design the only tuning parameter for the
-#' TopDom method (Shin et al., 2016). The default value, which is _5_ bins, is
-#' argued for in Shin et al. (2016) as: "Considering the previously reported 
-#' minimum TD size (approx. 200 kb) (Dixon et al., 2012) and our bin size of
-#' 40 kb, _w_\[indow.size\] = 5 is a reasonable setting."
+#' The `window.size` parameter is by design the only tuning parameter in the
+#' TopDom method and affects the amount of smoothing applied when calculating
+#' the TopDom bin signals.  The binning window extends symmetrically downstream
+#' and upstream from the bin such that the bin signal is the average
+#' `window.size^2` contact frequencies.
+#' For details, see Equation (1) and Figure 1 in Shin et al. (2016).
+#' Typically, the number of identified TDs decreases while their average
+#' lengths increase as this window-size parameter increases (Figure 2).
+#' The default is `window.size = 5` (bins), which is motiviated as:
+#' "Considering the previously reported minimum TD size (approx. 200 kb)
+#' (Dixon et al., 2012) and our bin size of 40 kb, _w_\[indow.size\] = 5 is a
+#' reasonable setting" (Shin et al., 2016).
 #'
 #' @example incl/TopDom.R
 #' 

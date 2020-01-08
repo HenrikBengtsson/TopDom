@@ -111,11 +111,15 @@ Identify topological domains for given Hi-C contact matrix
 }
 \section{Windows size}{
 
-The \code{window.size} parameter is by design the only tuning parameter for the
-TopDom method (Shin et al., 2016). The default value, which is \emph{5} bins, is
-argued for in Shin et al. (2016) as: "Considering the previously reported
-minimum TD size (approx. 200 kb) (Dixon et al., 2012) and our bin size of
-40 kb, \emph{w}[indow.size] = 5 is a reasonable setting."
+The \code{window.size} parameter is by design the only tuning parameter in the
+TopDom method and affects the amount of smoothing applied when calculating
+the TopDom bin signals.  The binning window extends symmetrically downstream
+and upstream from the bin such that the bin signal is the average
+\code{window.size^2} contact frequencies.  For details, see Eq. (1) in
+Shin et al. (2016).  The default is \code{window.size = 5} (bins), motiviated as:
+"Considering the previously reported minimum TD size (approx. 200 kb)
+(Dixon et al., 2012) and our bin size of 40 kb, \emph{w}[indow.size] = 5 is a
+reasonable setting" (Shin et al., 2016).
 }
 
 \examples{
