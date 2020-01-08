@@ -115,8 +115,11 @@ The \code{window.size} parameter is by design the only tuning parameter in the
 TopDom method and affects the amount of smoothing applied when calculating
 the TopDom bin signals.  The binning window extends symmetrically downstream
 and upstream from the bin such that the bin signal is the average
-\code{window.size^2} contact frequencies.  For details, see Eq. (1) in
-Shin et al. (2016).  The default is \code{window.size = 5} (bins), motiviated as:
+\code{window.size^2} contact frequencies.
+For details, see Equation (1) and Figure 1 in Shin et al. (2016).
+Typically, the number of identified TDs decreases while their average
+lengths increase as this window-size parameter increases (Figure 2).
+The default is \code{window.size = 5} (bins), which is motiviated as:
 "Considering the previously reported minimum TD size (approx. 200 kb)
 (Dixon et al., 2012) and our bin size of 40 kb, \emph{w}[indow.size] = 5 is a
 reasonable setting" (Shin et al., 2016).
