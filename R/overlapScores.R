@@ -163,12 +163,20 @@ overlapScoresOneChromosome <- function(doms_A, doms_R, debug = getOption("TopDom
       }
     } ## for (kk ...)
 
+    ## Sanity checks
+    stop_if_not(length(best_score) == 1L, length(td_R$length) == 1L)
+
     best_scores[ii] <- best_score
     best_lengths[ii] <- td_R$length
     best_sets[[ii]] <- best_set
     
     if (debug) message(sprintf("TD \"domain\" #%d of %d ... done", ii, length(idxs_td)))
   } ## for (ii ...)
+
+  ## Sanity checks
+  stop_if_not(length(best_scores) == nrow(doms_R),
+              length(best_lengths) == nrow(doms_R),
+              length(best_sets) == nrow(doms_R))
 
   res <- data.frame(best_score = best_scores, best_length = best_lengths)
   res$best_set <- best_sets
