@@ -3,6 +3,15 @@ Package: TopDom
 
 Version: 0.8.2-9000 [2020-02-04]
 
+SIGNIFICANT CHANGES:
+
+ * The list data.frame elements returned by overlapScores() now has column
+   'chromosome' as the first position.  The data.frame:s are of kind tibble.
+ 
+NEW FEATURES:
+
+ * Add as_tibble() for TopDomOverlapScores.
+ 
 DOCUMENTATION:
 
  * Add further documentation on the 'window.size' parameter.

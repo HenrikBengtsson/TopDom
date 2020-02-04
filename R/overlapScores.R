@@ -10,12 +10,13 @@
 #' correspond to the chromosomes in domain reference set \eqn{R}.
 #' Each of these chromosome elements contains a data.frame with fields:
 #'
+#' * `chromosome`  - \eqn{D_{R,c}} character strings
 #' * `best_score`  - \eqn{D_{R,c}} numerics in \eqn{[0,1]}
 #' * `best_length` - \eqn{D_{R,c}} positive integers
 #' * `best_set`    - list of \eqn{D_{R,c}} index vectors
 #'
 #' where \eqn{D_{R,c}} is the number of TDs in reference set \eqn{R} on
-#' chromosome \eqn{c}.  If a TD in reference \eqn{R} is a not a `"domain"`,
+#' chromosome \eqn{c}.  If a TD in reference \eqn{R} is not a `"domain"`,
 #' then the corresponding `best_score` and `best_length` values are
 #' `NA_real_` and `NA_integer_`, respectively, while `best_set` is an empty
 #' list.
@@ -55,6 +56,7 @@
 #' 
 #' @seealso [TopDom].
 #'
+#' @importFrom tibble as_tibble tibble
 #' @export
 overlapScores <- function(a, reference, debug = getOption("TopDom.debug", FALSE)) {
   stopifnot(inherits(reference, "TopDom"), inherits(a, "TopDom"))
@@ -70,14 +72,18 @@ overlapScores <- function(a, reference, debug = getOption("TopDom.debug", FALSE)
     if (debug) message(sprintf("Chromosome %s ...", chr))
     doms_R <- domains_R[domains_R$chr == chr, ]
     doms_A <- domains_A[domains_A$chr == chr, ]
-    scores[[chr]] <- overlapScoresOneChromosome(doms_A, doms_R = doms_R, debug = debug)
+    scores_chr <- overlapScoresOneChromosome(doms_A, doms_R = doms_R, debug = debug)
+    scores_chr <- as_tibble(cbind(tibble(chromosome = chr), scores_chr))
+    scores[[chr]] <- scores_chr
     if (debug) message(sprintf("Chromosome %s ... done", chr))
   }
 
-  structure(scores, class = "TopDomOverlapScores")
+  class(scores) <- c("TopDomOverlapScores", class(scores))
+  scores
 }
 
 
+#' @importFrom tibble as_tibble
 overlapScoresOneChromosome <- function(doms_A, doms_R, debug = getOption("TopDom.debug", FALSE)) {
   stopifnot(is.logical(debug), length(debug) == 1L, !is.na(debug))
   ## FIXME: Assert that A and reference R are sorted by (chr, pos)
@@ -185,12 +191,20 @@ overlapScoresOneChromosome <- function(doms_A, doms_R, debug = getOption("TopDom
 } ## overlapScoresOneChromosome()
 
 
+#' @importFrom tibble as_tibble
+#' @export
+as_tibble.TopDomOverlapScores <- function(x, ...) {
+  do.call(rbind, args = x)
+}
+
+
 #' @export
 print.TopDomOverlapScores <- function(x, ...) {
-  cat(sprintf("%s:\n", class(x)))
+  cat(sprintf("%s:\n", paste(class(x), collapse = ", ")))
+
   cat(sprintf("Chromosomes: [n = %d] %s\n",
               length(x), paste(sQuote(names(x)), collapse = ", ")))
-	      
+
   lengths <- lapply(x, FUN = `[[`, "best_length")
   lengths[["whole genome"]] <- unlist(lengths, use.names = FALSE)
   cat("Summary of reference domain lengths:\n")

@@ -6,7 +6,8 @@ Imports:
     matrixStats,
     grid,
     ggplot2,
-    reshape2
+    reshape2,
+    tibble
 Suggests:
     TopDomData,
     diffobj (>= 0.1.11)
