@@ -116,6 +116,11 @@
 #' * Shin et al., TopDom Manual, 2016-07-08 (original from
 #'   \code{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf})
 #'
+#' * Hanjun Shin, Understanding the 3D genome organization in topological
+#'   domain level, Doctor of Philosophy Dissertation,
+#'   University of Southern California, March 2017,
+#'   \url{http://digitallibrary.usc.edu/cdm/ref/collection/p15799coll40/id/347735}
+#'
 #' * Dixon JR, Selvaraj S, Yue F, Kim A, et al. Topological domains in
 #'   mammalian genomes identified by analysis of chromatin interactions.
 #'   _Nature_; 485(7398):376-80, April 2012.

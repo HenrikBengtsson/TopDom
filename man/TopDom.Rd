@@ -192,6 +192,10 @@ PMID: \href{https://www.ncbi.nlm.nih.gov/pubmed/26704975}{26704975}
 \code{http://zhoulab.usc.edu/TopDom/})
 \item Shin et al., TopDom Manual, 2016-07-08 (original from
 \code{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf})
+\item Hanjun Shin, Understanding the 3D genome organization in topological
+domain level, Doctor of Philosophy Dissertation,
+University of Southern California, March 2017,
+\url{http://digitallibrary.usc.edu/cdm/ref/collection/p15799coll40/id/347735}
 \item Dixon JR, Selvaraj S, Yue F, Kim A, et al. Topological domains in
 mammalian genomes identified by analysis of chromatin interactions.
 \emph{Nature}; 485(7398):376-80, April 2012.

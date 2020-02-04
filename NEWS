@@ -1,11 +1,13 @@
 Package: TopDom
 ===============
 
-Version: 0.8.2-9000 [2020-01-07]
+Version: 0.8.2-9000 [2020-02-04]
 
 DOCUMENTATION:
 
  * Add further documentation on the 'window.size' parameter.
+
+ * Add reference to Hanjun Shin's PhD thesis.
  
 
 Version: 0.8.2 [2019-12-17]
