@@ -37,16 +37,16 @@ A named list of class \code{TopDom} with data.frame elements
 \item The \code{binSignal} data frame (N-by-7) holds mean contact frequency,
 local extreme, and p-value for every bin. The first four columns
 represent basic bin information given by matrix file, such as
-bin id (\code{id}), chromosome(\code{chr}), start coordination (\code{from.coord}),
-and end coordination (\code{to.coord}) for each bin.
+bin id (\code{id}), chromosome(\code{chr}), start coordinate (\code{from.coord}),
+and end coordinate (\code{to.coord}) for each bin.
 The last three columns (\code{local.ext}, \code{mean.cf}, and \code{p-value}) represent
 computed values by the TopDom algorithm.
 The columns are:
 \itemize{
 \item \code{id}: Bin ID
 \item \code{chr}: Chromosome
-\item \code{from.coord}: Start coordination of bin
-\item \code{to.coord}: End coordination of bin
+\item \code{from.coord}: Start coordinate of bin
+\item \code{to.coord}: End coordinate of bin
 \item \code{local.ext}:
 \itemize{
 \item \code{-1}: Local minima.
@@ -69,9 +69,9 @@ The first five columns include the basic information about the block,
 \item \code{id}: Identifier of block
 \item \code{chr}: Chromosome
 \item \code{from.id}: Start bin index of the block
-\item \code{from.coord}: Start coordination of the block
+\item \code{from.coord}: Start coordinate of the block
 \item \code{to.id}: End bin index of the block
-\item \code{to.coord}: End coordination of the block
+\item \code{to.coord}: End coordinate of the block
 \item \code{tag}: Categorized name of the block. Three possible blocks exists:
 \itemize{
 \item \code{gap}
@@ -111,11 +111,18 @@ Identify topological domains for given Hi-C contact matrix
 }
 \section{Windows size}{
 
-The \code{window.size} parameter is by design the only tuning parameter for the
-TopDom method (Shin et al., 2016). The default value, which is \emph{5} bins, is
-argued for in Shin et al. (2016) as: "Considering the previously reported
-minimum TD size (approx. 200 kb) (Dixon et al., 2012) and our bin size of
-40 kb, \emph{w}[indow.size] = 5 is a reasonable setting."
+The \code{window.size} parameter is by design the only tuning parameter in the
+TopDom method and affects the amount of smoothing applied when calculating
+the TopDom bin signals.  The binning window extends symmetrically downstream
+and upstream from the bin such that the bin signal is the average
+\code{window.size^2} contact frequencies.
+For details, see Equation (1) and Figure 1 in Shin et al. (2016).
+Typically, the number of identified TDs decreases while their average
+lengths increase as this window-size parameter increases (Figure 2).
+The default is \code{window.size = 5} (bins), which is motiviated as:
+"Considering the previously reported minimum TD size (approx. 200 kb)
+(Dixon et al., 2012) and our bin size of 40 kb, \emph{w}[indow.size] = 5 is a
+reasonable setting" (Shin et al., 2016).
 }
 
 \examples{
@@ -185,6 +192,10 @@ PMID: \href{https://www.ncbi.nlm.nih.gov/pubmed/26704975}{26704975}
 \code{http://zhoulab.usc.edu/TopDom/})
 \item Shin et al., TopDom Manual, 2016-07-08 (original from
 \code{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf})
+\item Hanjun Shin, Understanding the 3D genome organization in topological
+domain level, Doctor of Philosophy Dissertation,
+University of Southern California, March 2017,
+\url{http://digitallibrary.usc.edu/cdm/ref/collection/p15799coll40/id/347735}
 \item Dixon JR, Selvaraj S, Yue F, Kim A, et al. Topological domains in
 mammalian genomes identified by analysis of chromatin interactions.
 \emph{Nature}; 485(7398):376-80, April 2012.

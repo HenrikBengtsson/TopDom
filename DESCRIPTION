@@ -1,12 +1,13 @@
 Package: TopDom
-Version: 0.8.2
+Version: 0.9.0
 Title: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes
 Depends: R (>= 3.3.0)
 Imports:
     matrixStats,
     grid,
     ggplot2,
-    reshape2
+    reshape2,
+    tibble
 Suggests:
     TopDomData,
     diffobj (>= 0.1.11)

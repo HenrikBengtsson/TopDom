@@ -1,6 +1,24 @@
 Package: TopDom
 ===============
 
+Version: 0.9.0 [2020-02-19]
+
+SIGNIFICANT CHANGES:
+
+ * The list data.frame elements returned by overlapScores() now has column
+   'chromosome' as the first position.  The data.frame:s are of kind tibble.
+ 
+NEW FEATURES:
+
+ * Add as_tibble() for TopDomOverlapScores.
+ 
+DOCUMENTATION:
+
+ * Add further documentation on the 'window.size' parameter.
+
+ * Add reference to Hanjun Shin's PhD thesis.
+ 
+
 Version: 0.8.2 [2019-12-17]
 
 DOCUMENTATION:
@@ -37,7 +55,7 @@ ROBUSTNESS:
  
 BUG FIXES:
 
- o Internal Convert.Bin.To.Domain.TMP() used by TopDom() could produce 'Error
+ * Internal Convert.Bin.To.Domain.TMP() used by TopDom() could produce 'Error
    in `[<-.data.frame`(`*tmp*`, , "to.coord", value = c(NA, 2500, 247500 : 
    replacement has 3 rows, data has 1' because it assumed at least one domain
    was identified.

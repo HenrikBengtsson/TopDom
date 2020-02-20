@@ -21,15 +21,15 @@
 #' * The `binSignal` data frame (N-by-7) holds mean contact frequency,
 #'   local extreme, and p-value for every bin. The first four columns
 #'   represent basic bin information given by matrix file, such as
-#'   bin id (`id`), chromosome(`chr`), start coordination (`from.coord`),
-#'   and end coordination (`to.coord`) for each bin.
+#'   bin id (`id`), chromosome(`chr`), start coordinate (`from.coord`),
+#'   and end coordinate (`to.coord`) for each bin.
 #'   The last three columns (`local.ext`, `mean.cf`, and `p-value`) represent
 #'   computed values by the TopDom algorithm.
 #'   The columns are:
 #'   - `id`: Bin ID
 #'   - `chr`: Chromosome
-#'   - `from.coord`: Start coordination of bin
-#'   - `to.coord`: End coordination of bin
+#'   - `from.coord`: Start coordinate of bin
+#'   - `to.coord`: End coordinate of bin
 #'   - `local.ext`:
 #'      + `-1`: Local minima.
 #'      + `-0.5`: Gap region.
@@ -49,9 +49,9 @@
 #'   - `id`: Identifier of block
 #'   - `chr`: Chromosome
 #'   - `from.id`: Start bin index of the block
-#'   - `from.coord`: Start coordination of the block
+#'   - `from.coord`: Start coordinate of the block
 #'   - `to.id`: End bin index of the block
-#'   - `to.coord`: End coordination of the block
+#'   - `to.coord`: End coordinate of the block
 #'   - `tag`: Categorized name of the block. Three possible blocks exists:
 #'     + `gap`
 #'     + `domain`
@@ -82,11 +82,18 @@
 #' and all but the BED file have column names.
 #'
 #' @section Windows size:
-#' The `window.size` parameter is by design the only tuning parameter for the
-#' TopDom method (Shin et al., 2016). The default value, which is _5_ bins, is
-#' argued for in Shin et al. (2016) as: "Considering the previously reported 
-#' minimum TD size (approx. 200 kb) (Dixon et al., 2012) and our bin size of
-#' 40 kb, _w_\[indow.size\] = 5 is a reasonable setting."
+#' The `window.size` parameter is by design the only tuning parameter in the
+#' TopDom method and affects the amount of smoothing applied when calculating
+#' the TopDom bin signals.  The binning window extends symmetrically downstream
+#' and upstream from the bin such that the bin signal is the average
+#' `window.size^2` contact frequencies.
+#' For details, see Equation (1) and Figure 1 in Shin et al. (2016).
+#' Typically, the number of identified TDs decreases while their average
+#' lengths increase as this window-size parameter increases (Figure 2).
+#' The default is `window.size = 5` (bins), which is motiviated as:
+#' "Considering the previously reported minimum TD size (approx. 200 kb)
+#' (Dixon et al., 2012) and our bin size of 40 kb, _w_\[indow.size\] = 5 is a
+#' reasonable setting" (Shin et al., 2016).
 #'
 #' @example incl/TopDom.R
 #' 
@@ -108,6 +115,11 @@
 #'
 #' * Shin et al., TopDom Manual, 2016-07-08 (original from
 #'   \code{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf})
+#'
+#' * Hanjun Shin, Understanding the 3D genome organization in topological
+#'   domain level, Doctor of Philosophy Dissertation,
+#'   University of Southern California, March 2017,
+#'   \url{http://digitallibrary.usc.edu/cdm/ref/collection/p15799coll40/id/347735}
 #'
 #' * Dixon JR, Selvaraj S, Yue F, Kim A, et al. Topological domains in
 #'   mammalian genomes identified by analysis of chromatin interactions.

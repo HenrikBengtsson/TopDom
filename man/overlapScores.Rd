@@ -17,13 +17,14 @@ Returns a named list of class \code{TopDomOverlapScores}, where the names
 correspond to the chromosomes in domain reference set \eqn{R}.
 Each of these chromosome elements contains a data.frame with fields:
 \itemize{
+\item \code{chromosome}  - \eqn{D_{R,c}} character strings
 \item \code{best_score}  - \eqn{D_{R,c}} numerics in \eqn{[0,1]}
 \item \code{best_length} - \eqn{D_{R,c}} positive integers
 \item \code{best_set}    - list of \eqn{D_{R,c}} index vectors
 }
 
 where \eqn{D_{R,c}} is the number of TDs in reference set \eqn{R} on
-chromosome \eqn{c}.  If a TD in reference \eqn{R} is a not a \code{"domain"},
+chromosome \eqn{c}.  If a TD in reference \eqn{R} is not a \code{"domain"},
 then the corresponding \code{best_score} and \code{best_length} values are
 \code{NA_real_} and \code{NA_integer_}, respectively, while \code{best_set} is an empty
 list.
@@ -55,6 +56,7 @@ TopDom article used.
 
 \examples{
 if (require("TopDomData")) {
+  library(tibble)
   path <- system.file("exdata", package = "TopDomData", mustWork = TRUE)
 
   ## Original count data
@@ -69,9 +71,11 @@ if (require("TopDomData")) {
   ## Overlap scores (in both directions)
   overlap_56 <- overlapScores(tds_6, reference = tds_5)
   print(overlap_56)
+  print(as_tibble(overlap_56))
   
   overlap_65 <- overlapScores(tds_5, reference = tds_6)
   print(overlap_65)
+  print(as_tibble(overlap_65))
 }
 }
 \references{
