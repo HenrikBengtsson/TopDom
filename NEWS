@@ -1,9 +1,12 @@
 Package: TopDom
 ===============
 
-Version: 0.9.0-9000 [2020-02-19]
+Version: 0.9.0-9000 [2020-02-20]
 
- * ...
+BUG FIXES:
+
+ * ggCountHeatmap() for TopDomData could produce a warning on a partial
+   argument name.
 
 
 Version: 0.9.0 [2020-02-19]

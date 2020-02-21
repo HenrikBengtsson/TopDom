@@ -62,6 +62,7 @@ overlapScores <- function(a, reference, debug = getOption("TopDom.debug", FALSE)
   stopifnot(inherits(reference, "TopDom"), inherits(a, "TopDom"))
   stopifnot(is.logical(debug), length(debug) == 1L, !is.na(debug))
 
+  ## Extract the 'domain' fields from the 'reference' and the 'a' TopDom objects
   domains_R <- reference$domain
   domains_A <- a$domain
   

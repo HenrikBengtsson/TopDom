@@ -48,7 +48,7 @@ ggCountHeatmap.TopDomData <- function(data, transform = function(x) log2(x + 1),
   gg <- gg + geom_raster(show.legend = FALSE)
   gg <- gg + coord_fixed()
   gg <- gg + theme_void()
-  gg <- gg + scale_fill_gradient2(limit = c(0, NA), na.value = colors["na"],
+  gg <- gg + scale_fill_gradient2(limits = c(0, NA), na.value = colors["na"],
                                   mid = colors["mid"], high = colors["high"])
   gg
 }
