@@ -188,10 +188,14 @@ topological domains in genomes,
 DOI: 10.1093/nar/gkv1505,
 PMCID: \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/}{PMC4838359},
 PMID: \href{https://www.ncbi.nlm.nih.gov/pubmed/26704975}{26704975}
-\item Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017 (original from
-\code{http://zhoulab.usc.edu/TopDom/})
+\item Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017 (originally from
+\code{http://zhoulab.usc.edu/TopDom/};
+later available on \url{https://github.com/jasminezhoulab/TopDom} via
+\url{https://zhoulab.dgsom.ucla.edu/pages/software})
 \item Shin et al., TopDom Manual, 2016-07-08 (original from
-\code{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf})
+\code{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf};
+later available on \url{https://github.com/jasminezhoulab/TopDom} via
+\url{https://zhoulab.dgsom.ucla.edu/pages/software})
 \item Hanjun Shin, Understanding the 3D genome organization in topological
 domain level, Doctor of Philosophy Dissertation,
 University of Southern California, March 2017,

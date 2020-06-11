@@ -110,11 +110,15 @@
 #'   PMCID: [PMC4838359](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/),
 #'   PMID: [26704975](https://www.ncbi.nlm.nih.gov/pubmed/26704975)
 #'
-#' * Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017 (original from
-#'   \code{http://zhoulab.usc.edu/TopDom/})
+#' * Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017 (originally from
+#'   \code{http://zhoulab.usc.edu/TopDom/};
+#'   later available on \url{https://github.com/jasminezhoulab/TopDom} via
+#'   \url{https://zhoulab.dgsom.ucla.edu/pages/software})
 #'
 #' * Shin et al., TopDom Manual, 2016-07-08 (original from
-#'   \code{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf})
+#'   \code{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf};
+#'   later available on \url{https://github.com/jasminezhoulab/TopDom} via
+#'   \url{https://zhoulab.dgsom.ucla.edu/pages/software})
 #'
 #' * Hanjun Shin, Understanding the 3D genome organization in topological
 #'   domain level, Doctor of Philosophy Dissertation,
