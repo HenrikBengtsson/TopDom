@@ -56,7 +56,7 @@ readHiC <- function(file, chr = NULL, binSize = NULL, debug = getOption("TopDom.
     binSize <- as.integer(binSize)
     stopifnot(is.integer(binSize), length(binSize) == 1, !is.na(binSize), binSize >= 1)
     
-    first <- read.table(file, header = FALSE, nrows = 1L)
+    first <- read.table(file, header = FALSE, nrows = 1L, stringsAsFactors = FALSE)
     if (debug) mcat("  -- reading ", length(first), "-by-", length(first), " count matrix")
     ## Assert that it's a count matrix
     is.numeric <- unlist(lapply(first, FUN = is.numeric), use.names = FALSE)
@@ -64,7 +64,7 @@ readHiC <- function(file, chr = NULL, binSize = NULL, debug = getOption("TopDom.
     
     ## Column types to read
     colClasses <- rep("numeric", times = length(first))
-    matrix.data <- read.table(file, colClasses = colClasses, header = FALSE)
+    matrix.data <- read.table(file, colClasses = colClasses, header = FALSE, stringsAsFactors = FALSE)
     colnames(matrix.data) <- NULL
 
     ## N-by-N count matrix (from file content)
@@ -81,7 +81,7 @@ readHiC <- function(file, chr = NULL, binSize = NULL, debug = getOption("TopDom.
       to.coord   = seq(from = binSize, by = binSize, length.out = n_bins)
     )
   } else {
-    matdf <- read.table(file, header = FALSE)
+    matdf <- read.table(file, header = FALSE, stringsAsFactors = FALSE)
     n_bins <- nrow(matdf)
     if (ncol(matdf) - n_bins == 3) {
       colnames(matdf) <- c("chr", "from.coord", "to.coord")
