@@ -2,7 +2,9 @@
 
 This is an R package that originates from the original TopDom R script by Shin et al. (2016).  This package was put together by Henrik Bengtsson independently of the TopDom authors based on that original TopDom R script and the original TopDom PDF documentation.
 
-The original R script (versions 0.0.1 and 0.0.2) and the TopDom documentation were made available on a website of the TopDom author (http://zhoulab.usc.edu/TopDom/).  As of 2019, that website is no longer available.  This Git repository holds verbatim copies of the two iterations of the original TopDom R script: [TopDom_v0.0.1.R](https://github.com/HenrikBengtsson/TopDom/tree/0.0.1/R/TopDom.R) and [TopDom_v0.0.2.R](https://github.com/HenrikBengtsson/TopDom/tree/0.0.2/R/TopDom.R), as well as the original TopDom documentation [TopDom Manual_v0.0.2.pdf](https://github.com/HenrikBengtsson/TopDom/blob/0.0.2/docs/TopDom%20Manual_v0.0.2.pdf).
+The original R script (versions 0.0.1 and 0.0.2) and the TopDom manual were made available on a website of the TopDom author (http://zhoulab.usc.edu/TopDom/).  As of 2019, that website is no longer available.  Instead, TopDom is now listed as a paragraph on <https://labs.dgsom.ucla.edu/zhou/pages/software> with a link to one of the author GitHub repository [jasminezhoulab/TopDom](https://github.com/jasminezhoulab/TopDom), which holds the TopDom manual and version 0.0.2 of the script but no version 0.0.1.
+
+This git repository holds verbatim copies of the two iterations of the original TopDom R script: [TopDom_v0.0.1.R](https://github.com/HenrikBengtsson/TopDom/tree/0.0.1/R/TopDom.R) and [TopDom_v0.0.2.R](https://github.com/HenrikBengtsson/TopDom/tree/0.0.2/R/TopDom.R), as well as the original TopDom documentation [TopDom Manual_v0.0.2.pdf](https://github.com/HenrikBengtsson/TopDom/blob/0.0.2/docs/TopDom%20Manual_v0.0.2.pdf).
 
 The **TopDom** package is licensed under the [GNU Public License (GPL)](https://www.gnu.org/licenses/gpl.html) (per email from XJ Zhou on 2018-11-12).
 
