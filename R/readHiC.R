@@ -78,7 +78,8 @@ readHiC <- function(file, chr = NULL, binSize = NULL, debug = getOption("TopDom.
       id         = seq_len(n_bins),
       chr        = chr,
       from.coord = seq(from = 0, by = binSize, length.out = n_bins),
-      to.coord   = seq(from = binSize, by = binSize, length.out = n_bins)
+      to.coord   = seq(from = binSize, by = binSize, length.out = n_bins),
+      stringsAsFactors = FALSE
     )
   } else {
     matdf <- read.table(file, header = FALSE, stringsAsFactors = FALSE)
@@ -96,7 +97,8 @@ readHiC <- function(file, chr = NULL, binSize = NULL, debug = getOption("TopDom.
       id         = seq_len(n_bins),
       chr        = matdf[["chr"]],
       from.coord = matdf[["from.coord"]],
-      to.coord   = matdf[["to.coord"]]
+      to.coord   = matdf[["to.coord"]],
+      stringsAsFactors = FALSE
     )
 
     ## N-by-N count matrix (from file content)

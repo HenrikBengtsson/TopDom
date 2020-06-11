@@ -92,7 +92,8 @@ overlapScoresOneChromosome <- function(doms_A, doms_R, debug = getOption("TopDom
   dtags <- diff(c(0L, as.integer(doms_A$tag == "domain"), 0L))
   sets <- data.frame(
     first = which(dtags == +1L),
-    last  = which(dtags == -1L) - 1L
+    last  = which(dtags == -1L) - 1L,
+    stringsAsFactors = FALSE
   )
   sets$from.coord <- doms_A$from.coord[sets$first]
   sets$to.coord <- doms_A$to.coord[sets$last]
@@ -185,7 +186,7 @@ overlapScoresOneChromosome <- function(doms_A, doms_R, debug = getOption("TopDom
               length(best_lengths) == nrow(doms_R),
               length(best_sets) == nrow(doms_R))
 
-  res <- data.frame(best_score = best_scores, best_length = best_lengths)
+  res <- data.frame(best_score = best_scores, best_length = best_lengths, stringsAsFactors = FALSE)
   res$best_set <- best_sets
 
   res

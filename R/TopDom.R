@@ -349,7 +349,7 @@ Get.Diamond.Matrix <- function(mat.data, i, size) {
 Which.process.region <- function(rmv.idx, n_bins, min.size = 3L) {
   gap.idx <- rmv.idx
 
-  proc.regions <- data.frame(start = numeric(0), end = numeric(0))
+  proc.regions <- data.frame(start = numeric(0), end = numeric(0), stringsAsFactors = FALSE)
   proc.set <- setdiff(seq_len(n_bins), gap.idx)
   n_proc.set <- length(proc.set)
 
@@ -661,7 +661,7 @@ Get.Diamond.Matrix2 <- function(mat.data, i, size) {
 # @return dataframe storing domain information
 Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues = NULL, pvalue.cut = NULL) {
   n_bins <- nrow(bins)
-  ret <- data.frame(chr = character(0), from.id = numeric(0), from.coord = numeric(0), to.id = numeric(0), to.coord = numeric(0), tag = character(0), size = numeric(0))
+  ret <- data.frame(chr = character(0), from.id = numeric(0), from.coord = numeric(0), to.id = numeric(0), to.coord = numeric(0), tag = character(0), size = numeric(0), stringsAsFactors = FALSE)
   levels(x = ret[, "tag"]) <- c("domain", "gap", "boundary")
 
   rmv.idx <- setdiff(seq_len(n_bins), gap.idx)
@@ -741,7 +741,8 @@ Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues = NULL, pva
     to.id = numeric(0),
     to.coord = numeric(0),
     tag = character(0),
-    size = numeric(0)
+    size = numeric(0),
+    stringsAsFactors = FALSE
   )
 
   i <- 1L
@@ -756,7 +757,8 @@ Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues = NULL, pva
         to.id      = max(stack.bdr[, "to.id"]),
         to.coord   = max(stack.bdr[, "to.coord"]),
         tag        = "boundary",
-        size       = max(stack.bdr[, "to.coord"]) - min(stack.bdr[, "from.coord"])
+        size       = max(stack.bdr[, "to.coord"]) - min(stack.bdr[, "from.coord"]),
+        stringsAsFactors = FALSE
       )
       new.bdr.set <- rbind(new.bdr.set, new.bdr)
       stack.bdr <- stack.bdr.empty
@@ -783,7 +785,7 @@ Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues = NULL, pva
 # @return dataframe storing domain information
 Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues = NULL, pvalue.cut = NULL) {
   n_bins <- nrow(bins)
-  ret <- data.frame(chr = character(0), from.id = numeric(0), from.coord = numeric(0), to.id = numeric(0), to.coord = numeric(0), tag = character(0), size = numeric(0))
+  ret <- data.frame(chr = character(0), from.id = numeric(0), from.coord = numeric(0), to.id = numeric(0), to.coord = numeric(0), tag = character(0), size = numeric(0), stringsAsFactors = FALSE)
   levels(x = ret[, "tag"]) <- c("domain", "gap", "boundary")
 
   rmv.idx <- setdiff(seq_len(n_bins), gap.idx)
