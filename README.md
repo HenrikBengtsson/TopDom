@@ -13,7 +13,7 @@ The **TopDom** package is licensed under the [GNU Public License (GPL)](https://
 
 This package is only available from GitHub - it is neither on CRAN nor on Bioconductor. To install this package, use:
 ```r
-remotes::install_github("HenrikBengtsson/TopDom")
+remotes::install_github("HenrikBengtsson/TopDom", ref="master")
 ```
 
 To get the example data, install the [TopDomData] package.
