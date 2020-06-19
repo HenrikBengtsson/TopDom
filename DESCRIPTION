@@ -18,11 +18,13 @@ Authors@R: c(person("Henrik", "Bengtsson", role = c("aut", "cre", "cph"),
              person("Harris", "Lazaris", role = c("ctr", "cph"),
 	            comment = "PhD Student, NYU"),
              person("Gangqing", "Hu", role = c("ctr", "cph"),
-	            comment = "Staff Scientist, NIH"))
+	            comment = "Staff Scientist, NIH"),
+             person("Xianghong", "Zhou", role = c("ctr"),
+	            email = "XJZhou@mednet.ucla.edu"))
 Description: An R package based on the 'TopDom_v0.0.2.R' script provided by the authors of the 'TopDom' method and the original implementation.
 License: GPL
 LazyLoad: TRUE
 URL: https://github.com/HenrikBengtsson/TopDom
 BugReports: https://github.com/HenrikBengtsson/TopDom/issues
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.0.9000
 Roxygen: list(markdown = TRUE)

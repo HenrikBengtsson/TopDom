@@ -27,13 +27,16 @@ citEntry(
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   entry="Manual",
   title = "R Package TopDom: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes",
-  author = "Henrik Bengtsson and Hanjun Shin",
+  author = "Henrik Bengtsson and Hanjun Shin and Harris Lazaris and Gangqing Hu and Xianghong Zhou",
   year = "2020",
-  note = "R package version 0.8.2",
+  note = "R package version 0.9.1-9000",
   url = "https://github.com/HenrikBengtsson/TopDom",
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Plain-text citation:
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  textVersion = "Henrik Bengtsson and Hanjun Shin (2020). R Package TopDom: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes. R package version 0.8.2. https://github.com/HenrikBengtsson/TopDom"
+  textVersion = "Henrik Bengtsson, Hanjun Shin, Harris Lazaris, Gangqing Hu and Xianghong Zhou (2020). R Package TopDom: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes. R package version 0.9.1-9000. https://github.com/HenrikBengtsson/TopDom"
 )
+
+
+
