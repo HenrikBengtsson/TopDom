@@ -39,6 +39,8 @@ This Git repository uses the [Git Flow](http://nvie.com/posts/a-successful-git-b
 Contributing to this package is easy.  Just send a [pull request](https://help.github.com/articles/using-pull-requests/).  When you send your PR, make sure `develop` is the destination branch on the [TopDom repository](https://github.com/HenrikBengtsson/TopDom).  Your PR should pass `R CMD check --as-cran`, which will also be checked by <a href="https://travis-ci.org/HenrikBengtsson/TopDom">Travis CI</a> and <a href="https://ci.appveyor.com/project/HenrikBengtsson/TopDom">AppVeyor CI</a> when the PR is submitted.
 
 
+<div id="badges"><!-- pkgdown markup -->
+
 ## Software status
 
 | Resource:     | CRAN                | Travis CI       | AppVeyor         |
@@ -46,6 +48,8 @@ Contributing to this package is easy.  Just send a [pull request](https://help.g
 | _Platforms:_  | _Multiple_          | _Linux & macOS_ | _Windows_        |
 | R CMD check   | | <a href="https://travis-ci.org/HenrikBengtsson/TopDom"><img src="https://travis-ci.org/HenrikBengtsson/TopDom.svg" alt="Build status"></a>   | <a href="https://ci.appveyor.com/project/HenrikBengtsson/TopDom"><img src="https://ci.appveyor.com/api/projects/status/github/HenrikBengtsson/TopDom?svg=true" alt="Build status"></a> |
 | Test coverage | | <a href="https://codecov.io/gh/HenrikBengtsson/TopDom"><img src="https://codecov.io/gh/HenrikBengtsson/TopDom/branch/develop/graph/badge.svg" alt="Coverage Status"/></a> | |
+
+</div>
 
 
 [R]: https://www.r-project.org/
