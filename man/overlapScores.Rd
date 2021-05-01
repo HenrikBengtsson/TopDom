@@ -64,6 +64,10 @@ if (require("TopDomData")) {
   data <- readHiC(pathname, chr = "chr10", binSize = 40e3)
   print(data)
 
+  ## Subset data (to speed up the example)
+  idxs <- seq_len(0.5 * nrow(data))
+  data <- data[idxs, idxs]
+
   ## Find topological domains using TopDom method for two window sizes
   tds_5 <- TopDom(data, window.size = 5L)
   tds_6 <- TopDom(data, window.size = 6L)
