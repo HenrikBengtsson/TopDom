@@ -221,7 +221,7 @@ Version: 0.0.2 [2016-07-08]
    
  * Gap Identification module is changed.
    
- * Minor bug related to Change Points identificaiton in very small
+ * Minor bug related to Change Points identification in very small
    regions is fixed.
      
  * bed format support.

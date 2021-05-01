@@ -90,7 +90,7 @@
 #' For details, see Equation (1) and Figure 1 in Shin et al. (2016).
 #' Typically, the number of identified TDs decreases while their average
 #' lengths increase as this window-size parameter increases (Figure 2).
-#' The default is `window.size = 5` (bins), which is motiviated as:
+#' The default is `window.size = 5` (bins), which is motivated as:
 #' "Considering the previously reported minimum TD size (approx. 200 kb)
 #' (Dixon et al., 2012) and our bin size of 40 kb, _w_\[indow.size\] = 5 is a
 #' reasonable setting" (Shin et al., 2016).
