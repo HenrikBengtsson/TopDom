@@ -60,6 +60,8 @@ readHiC <- function(file, chr = NULL, binSize = NULL, ..., debug = getOption("To
 
     args <- list(..., comment.char = "", na.strings = "", quote = "",
                       stringsAsFactors = FALSE)
+    bins <- args$bins                        
+    args$bins <- NULL
     args <- args[unique(names(args))]
     argsT <- c(list(file, header = FALSE, nrows = 1L), args)
     first <- do.call(read.table, args = argsT)
@@ -68,33 +70,49 @@ readHiC <- function(file, chr = NULL, binSize = NULL, ..., debug = getOption("To
     is.numeric <- unlist(lapply(first, FUN = is.numeric), use.names = FALSE)
     stopifnot(all(is.numeric))
     
-    ## Column types to read
-    if (isTRUE(getOption("TopDom.readHiC.fast", FALSE))) {
-      args <- list(..., comment.char = "", na.strings = "", quote = "",
-                        quiet = TRUE, blank.lines.skip = FALSE)
-      args <- args[unique(names(args))]
-      argsT <- c(list(file), args)
-      matrix.data <- do.call(scan, args = argsT)
-      matrix.data <- matrix(matrix.data, ncol = length(first), byrow = TRUE)
+    if (!is.null(bins)) {
+      if (any(bins < 1)) {
+        stop("Argument 'bins' specifies non-positive bin indices")
+      } else if (any(bins > length(first))) {
+        stop(sprintf("Argument 'bins' specifies bin indices out of range [1,%d]", length(first)))
+      }
+      colClasses <- rep("NULL", times = length(first))
+      colClasses[bins] <- "numeric"
     } else {
       colClasses <- rep("numeric", times = length(first))
-      argsT <- c(list(file, colClasses = colClasses, header = FALSE), args)
-      matrix.data <- do.call(read.table, args = argsT)
-      colnames(matrix.data) <- NULL
-    }      
+    }
+    argsT <- c(list(file, colClasses = colClasses, header = FALSE), args)
+    matrix.data <- do.call(read.table, args = argsT)
+    colnames(matrix.data) <- NULL
+
+    if (!is.null(bins)) {
+      matrix.data <- matrix.data[bins, , drop = FALSE]
+    }
 
     ## N-by-N count matrix (from file content)
     matrix.data <- as.matrix(matrix.data)
     dimnames(matrix.data) <- NULL
     stopifnot(nrow(matrix.data) == ncol(matrix.data))
-    n_bins <- nrow(matrix.data)
+    n_bins <- length(first)
+
+    from.coord <- seq(from = 0, by = binSize, length.out = n_bins)
+    to.coord   <- seq(from = binSize, by = binSize, length.out = n_bins)
+    if (is.null(bins)) {
+      stopifnot(n_bins == nrow(matrix.data))
+      id <- seq_len(n_bins)
+    } else {
+      n_bins <- length(bins)
+      id <- bins
+      from.coord <- from.coord[bins]
+      to.coord   <- to.coord[bins]
+    }
     
     ## Bin annotation from (chr, binSize)
     bins <- data.frame(
-      id         = seq_len(n_bins),
-      chr        = chr,
-      from.coord = seq(from = 0, by = binSize, length.out = n_bins),
-      to.coord   = seq(from = binSize, by = binSize, length.out = n_bins),
+      id               = id,
+      chr              = chr,
+      from.coord       = from.coord,
+      to.coord         = to.coord,
       stringsAsFactors = FALSE
     )
   } else {
