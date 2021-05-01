@@ -1,10 +1,4 @@
-This is an R package that originates from the original TopDom R script by Shin et al. (2016).  This package was put together by Henrik Bengtsson independently of the TopDom authors based on that original TopDom R script and the original TopDom PDF documentation.
-
-The original R script (versions 0.0.1 and 0.0.2) and the TopDom manual were made available on a website of the TopDom author (http<span/>://zhoulab.usc.edu/TopDom/).  As of 2019, that website is no longer available.  Instead, TopDom is now listed as a paragraph on <https://labs.dgsom.ucla.edu/zhou/pages/software> with a link to one of the author GitHub repository [jasminezhoulab/TopDom](https://github.com/jasminezhoulab/TopDom), which holds the TopDom manual and version 0.0.2 of the script but no version 0.0.1.
-
-This git repository holds verbatim copies of the two iterations of the original TopDom R script: [TopDom_v0.0.1.R](https://github.com/HenrikBengtsson/TopDom/tree/0.0.1/R/TopDom.R) and [TopDom_v0.0.2.R](https://github.com/HenrikBengtsson/TopDom/tree/0.0.2/R/TopDom.R), as well as the original TopDom documentation [TopDom Manual_v0.0.2.pdf](https://github.com/HenrikBengtsson/TopDom/blob/0.0.2/docs/TopDom%20Manual_v0.0.2.pdf).
-
-The **TopDom** package is licensed under the [GNU Public License (GPL)](https://www.gnu.org/licenses/gpl.html).
+The TopDom method identifies topological domains in genomes from Hi-C sequence data (Shin et al., 2016).  The authors published an implementation of their method as an R script (two different versions; also available in this package).  This package originates from those original TopDom R scripts and provides help pages adopted from the original TopDom PDF documentation.  It also provides a small number of bug fixes to the original code.
 
 
 ## Citing TopDom - the method and the package
@@ -27,6 +21,12 @@ Please note that I, Henrik Bengtsson, is _not_ the developer of the TopDom metho
 Now, since I find it a waste of resources if someone else has to go through the same efforts that I had to, I decided to make this package public.  The goal is also to submit the **TopDom** package to CRAN so that the TopDom method is properly archived for reproducible purposes.  In order to do this, the original authors agreed on releasing their original TopDom scripts under the GPL license, which is also the license of the **TopDom** package.
 
 Having said this, please note that I don't intend to do user support for the TopDom method, how to use it, add new features, and so on.  This is simply because I don't have the resources to do that.  More importantly, I am not the best person to answer questions on the TopDom method and its implementation.  Instead, I recommend that you reach out to the original TopDom authors to get your questions answered.
+
+
+## Archaeology
+
+The original R script (versions 0.0.1 and 0.0.2) and the TopDom manual were made available on a website of the TopDom author (http<span/>://zhoulab.usc.edu/TopDom/).  As of 2019, that website is no longer available.  Instead, TopDom is now listed as a paragraph on <https://labs.dgsom.ucla.edu/zhou/pages/software> with a link to one of the author GitHub repository [jasminezhoulab/TopDom](https://github.com/jasminezhoulab/TopDom), which holds the TopDom manual and version 0.0.2 of the script but not version 0.0.1.
+
 
 
 [R]: https://www.r-project.org/

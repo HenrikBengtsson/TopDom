@@ -23,7 +23,7 @@ Authors@R: c(person("Henrik", "Bengtsson", role = c("aut", "cre", "cph"),
 	            comment = "Staff Scientist, NIH"),
              person("Xianghong", "Zhou", role = c("ctr"),
 	            email = "XJZhou@mednet.ucla.edu"))
-Description: An R package based on the 'TopDom_v0.0.2.R' script provided by the authors of the 'TopDom' method and the original implementation.
+Description: The TopDom method identifies topological domains in genomes from Hi-C sequence data (Shin et al., 2016 <doi:10.1093/nar/gkv1505>).  The authors published an implementation of their method as an R script (two different versions; also available in this package).  This package originates from those original TopDom R scripts and provides help pages adopted from the original TopDom PDF documentation.  It also provides a small number of bug fixes to the original code.
 License: GPL
 LazyLoad: TRUE
 URL: https://github.com/HenrikBengtsson/TopDom
