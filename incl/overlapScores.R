@@ -2,9 +2,10 @@ if (require("TopDomData")) {
   library(tibble)
   path <- system.file("exdata", package = "TopDomData", mustWork = TRUE)
 
-  ## Original count data (read a subset of the bins to speed up example)
-  pathname <- file.path(path, "nij.chr10.gz")
-  data <- readHiC(pathname, chr = "chr10", binSize = 40e3, bins = 1:1000)
+  ## Original count data
+  chr <- "chr10"
+  pathname <- file.path(path, sprintf("nij.%s.gz", chr))
+  data <- readHiC(pathname, chr = chr, binSize = 40e3)
   print(data)
 
   ## Find topological domains using TopDom method for two window sizes
