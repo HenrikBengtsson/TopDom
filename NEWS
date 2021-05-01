@@ -5,6 +5,8 @@ Version: 0.9.1-9000 [2020-05-01]
 
 NEW FEATURES:
 
+ * readHiC() gained arguments '...' which is passed as-is to read.table().
+
  * The orignal TopDom scripts 'TopDom_v0.0.1.R' and 'TopDom_v0.0.2.R' are
    now distributed part of the package as-is.  They can be found in the
    system.file("original-scripts", package = "TopDom") folder.

@@ -7,6 +7,8 @@
 #' @param chr,binSize If the file contains a count matrix without bin
 #' annotation, the latter is created from these parameters.
 #'
+#' @param \ldots Arguments passed to [utils::read.table()] as-is.
+#'
 #' @param debug If `TRUE`, debug output is produced.
 #' 
 #' @return A list with elements \code{bins} (an N-by-4 data.frame) and
@@ -38,9 +40,9 @@
 #' 
 #' @seealso [TopDom].
 #'
-#' @importFrom utils file_test
+#' @importFrom utils file_test read.table
 #' @export
-readHiC <- function(file, chr = NULL, binSize = NULL, debug = getOption("TopDom.debug", FALSE)) {
+readHiC <- function(file, chr = NULL, binSize = NULL, ..., debug = getOption("TopDom.debug", FALSE)) {
   stopifnot(file_test("-f", file))
   stopifnot(is.logical(debug), length(debug) == 1L, !is.na(debug))
 
@@ -55,8 +57,12 @@ readHiC <- function(file, chr = NULL, binSize = NULL, debug = getOption("TopDom.
     stopifnot(is.character(chr), length(chr) == 1, !is.na(chr))
     binSize <- as.integer(binSize)
     stopifnot(is.integer(binSize), length(binSize) == 1, !is.na(binSize), binSize >= 1)
-    
-    first <- read.table(file, header = FALSE, nrows = 1L, stringsAsFactors = FALSE)
+
+    args <- list(..., comment.char = "", na.strings = "", quote = "",
+                      stringsAsFactors = FALSE)
+    args <- args[unique(names(args))]
+    argsT <- c(list(file, header = FALSE, nrows = 1L), args)
+    first <- do.call(read.table, args = argsT)
     if (debug) mcat("  -- reading ", length(first), "-by-", length(first), " count matrix")
     ## Assert that it's a count matrix
     is.numeric <- unlist(lapply(first, FUN = is.numeric), use.names = FALSE)
@@ -64,7 +70,8 @@ readHiC <- function(file, chr = NULL, binSize = NULL, debug = getOption("TopDom.
     
     ## Column types to read
     colClasses <- rep("numeric", times = length(first))
-    matrix.data <- read.table(file, colClasses = colClasses, header = FALSE, stringsAsFactors = FALSE)
+    argsT <- c(list(file, colClasses = colClasses, header = FALSE), args)
+    matrix.data <- do.call(read.table, args = argsT)
     colnames(matrix.data) <- NULL
 
     ## N-by-N count matrix (from file content)
@@ -82,7 +89,10 @@ readHiC <- function(file, chr = NULL, binSize = NULL, debug = getOption("TopDom.
       stringsAsFactors = FALSE
     )
   } else {
-    matdf <- read.table(file, header = FALSE, stringsAsFactors = FALSE)
+    args <- list(..., stringsAsFactors = FALSE)
+    args <- args[unique(names(args))]
+    argsT <- c(list(file, header = FALSE), args)
+    matdf <- do.call(read.table, args = argsT)
     n_bins <- nrow(matdf)
     if (ncol(matdf) - n_bins == 3) {
       colnames(matdf) <- c("chr", "from.coord", "to.coord")

@@ -8,6 +8,7 @@ readHiC(
   file,
   chr = NULL,
   binSize = NULL,
+  ...,
   debug = getOption("TopDom.debug", FALSE)
 )
 }
@@ -20,6 +21,8 @@ Also a gzip-compressed file can be used.}
 annotation, the latter is created from these parameters.}
 
 \item{debug}{If \code{TRUE}, debug output is produced.}
+
+\item{\ldots}{Arguments passed to \code{\link[utils:read.table]{utils::read.table()}} as-is.}
 }
 \value{
 A list with elements \code{bins} (an N-by-4 data.frame) and
