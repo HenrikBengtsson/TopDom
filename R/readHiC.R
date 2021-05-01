@@ -36,7 +36,7 @@
 #'   ...
 #' }
 #'
-#' @example incl/TopDom.R
+#' @example incl/readHiC.R
 #' 
 #' @seealso [TopDom].
 #'
@@ -69,10 +69,19 @@ readHiC <- function(file, chr = NULL, binSize = NULL, ..., debug = getOption("To
     stopifnot(all(is.numeric))
     
     ## Column types to read
-    colClasses <- rep("numeric", times = length(first))
-    argsT <- c(list(file, colClasses = colClasses, header = FALSE), args)
-    matrix.data <- do.call(read.table, args = argsT)
-    colnames(matrix.data) <- NULL
+    if (isTRUE(getOption("TopDom.readHiC.fast", FALSE))) {
+      args <- list(..., comment.char = "", na.strings = "", quote = "",
+                        quiet = TRUE, blank.lines.skip = FALSE)
+      args <- args[unique(names(args))]
+      argsT <- c(list(file), args)
+      matrix.data <- do.call(scan, args = argsT)
+      matrix.data <- matrix(matrix.data, ncol = length(first), byrow = TRUE)
+    } else {
+      colClasses <- rep("numeric", times = length(first))
+      argsT <- c(list(file, colClasses = colClasses, header = FALSE), args)
+      matrix.data <- do.call(read.table, args = argsT)
+      colnames(matrix.data) <- NULL
+    }      
 
     ## N-by-N count matrix (from file content)
     matrix.data <- as.matrix(matrix.data)
