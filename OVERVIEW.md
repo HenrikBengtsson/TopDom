@@ -1,16 +1,3 @@
-
-
-<div id="badges"><!-- pkgdown markup -->
-
-<a href="https://github.com/HenrikBengtsson/TopDom/actions?query=workflow%3AR-CMD-check"><img border="0" src="https://github.com/HenrikBengtsson/TopDom/workflows/R-CMD-check/badge.svg?branch=develop" alt="Build status"></a></a>
-<a href="https://travis-ci.org/HenrikBengtsson/TopDom"><img border="0" src="https://travis-ci.org/HenrikBengtsson/TopDom.svg" alt="Build status"></a></a>
-<a href="https://ci.appveyor.com/project/HenrikBengtsson/topdom"><img border="0" src="https://ci.appveyor.com/api/projects/status/github/HenrikBengtsson/TopDom?svg=true" alt="Build status"></a></a>
-<a href="https://codecov.io/gh/HenrikBengtsson/TopDom"><img border="0" src="https://codecov.io/gh/HenrikBengtsson/TopDom/branch/develop/graph/badge.svg" alt="Coverage Status"></a></a>
-
-</div>
-
-# TopDom: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes 
-
 This is an R package that originates from the original TopDom R script by Shin et al. (2016).  This package was put together by Henrik Bengtsson independently of the TopDom authors based on that original TopDom R script and the original TopDom PDF documentation.
 
 The original R script (versions 0.0.1 and 0.0.2) and the TopDom manual were made available on a website of the TopDom author (http://zhoulab.usc.edu/TopDom/).  As of 2019, that website is no longer available.  Instead, TopDom is now listed as a paragraph on <https://labs.dgsom.ucla.edu/zhou/pages/software> with a link to one of the author GitHub repository [jasminezhoulab/TopDom](https://github.com/jasminezhoulab/TopDom), which holds the TopDom manual and version 0.0.2 of the script but no version 0.0.1.
@@ -37,25 +24,3 @@ The above information is also available as plain text as well as BibTeX entries 
 [R]: https://www.r-project.org/
 [TopDom]: https://github.com/HenrikBengtsson/TopDom/
 [TopDomData]: https://github.com/HenrikBengtsson/TopDomData/
-
-## Installation
-R package TopDom is only available via [GitHub](https://github.com/HenrikBengtsson/TopDom) and can be installed in R as:
-```r
-remotes::install_github("HenrikBengtsson/TopDom", ref="master")
-```
-
-
-### Pre-release version
-
-To install the pre-release version that is available in Git branch `develop` on GitHub, use:
-```r
-remotes::install_github("HenrikBengtsson/TopDom", ref="develop")
-```
-This will install the package from source.  
-
-
-<!-- pkgdown-drop-below -->
-
-## Contributing
-
-To contribute to this package, please see [CONTRIBUTING.md](CONTRIBUTING.md).
