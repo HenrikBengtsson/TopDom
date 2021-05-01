@@ -3,17 +3,16 @@ Package: TopDom
 
 Version: 0.9.1-9001 [2020-05-01]
 
-SIGNIFICANT CHANGES:
-
- * Package now includes mouse Chr19 data from the original TopDom study.
- 
 NEW FEATURES:
 
- * readHiC() gained arguments '...' which is passed as-is to read.table().
+ * Package now includes mouse Chr19 data from the TopDom study. They can
+   be found in the system.file("exdata", package = "TopDom") folder.
 
  * The orignal TopDom scripts 'TopDom_v0.0.1.R' and 'TopDom_v0.0.2.R' are
    now distributed part of the package as-is.  They can be found in the
    system.file("original-scripts", package = "TopDom") folder.
+
+ * readHiC() gained arguments '...' which is passed as-is to read.table().
  
 
 Version: 0.9.1 [2020-04-02]
