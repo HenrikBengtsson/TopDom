@@ -2,7 +2,7 @@
 % Please edit documentation in R/readHiC.R
 \name{readHiC}
 \alias{readHiC}
-\title{Reads a Hi-C contact data file}
+\title{Reads Hi-C Contact Data from File}
 \usage{
 readHiC(
   file,
@@ -29,7 +29,7 @@ A list with elements \code{bins} (an N-by-4 data.frame) and
 \code{counts} (N-by-N matrix).
 }
 \description{
-Reads a Hi-C contact data file
+Reads Hi-C Contact Data from File
 }
 \section{Format of HiC contact-matrix file}{
 

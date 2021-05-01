@@ -1,4 +1,4 @@
-#' Reads a Hi-C contact data file
+#' Reads Hi-C Contact Data from File
 #' 
 #' @param file The pathname of a normalize Hi-C contact matrix file
 #' stored as a whitespace-delimited file.  See below for details.

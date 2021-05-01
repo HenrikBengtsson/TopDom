@@ -1,4 +1,4 @@
-#' Calculates Overlap Scores between Two Sets of Topological Domains
+#' Calculates Overlap Scores Between Two Sets of Topological Domains
 #' 
 #' @param a,reference Topological domain (TD) set \eqn{A} and TD reference
 #' set \eqn{R} both in a format as returned by [TopDom()].

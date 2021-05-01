@@ -1,4 +1,4 @@
-#' Identify topological domains for given Hi-C contact matrix
+#' Identify Topological Domains from a Hi-C Contact Matrix
 #' 
 #' @param data A TopDomData object, or the pathname to a normalized
 #' Hi-C contact matrix file as read by [readHiC()], that specify N bins.

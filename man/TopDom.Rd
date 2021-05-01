@@ -2,7 +2,7 @@
 % Please edit documentation in R/TopDom.R
 \name{TopDom}
 \alias{TopDom}
-\title{Identify topological domains for given Hi-C contact matrix}
+\title{Identify Topological Domains from a Hi-C Contact Matrix}
 \usage{
 TopDom(
   data,
@@ -107,7 +107,7 @@ with file names \file{<outFile>.binSignal}, \file{<outFile>.domain}, and
 and all but the BED file have column names.
 }
 \description{
-Identify topological domains for given Hi-C contact matrix
+Identify Topological Domains from a Hi-C Contact Matrix
 }
 \section{Windows size}{
 

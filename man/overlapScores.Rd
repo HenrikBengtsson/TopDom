@@ -2,7 +2,7 @@
 % Please edit documentation in R/overlapScores.R
 \name{overlapScores}
 \alias{overlapScores}
-\title{Calculates Overlap Scores between Two Sets of Topological Domains}
+\title{Calculates Overlap Scores Between Two Sets of Topological Domains}
 \usage{
 overlapScores(a, reference, debug = getOption("TopDom.debug", FALSE))
 }
@@ -30,7 +30,7 @@ then the corresponding \code{best_score} and \code{best_length} values are
 list.
 }
 \description{
-Calculates Overlap Scores between Two Sets of Topological Domains
+Calculates Overlap Scores Between Two Sets of Topological Domains
 }
 \details{
 The \emph{overlap score}, \eqn{overlap(A', r_i)}, represents how well a

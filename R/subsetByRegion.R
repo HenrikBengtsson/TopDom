@@ -1,4 +1,4 @@
-#' Subset a TopDomData object by region
+#' Subset a TopDomData Object by Region
 #'
 #' @param data A TopDomData object.
 #'
