@@ -1,8 +1,12 @@
 Package: TopDom
 ===============
 
-Version: 0.10.0 [2020-05-01]
+Version: 0.9.1-9001 [2020-05-01]
 
+SIGNIFICANT CHANGES:
+
+ * Package now includes mouse Chr19 data from the original TopDom study.
+ 
 NEW FEATURES:
 
  * readHiC() gained arguments '...' which is passed as-is to read.table().
