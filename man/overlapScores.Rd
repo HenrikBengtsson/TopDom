@@ -61,7 +61,7 @@ if (require("TopDomData")) {
 
   ## Original count data (read a subset of the bins to speed up example)
   pathname <- file.path(path, "nij.chr10.gz")
-  data <- readHiC(pathname, chr = "chr10", binSize = 40e3, bins = 1:1500)
+  data <- readHiC(pathname, chr = "chr10", binSize = 40e3, bins = 1:1000)
   print(data)
 
   ## Find topological domains using TopDom method for two window sizes
@@ -86,7 +86,7 @@ topological domains in genomes,
 \emph{Nucleic Acids Research}, 44(7): e70, April 2016.
 doi: 10.1093/nar/gkv1505,
 PMCID: \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/}{PMC4838359},
-PMID: \href{https://www.ncbi.nlm.nih.gov/pubmed/26704975}{26704975}.
+PMID: \href{https://pubmed.ncbi.nlm.nih.gov/26704975/}{26704975}
 }
 }
 \seealso{

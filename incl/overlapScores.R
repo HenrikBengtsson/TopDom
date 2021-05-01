@@ -4,7 +4,7 @@ if (require("TopDomData")) {
 
   ## Original count data (read a subset of the bins to speed up example)
   pathname <- file.path(path, "nij.chr10.gz")
-  data <- readHiC(pathname, chr = "chr10", binSize = 40e3, bins = 1:1500)
+  data <- readHiC(pathname, chr = "chr10", binSize = 40e3, bins = 1:1000)
   print(data)
 
   ## Find topological domains using TopDom method for two window sizes

@@ -108,7 +108,7 @@
 #'   _Nucleic Acids Research_, 44(7): e70, April 2016.
 #'   DOI: 10.1093/nar/gkv1505,
 #'   PMCID: [PMC4838359](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/),
-#'   PMID: [26704975](https://www.ncbi.nlm.nih.gov/pubmed/26704975)
+#'   PMID: [26704975](https://pubmed.ncbi.nlm.nih.gov/26704975/)
 #'
 #' * Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017 (originally from
 #'   \code{http://zhoulab.usc.edu/TopDom/};

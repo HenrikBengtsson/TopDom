@@ -9,7 +9,7 @@ Whenever using the TopDom method, please cite:
 
 Whenever using the **TopDom** package, please cite:
 
-* Henrik Bengtsson, Hanjun Shin, Harris Lazaris, Gangqing Hu and Xianghong Zhou (2020). R Package TopDom: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes. R package version 0.9.1-9000. https://github.com/HenrikBengtsson/TopDom
+* Henrik Bengtsson, Hanjun Shin, Harris Lazaris, Gangqing Hu and Xianghong Zhou (2020). R Package TopDom: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes. R package version 0.10.0. https://github.com/HenrikBengtsson/TopDom
 
 The above information is also available as plain text as well as BibTeX entries via `citation("TopDom")`.
 

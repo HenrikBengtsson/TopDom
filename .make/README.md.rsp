@@ -220,9 +220,13 @@ Because of this and because this package also compiles native code, Windows user
 <% } # if (file.exists("INSTALL.md")) %>
 
 
-
 <!-- pkgdown-drop-below -->
+
+<% if (file.exists("CONTRIBUTING.md") &&
+       any(grepl("README.*md", readLines(".Rbuildignore")))) { %>
 
 ## Contributing
 
 To contribute to this package, please see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+<% } # if (file.exists("CONTRIBUTING.md")) %>
