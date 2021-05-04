@@ -1,6 +1,13 @@
 Package: TopDom
 ===============
 
+Version: 0.10.1 [2020-05-04]
+
+CRAN POLICIES:
+
+ * Update URL that otherwise redirects HTTP to HTTPS.
+ 
+
 Version: 0.10.0 [2020-05-03]
 
 NEW FEATURES:
