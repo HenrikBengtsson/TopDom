@@ -128,10 +128,10 @@ reasonable setting" (Shin et al., 2016).
 \examples{
 path <- system.file("exdata", package = "TopDom", mustWork = TRUE)
 
-## Original count data
+## Original count data (on a subset of the bins to speed up example)
 chr <- "chr19"
 pathname <- file.path(path, sprintf("nij.\%s.gz", chr))
-data <- readHiC(pathname, chr = chr, binSize = 40e3)
+data <- readHiC(pathname, chr = chr, binSize = 40e3, bins = 1:500)
 print(data)  ## a TopDomData object
 
 ## Find topological domains using the TopDom method
