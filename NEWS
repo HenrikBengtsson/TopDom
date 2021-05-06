@@ -1,6 +1,27 @@
 Package: TopDom
 ===============
 
+Version: 0.10.1 [2020-05-04]
+
+CRAN POLICIES:
+
+ * Update URL that otherwise redirects HTTP to HTTPS.
+ 
+
+Version: 0.10.0 [2020-05-03]
+
+NEW FEATURES:
+
+ * Package now includes mouse Chr19 data from the TopDom study. They can
+   be found in the system.file("exdata", package = "TopDom") folder.
+
+ * The orignal TopDom scripts 'TopDom_v0.0.1.R' and 'TopDom_v0.0.2.R' are
+   now distributed part of the package as-is.  They can be found in the
+   system.file("original-scripts", package = "TopDom") folder.
+
+ * readHiC() gained arguments '...' which is passed as-is to read.table().
+ 
+
 Version: 0.9.1 [2020-04-02]
 
 BUG FIXES:
@@ -216,7 +237,7 @@ Version: 0.0.2 [2016-07-08]
    
  * Gap Identification module is changed.
    
- * Minor bug related to Change Points identificaiton in very small
+ * Minor bug related to Change Points identification in very small
    regions is fixed.
      
  * bed format support.

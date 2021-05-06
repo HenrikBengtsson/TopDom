@@ -2,7 +2,7 @@
 % Please edit documentation in R/subsetByRegion.R
 \name{subsetByRegion}
 \alias{subsetByRegion}
-\title{Subset a TopDomData object by region}
+\title{Subset a TopDomData Object by Region}
 \usage{
 subsetByRegion(data, region, margin = 1/2)
 }
@@ -20,7 +20,7 @@ to the size of the domain.}
 A TopDomData object.
 }
 \description{
-Subset a TopDomData object by region
+Subset a TopDomData Object by Region
 }
 \author{
 Henrik Bengtsson.

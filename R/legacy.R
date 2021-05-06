@@ -1,4 +1,4 @@
-#' Easy Access to the Original TopDom v0.0.1 and v0.0.2 Implementations
+#' Easy Access to the Original TopDom 0.0.1 and 0.0.2 Implementations
 #'
 #' @param version A version string.
 #'

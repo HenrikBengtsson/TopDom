@@ -39,8 +39,8 @@ matrix:
         - _R_CLASS_MATRIX_ARRAY_=true
 #    - os: osx
 #      r: oldrel
-    - os: osx
-      r: release
+#    - os: osx
+#      r: release
     - os: linux
       r: release
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes

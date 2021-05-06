@@ -1,4 +1,4 @@
-#' Identify topological domains for given Hi-C contact matrix
+#' Identify Topological Domains from a Hi-C Contact Matrix
 #' 
 #' @param data A TopDomData object, or the pathname to a normalized
 #' Hi-C contact matrix file as read by [readHiC()], that specify N bins.
@@ -90,7 +90,7 @@
 #' For details, see Equation (1) and Figure 1 in Shin et al. (2016).
 #' Typically, the number of identified TDs decreases while their average
 #' lengths increase as this window-size parameter increases (Figure 2).
-#' The default is `window.size = 5` (bins), which is motiviated as:
+#' The default is `window.size = 5` (bins), which is motivated as:
 #' "Considering the previously reported minimum TD size (approx. 200 kb)
 #' (Dixon et al., 2012) and our bin size of 40 kb, _w_\[indow.size\] = 5 is a
 #' reasonable setting" (Shin et al., 2016).
@@ -108,13 +108,17 @@
 #'   _Nucleic Acids Research_, 44(7): e70, April 2016.
 #'   DOI: 10.1093/nar/gkv1505,
 #'   PMCID: [PMC4838359](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/),
-#'   PMID: [26704975](https://www.ncbi.nlm.nih.gov/pubmed/26704975)
+#'   PMID: [26704975](https://pubmed.ncbi.nlm.nih.gov/26704975/)
 #'
-#' * Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017 (original from
-#'   \code{http://zhoulab.usc.edu/TopDom/})
+#' * Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017 (originally from
+#'   \code{http://zhoulab.usc.edu/TopDom/};
+#'   later available on \url{https://github.com/jasminezhoulab/TopDom} via
+#'   \url{https://zhoulab.dgsom.ucla.edu/pages/software})
 #'
 #' * Shin et al., TopDom Manual, 2016-07-08 (original from
-#'   \code{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf})
+#'   \code{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf};
+#'   later available on \url{https://github.com/jasminezhoulab/TopDom} via
+#'   \url{https://zhoulab.dgsom.ucla.edu/pages/software})
 #'
 #' * Hanjun Shin, Understanding the 3D genome organization in topological
 #'   domain level, Doctor of Philosophy Dissertation,
@@ -345,7 +349,7 @@ Get.Diamond.Matrix <- function(mat.data, i, size) {
 Which.process.region <- function(rmv.idx, n_bins, min.size = 3L) {
   gap.idx <- rmv.idx
 
-  proc.regions <- data.frame(start = numeric(0), end = numeric(0))
+  proc.regions <- data.frame(start = numeric(0), end = numeric(0), stringsAsFactors = FALSE)
   proc.set <- setdiff(seq_len(n_bins), gap.idx)
   n_proc.set <- length(proc.set)
 
@@ -657,7 +661,7 @@ Get.Diamond.Matrix2 <- function(mat.data, i, size) {
 # @return dataframe storing domain information
 Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues = NULL, pvalue.cut = NULL) {
   n_bins <- nrow(bins)
-  ret <- data.frame(chr = character(0), from.id = numeric(0), from.coord = numeric(0), to.id = numeric(0), to.coord = numeric(0), tag = character(0), size = numeric(0))
+  ret <- data.frame(chr = character(0), from.id = numeric(0), from.coord = numeric(0), to.id = numeric(0), to.coord = numeric(0), tag = character(0), size = numeric(0), stringsAsFactors = FALSE)
   levels(x = ret[, "tag"]) <- c("domain", "gap", "boundary")
 
   rmv.idx <- setdiff(seq_len(n_bins), gap.idx)
@@ -737,7 +741,8 @@ Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues = NULL, pva
     to.id = numeric(0),
     to.coord = numeric(0),
     tag = character(0),
-    size = numeric(0)
+    size = numeric(0),
+    stringsAsFactors = FALSE
   )
 
   i <- 1L
@@ -752,7 +757,8 @@ Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues = NULL, pva
         to.id      = max(stack.bdr[, "to.id"]),
         to.coord   = max(stack.bdr[, "to.coord"]),
         tag        = "boundary",
-        size       = max(stack.bdr[, "to.coord"]) - min(stack.bdr[, "from.coord"])
+        size       = max(stack.bdr[, "to.coord"]) - min(stack.bdr[, "from.coord"]),
+        stringsAsFactors = FALSE
       )
       new.bdr.set <- rbind(new.bdr.set, new.bdr)
       stack.bdr <- stack.bdr.empty
@@ -779,7 +785,7 @@ Convert.Bin.To.Domain <- function(bins, signal.idx, gap.idx, pvalues = NULL, pva
 # @return dataframe storing domain information
 Convert.Bin.To.Domain.TMP <- function(bins, signal.idx, gap.idx, pvalues = NULL, pvalue.cut = NULL) {
   n_bins <- nrow(bins)
-  ret <- data.frame(chr = character(0), from.id = numeric(0), from.coord = numeric(0), to.id = numeric(0), to.coord = numeric(0), tag = character(0), size = numeric(0))
+  ret <- data.frame(chr = character(0), from.id = numeric(0), from.coord = numeric(0), to.id = numeric(0), to.coord = numeric(0), tag = character(0), size = numeric(0), stringsAsFactors = FALSE)
   levels(x = ret[, "tag"]) <- c("domain", "gap", "boundary")
 
   rmv.idx <- setdiff(seq_len(n_bins), gap.idx)

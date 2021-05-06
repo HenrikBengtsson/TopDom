@@ -2,7 +2,7 @@
 % Please edit documentation in R/legacy.R
 \name{legacy}
 \alias{legacy}
-\title{Easy Access to the Original TopDom v0.0.1 and v0.0.2 Implementations}
+\title{Easy Access to the Original TopDom 0.0.1 and 0.0.2 Implementations}
 \usage{
 legacy(version = c("0.0.1", "0.0.2"))
 }
@@ -13,7 +13,7 @@ legacy(version = c("0.0.1", "0.0.2"))
 An environment containing the legacy TopDom API.
 }
 \description{
-Easy Access to the Original TopDom v0.0.1 and v0.0.2 Implementations
+Easy Access to the Original TopDom 0.0.1 and 0.0.2 Implementations
 }
 \examples{
 TopDom::legacy("0.0.2")$TopDom

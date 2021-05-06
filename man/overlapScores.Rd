@@ -2,7 +2,7 @@
 % Please edit documentation in R/overlapScores.R
 \name{overlapScores}
 \alias{overlapScores}
-\title{Calculates Overlap Scores between Two Sets of Topological Domains}
+\title{Calculates Overlap Scores Between Two Sets of Topological Domains}
 \usage{
 overlapScores(a, reference, debug = getOption("TopDom.debug", FALSE))
 }
@@ -30,7 +30,7 @@ then the corresponding \code{best_score} and \code{best_length} values are
 list.
 }
 \description{
-Calculates Overlap Scores between Two Sets of Topological Domains
+Calculates Overlap Scores Between Two Sets of Topological Domains
 }
 \details{
 The \emph{overlap score}, \eqn{overlap(A', r_i)}, represents how well a
@@ -55,28 +55,28 @@ TopDom article used.
 }
 
 \examples{
-if (require("TopDomData")) {
-  library(tibble)
-  path <- system.file("exdata", package = "TopDomData", mustWork = TRUE)
+library(tibble)
+path <- system.file("exdata", package = "TopDom", mustWork = TRUE)
 
-  ## Original count data
-  pathname <- file.path(path, "nij.chr10.gz")
-  data <- readHiC(pathname, chr = "chr10", binSize = 40e3)
-  print(data)
+## Original count data (on a subset of the bins to speed up example)
+chr <- "chr19"
+pathname <- file.path(path, sprintf("nij.\%s.gz", chr))
+data <- readHiC(pathname, chr = chr, binSize = 40e3, bins = 1:500)
+print(data)
 
-  ## Find topological domains using TopDom method for two window sizes
-  tds_5 <- TopDom(data, window.size = 5L)
-  tds_6 <- TopDom(data, window.size = 6L)
+## Find topological domains using TopDom method for two window sizes
+tds_5 <- TopDom(data, window.size = 5L)
+tds_6 <- TopDom(data, window.size = 6L)
 
-  ## Overlap scores (in both directions)
-  overlap_56 <- overlapScores(tds_6, reference = tds_5)
-  print(overlap_56)
-  print(as_tibble(overlap_56))
-  
-  overlap_65 <- overlapScores(tds_5, reference = tds_6)
-  print(overlap_65)
-  print(as_tibble(overlap_65))
-}
+## Overlap scores (in both directions)
+overlap_56 <- overlapScores(tds_6, reference = tds_5)
+print(overlap_56)
+print(as_tibble(overlap_56))
+
+overlap_65 <- overlapScores(tds_5, reference = tds_6)
+print(overlap_65)
+print(as_tibble(overlap_65))
+
 }
 \references{
 \itemize{
@@ -86,7 +86,7 @@ topological domains in genomes,
 \emph{Nucleic Acids Research}, 44(7): e70, April 2016.
 doi: 10.1093/nar/gkv1505,
 PMCID: \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/}{PMC4838359},
-PMID: \href{https://www.ncbi.nlm.nih.gov/pubmed/26704975}{26704975}.
+PMID: \href{https://pubmed.ncbi.nlm.nih.gov/26704975/}{26704975}
 }
 }
 \seealso{

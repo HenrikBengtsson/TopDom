@@ -1,4 +1,4 @@
-#' Calculates Overlap Scores between Two Sets of Topological Domains
+#' Calculates Overlap Scores Between Two Sets of Topological Domains
 #' 
 #' @param a,reference Topological domain (TD) set \eqn{A} and TD reference
 #' set \eqn{R} both in a format as returned by [TopDom()].
@@ -50,7 +50,7 @@
 #'   _Nucleic Acids Research_, 44(7): e70, April 2016.
 #'   doi: 10.1093/nar/gkv1505,
 #'   PMCID: [PMC4838359](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/),
-#'   PMID: [26704975](https://www.ncbi.nlm.nih.gov/pubmed/26704975).
+#'   PMID: [26704975](https://pubmed.ncbi.nlm.nih.gov/26704975/)
 #'
 #' @author Henrik Bengtsson - based on the description in Shin et al. (2016).
 #' 
@@ -92,7 +92,8 @@ overlapScoresOneChromosome <- function(doms_A, doms_R, debug = getOption("TopDom
   dtags <- diff(c(0L, as.integer(doms_A$tag == "domain"), 0L))
   sets <- data.frame(
     first = which(dtags == +1L),
-    last  = which(dtags == -1L) - 1L
+    last  = which(dtags == -1L) - 1L,
+    stringsAsFactors = FALSE
   )
   sets$from.coord <- doms_A$from.coord[sets$first]
   sets$to.coord <- doms_A$to.coord[sets$last]
@@ -185,7 +186,7 @@ overlapScoresOneChromosome <- function(doms_A, doms_R, debug = getOption("TopDom
               length(best_lengths) == nrow(doms_R),
               length(best_sets) == nrow(doms_R))
 
-  res <- data.frame(best_score = best_scores, best_length = best_lengths)
+  res <- data.frame(best_score = best_scores, best_length = best_lengths, stringsAsFactors = FALSE)
   res$best_set <- best_sets
 
   res

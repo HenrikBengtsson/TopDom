@@ -1,9 +1,8 @@
-if (require("TopDomData")) {
-  path <- system.file("exdata", package = "TopDomData", mustWork = TRUE)
+path <- system.file("exdata", package = "TopDom", mustWork = TRUE)
 
-  ## Original count data
-  pathname <- file.path(path, "nij.chr10.gz")
-  data <- readHiC(pathname, chr = "chr10", binSize = 40e3)
-  print(data)
-  str(data)
-}
+## Original count data
+chr <- "chr19"
+pathname <- file.path(path, sprintf("nij.%s.gz", chr))
+data <- readHiC(pathname, chr = chr, binSize = 40e3)
+print(data)
+str(data)

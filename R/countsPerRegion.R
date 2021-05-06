@@ -1,4 +1,4 @@
-#' Calculates counts per region in a TopDomData object
+#' Calculates Counts per Region in a TopDomData Object
 #'
 #' @param data A TopDomData object.
 #'

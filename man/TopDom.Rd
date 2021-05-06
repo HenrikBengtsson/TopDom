@@ -2,7 +2,7 @@
 % Please edit documentation in R/TopDom.R
 \name{TopDom}
 \alias{TopDom}
-\title{Identify topological domains for given Hi-C contact matrix}
+\title{Identify Topological Domains from a Hi-C Contact Matrix}
 \usage{
 TopDom(
   data,
@@ -107,7 +107,7 @@ with file names \file{<outFile>.binSignal}, \file{<outFile>.domain}, and
 and all but the BED file have column names.
 }
 \description{
-Identify topological domains for given Hi-C contact matrix
+Identify Topological Domains from a Hi-C Contact Matrix
 }
 \section{Windows size}{
 
@@ -119,65 +119,64 @@ and upstream from the bin such that the bin signal is the average
 For details, see Equation (1) and Figure 1 in Shin et al. (2016).
 Typically, the number of identified TDs decreases while their average
 lengths increase as this window-size parameter increases (Figure 2).
-The default is \code{window.size = 5} (bins), which is motiviated as:
+The default is \code{window.size = 5} (bins), which is motivated as:
 "Considering the previously reported minimum TD size (approx. 200 kb)
 (Dixon et al., 2012) and our bin size of 40 kb, \emph{w}[indow.size] = 5 is a
 reasonable setting" (Shin et al., 2016).
 }
 
 \examples{
-if (require("TopDomData")) {
-  path <- system.file("exdata", package = "TopDomData", mustWork = TRUE)
+path <- system.file("exdata", package = "TopDom", mustWork = TRUE)
 
-  ## Original count data
-  pathname <- file.path(path, "nij.chr10.gz")
-  data <- readHiC(pathname, chr = "chr10", binSize = 40e3)
-  print(data)  ## a TopDomData object
+## Original count data (on a subset of the bins to speed up example)
+chr <- "chr19"
+pathname <- file.path(path, sprintf("nij.\%s.gz", chr))
+data <- readHiC(pathname, chr = chr, binSize = 40e3, bins = 1:500)
+print(data)  ## a TopDomData object
 
-  ## Find topological domains using the TopDom method
-  fit <- TopDom(data, window.size = 5L)
-  print(fit)  ## a TopDom object
+## Find topological domains using the TopDom method
+fit <- TopDom(data, window.size = 5L)
+print(fit)  ## a TopDom object
 
-  ## Display the largest domain
-  td <- subset(subset(fit$domain, tag == "domain"), size == max(size))
-  print(td) ## a data.frame
+## Display the largest domain
+td <- subset(subset(fit$domain, tag == "domain"), size == max(size))
+print(td) ## a data.frame
 
-  ## Subset TopDomData object
-  data_s <- subsetByRegion(data, region = td, margin = 0.9999)
-  print(data_s)  ## a TopDomData object
-  
-  vp <- grid::viewport(angle = -45, width = 0.7, y = 0.3)
-  gg <- ggCountHeatmap(data_s)
-  gg <- gg + ggDomain(td, color = "#cccc00") + ggDomainLabel(td)
-  print(gg, newpage = TRUE, vp = vp)
+## Subset TopDomData object
+data_s <- subsetByRegion(data, region = td, margin = 0.9999)
+print(data_s)  ## a TopDomData object
 
-  gg <- ggCountHeatmap(data_s, colors = list(mid = "white", high = "black"))
-  gg_td <- ggDomain(td, delta = 0.08)
-  dx <- attr(gg_td, "gg_params")$dx
-  gg <- gg + gg_td + ggDomainLabel(td, vjust = 2.5)
-  print(gg, newpage = TRUE, vp = vp)
+vp <- grid::viewport(angle = -45, width = 0.7, y = 0.3)
+gg <- ggCountHeatmap(data_s)
+gg <- gg + ggDomain(td, color = "#cccc00") + ggDomainLabel(td)
+print(gg, newpage = TRUE, vp = vp)
 
-  ## Subset TopDom object
-  fit_s <- subsetByRegion(fit, region = td, margin = 0.9999)
-  print(fit_s)  ## a TopDom object
-  for (kk in seq_len(nrow(fit_s$domain))) {
-    gg <- gg + ggDomain(fit_s$domain[kk, ], dx = dx * (4 + kk \%\% 2), color = "red", size = 1)
-  }
+gg <- ggCountHeatmap(data_s, colors = list(mid = "white", high = "black"))
+gg_td <- ggDomain(td, delta = 0.08)
+dx <- attr(gg_td, "gg_params")$dx
+gg <- gg + gg_td + ggDomainLabel(td, vjust = 2.5)
+print(gg, newpage = TRUE, vp = vp)
 
-  print(gg, newpage = TRUE, vp = vp)
-
-
-  gg <- ggCountHeatmap(data_s)
-  gg_td <- ggDomain(td, delta = 0.08)
-  dx <- attr(gg_td, "gg_params")$dx
-  gg <- gg + gg_td + ggDomainLabel(td, vjust = 2.5)
-  fit_s <- subsetByRegion(fit, region = td, margin = 0.9999)
-  for (kk in seq_len(nrow(fit_s$domain))) {
-    gg <- gg + ggDomain(fit_s$domain[kk, ], dx = dx * (4 + kk \%\% 2), color = "blue", size = 1)
-  }
-
-  print(gg, newpage = TRUE, vp = vp)
+## Subset TopDom object
+fit_s <- subsetByRegion(fit, region = td, margin = 0.9999)
+print(fit_s)  ## a TopDom object
+for (kk in seq_len(nrow(fit_s$domain))) {
+  gg <- gg + ggDomain(fit_s$domain[kk, ], dx = dx * (4 + kk \%\% 2), color = "red", size = 1)
 }
+
+print(gg, newpage = TRUE, vp = vp)
+
+
+gg <- ggCountHeatmap(data_s)
+gg_td <- ggDomain(td, delta = 0.08)
+dx <- attr(gg_td, "gg_params")$dx
+gg <- gg + gg_td + ggDomainLabel(td, vjust = 2.5)
+fit_s <- subsetByRegion(fit, region = td, margin = 0.9999)
+for (kk in seq_len(nrow(fit_s$domain))) {
+  gg <- gg + ggDomain(fit_s$domain[kk, ], dx = dx * (4 + kk \%\% 2), color = "blue", size = 1)
+}
+
+print(gg, newpage = TRUE, vp = vp)
 }
 \references{
 \itemize{
@@ -187,11 +186,15 @@ topological domains in genomes,
 \emph{Nucleic Acids Research}, 44(7): e70, April 2016.
 DOI: 10.1093/nar/gkv1505,
 PMCID: \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/}{PMC4838359},
-PMID: \href{https://www.ncbi.nlm.nih.gov/pubmed/26704975}{26704975}
-\item Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017 (original from
-\code{http://zhoulab.usc.edu/TopDom/})
+PMID: \href{https://pubmed.ncbi.nlm.nih.gov/26704975/}{26704975}
+\item Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017 (originally from
+\code{http://zhoulab.usc.edu/TopDom/};
+later available on \url{https://github.com/jasminezhoulab/TopDom} via
+\url{https://zhoulab.dgsom.ucla.edu/pages/software})
 \item Shin et al., TopDom Manual, 2016-07-08 (original from
-\code{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf})
+\code{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf};
+later available on \url{https://github.com/jasminezhoulab/TopDom} via
+\url{https://zhoulab.dgsom.ucla.edu/pages/software})
 \item Hanjun Shin, Understanding the 3D genome organization in topological
 domain level, Doctor of Philosophy Dissertation,
 University of Southern California, March 2017,
