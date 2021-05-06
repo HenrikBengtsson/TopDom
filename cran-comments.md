@@ -1,10 +1,19 @@
-# CRAN submission TopDom 0.10.0
+# CRAN submission TopDom 0.10.1
 
-on 2021-05-03
+on 2021-05-04
+
+Updated one URL in TopDom 0.10.0 that otherwise redirects HTTP to HTTPS.
+
+Thanks
+
+
+TopDom 0.10.0 submission on 2021-05-03 comment:
 
 TopDom is a new CRAN package. Its code originates from supplementary R script of Shin et al. (2016). The original authors have agreed on the GPL license and are listed as co-authors of this package.
 
 Thank you
+
+
 
 
 ## Notes not sent to CRAN
