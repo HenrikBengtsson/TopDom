@@ -24,7 +24,7 @@
 #' It is a tab-delimited file containing a 3250-by-3250 numeric matrix
 #' non-negative decimal values. The underlying HiC sequence data is
 #' available from
-#' [GSE35156](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE35156)
+#' [GSE35156](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE35156)
 #' on GEO and was published part of Dixon, et al. (2012).
 #'
 #' @references
