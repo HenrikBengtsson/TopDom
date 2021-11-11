@@ -36,7 +36,7 @@ Calculates Overlap Scores Between Two Sets of Topological Domains
 The \emph{overlap score}, \eqn{overlap(A', r_i)}, represents how well a
 \emph{consecutive} subset \eqn{A'} of topological domains (TDs) in \eqn{A}
 overlap with topological domain \eqn{r_i} in reference set \eqn{R}.
-For each reference TD \eqn{r_i}, the \emph{best match} \eqn{A'_max} is
+For each reference TD \eqn{r_i}, the \emph{best match} \eqn{A'_{max}} is
 identified, that is, the \eqn{A'} subset that maximize
 \eqn{overlap(A', r_i)}.
 For exact definitions, see Page 8 in Shin et al. (2016).
