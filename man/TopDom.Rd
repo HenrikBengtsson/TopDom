@@ -198,7 +198,7 @@ later available on \url{https://github.com/jasminezhoulab/TopDom} via
 \item Hanjun Shin, Understanding the 3D genome organization in topological
 domain level, Doctor of Philosophy Dissertation,
 University of Southern California, March 2017,
-\url{http://digitallibrary.usc.edu/cdm/ref/collection/p15799coll40/id/347735}
+\url{https://digitallibrary.usc.edu/cdm/ref/collection/p15799coll40/id/347735}
 \item Dixon JR, Selvaraj S, Yue F, Kim A, et al. Topological domains in
 mammalian genomes identified by analysis of chromatin interactions.
 \emph{Nature}; 485(7398):376-80, April 2012.
