@@ -1,12 +1,7 @@
 
 
 <div id="badges"><!-- pkgdown markup -->
-<a href="https://CRAN.R-project.org/web/checks/check_results_TopDom.html"><img border="0" src="https://www.r-pkg.org/badges/version/TopDom" alt="CRAN check status"></a></a>
-<a href="https://github.com/HenrikBengtsson/TopDom/actions?query=workflow%3AR-CMD-check"><img border="0" src="https://github.com/HenrikBengtsson/TopDom/workflows/R-CMD-check/badge.svg?branch=develop" alt="Build status"></a></a>
-<a href="https://travis-ci.org/HenrikBengtsson/TopDom"><img border="0" src="https://travis-ci.org/HenrikBengtsson/TopDom.svg" alt="Build status"></a></a>
-<a href="https://ci.appveyor.com/project/HenrikBengtsson/topdom"><img border="0" src="https://ci.appveyor.com/api/projects/status/github/HenrikBengtsson/TopDom?svg=true" alt="Build status"></a></a>
-<a href="https://codecov.io/gh/HenrikBengtsson/TopDom"><img border="0" src="https://codecov.io/gh/HenrikBengtsson/TopDom/branch/develop/graph/badge.svg" alt="Coverage Status"></a></a>
-
+<a href="https://CRAN.R-project.org/web/checks/check_results_TopDom.html"><img border="0" src="https://www.r-pkg.org/badges/version/TopDom" alt="CRAN check status"/></a> <a href="https://github.com/HenrikBengtsson/TopDom/actions?query=workflow%3AR-CMD-check"><img border="0" src="https://github.com/HenrikBengtsson/TopDom/actions/workflows/R-CMD-check.yaml/badge.svg?branch=develop" alt="R CMD check status"/></a>     <a href="https://app.codecov.io/gh/HenrikBengtsson/TopDom"><img border="0" src="https://codecov.io/gh/HenrikBengtsson/TopDom/branch/develop/graph/badge.svg" alt="Coverage Status"/></a> 
 </div>
 
 # TopDom: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes 
