@@ -1,13 +1,16 @@
 Package: TopDom
-Version: 0.10.1-9001
+Version: 0.10.1-9002
 Title: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes
 Depends: R (>= 3.3.0)
 Imports:
     matrixStats,
+    graphics,
     grid,
     ggplot2,
     reshape2,
-    tibble
+    stats,
+    tibble,
+    utils
 Suggests:
     diffobj (>= 0.1.11)
 Authors@R: c(person("Henrik", "Bengtsson", role = c("aut", "cre", "cph"),
@@ -25,5 +28,5 @@ License: GPL
 LazyLoad: TRUE
 URL: https://github.com/HenrikBengtsson/TopDom
 BugReports: https://github.com/HenrikBengtsson/TopDom/issues
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 Roxygen: list(markdown = TRUE)
