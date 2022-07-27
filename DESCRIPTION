@@ -1,5 +1,5 @@
 Package: TopDom
-Version: 0.10.1-9002
+Version: 0.10.1-9003
 Title: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes
 Depends: R (>= 3.3.0)
 Imports:

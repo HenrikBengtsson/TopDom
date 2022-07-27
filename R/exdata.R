@@ -18,9 +18,10 @@
 #' 
 #' 2. A normalized HiC-count matrix file \file{nij.chr19.gz}, where the
 #' non-compressed version is part of the \file{mESC.norm.tar.gz} file
-#' (1,305,763,679 bytes; md5 2e79d0f57463b5b7c4bf86b187086d3c) originally
-#' downloaded from the
-#' [UCSD Ren Lab](http://chromosome.sdsc.edu/mouse/hi-c/download.html).
+#' (1,305,763,679 bytes; md5 2e79d0f57463b5b7c4bf86b187086d3c) made available
+#' by [UCSD Ren Lab](http://renlab.sdsc.edu/renlab_website/) originally
+#' downloaded from \file{http://chromosome.sdsc.edu/mouse/hi-c/download.html}
+#' (no longer available).
 #' It is a tab-delimited file containing a 3250-by-3250 numeric matrix
 #' non-negative decimal values. The underlying HiC sequence data is
 #' available from

@@ -23,9 +23,10 @@ These data were downloaded from the
 TopDom website (http://zhoulab.usc.edu/TopDom/ - now defunct).
 \item A normalized HiC-count matrix file \file{nij.chr19.gz}, where the
 non-compressed version is part of the \file{mESC.norm.tar.gz} file
-(1,305,763,679 bytes; md5 2e79d0f57463b5b7c4bf86b187086d3c) originally
-downloaded from the
-\href{http://chromosome.sdsc.edu/mouse/hi-c/download.html}{UCSD Ren Lab}.
+(1,305,763,679 bytes; md5 2e79d0f57463b5b7c4bf86b187086d3c) made available
+by \href{http://renlab.sdsc.edu/renlab_website/}{UCSD Ren Lab} originally
+downloaded from \file{http://chromosome.sdsc.edu/mouse/hi-c/download.html}
+(no longer available).
 It is a tab-delimited file containing a 3250-by-3250 numeric matrix
 non-negative decimal values. The underlying HiC sequence data is
 available from
