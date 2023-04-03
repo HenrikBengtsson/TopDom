@@ -24,7 +24,7 @@ The above information is also available as plain text as well as BibTeX entries 
 
 ## Background
 
-Please note that I, Henrik Bengtsson, is _not_ the developer of the TopDom method (Shin et al. 2016), or the (original) TopDom code available from the TopDom authors.   As I needed the TopDom method in a project, I ended up putting their `TopDom_v0.0.*.R` scripts into a proper R package (this **TopDom** package) so I could validate the[ir] code via `R CMD check` and so on. Then I started to add a bit of help documentation to make my own life easier.  I also found a few bugs that I fixed and did some improvements but I really tried not to diverge from the original functionality.
+Please note that I, Henrik Bengtsson, am _not_ the developer of the TopDom method (Shin et al. 2016), or the (original) TopDom code available from the TopDom authors.   As I needed the TopDom method in a project, I ended up putting their `TopDom_v0.0.*.R` scripts into a proper R package (this **TopDom** package) so I could validate the[ir] code via `R CMD check` and so on. Then I started to add a bit of help documentation to make my own life easier.  I also found a few bugs that I fixed and did some improvements but I really tried not to diverge from the original functionality.
 
 Now, since I find it a waste of resources if someone else has to go through the same efforts that I had to, I decided to make this package public.  The goal is also to submit the **TopDom** package to CRAN so that the TopDom method is properly archived for reproducible purposes.  In order to do this, the original authors agreed on releasing their original TopDom scripts under the GPL license, which is also the license of the **TopDom** package.
 
