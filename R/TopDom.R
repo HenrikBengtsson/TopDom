@@ -4,7 +4,7 @@
 #' Hi-C contact matrix file as read by [readHiC()], that specify N bins.
 #' 
 #' @param window.size The number of bins to extend (as a non-negative integer).
-#' Recommended range is in {5, ..., 20}.
+#' Recommended range is in \{5, ..., 20\}.
 #' 
 #' @param outFile (optional) The filename without extension of the three
 #' result files optionally produced. See details below.
