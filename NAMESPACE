@@ -22,24 +22,32 @@ export(legacy)
 export(overlapScores)
 export(readHiC)
 export(subsetByRegion)
-importFrom(ggplot2,aes)
-importFrom(ggplot2,annotation_custom)
-importFrom(ggplot2,coord_fixed)
-importFrom(ggplot2,geom_raster)
-importFrom(ggplot2,geom_segment)
-importFrom(ggplot2,ggplot)
-importFrom(ggplot2,scale_fill_gradient2)
-importFrom(ggplot2,theme_void)
+importFrom(ggplot2,
+  aes,
+  annotation_custom,
+  coord_fixed,
+  geom_raster,
+  geom_segment,
+  ggplot,
+  scale_fill_gradient2,
+  theme_void
+)
 importFrom(graphics,image)
-importFrom(grid,gpar)
-importFrom(grid,textGrob)
+importFrom(grid,
+  gpar,
+  textGrob
+)
 importFrom(matrixStats,colSums2)
 importFrom(reshape2,melt)
 importFrom(stats,wilcox.test)
-importFrom(tibble,as_tibble)
-importFrom(tibble,tibble)
-importFrom(utils,capture.output)
-importFrom(utils,file_test)
-importFrom(utils,read.table)
-importFrom(utils,str)
-importFrom(utils,write.table)
+importFrom(tibble,
+  as_tibble,
+  tibble
+)
+importFrom(utils,
+  capture.output,
+  file_test,
+  read.table,
+  str,
+  write.table
+)

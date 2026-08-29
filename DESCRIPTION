@@ -28,5 +28,5 @@ License: GPL
 LazyLoad: TRUE
 URL: https://github.com/HenrikBengtsson/TopDom
 BugReports: https://github.com/HenrikBengtsson/TopDom/issues
-RoxygenNote: 7.2.1
 Roxygen: list(markdown = TRUE)
+Config/roxygen2/version: 8.1.0
