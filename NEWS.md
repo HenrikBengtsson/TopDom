@@ -3,6 +3,10 @@
 ## Documentation
 
  * Fix equation format issue and update one URL.
+
+ * Drop stale and redirecting URLs (dead lab-software and USC library
+   pages, PubMed/PMC links) in the help pages and README, keeping DOIs
+   for the cited publications.
  
 
 # Version 0.10.1 [2020-05-04]

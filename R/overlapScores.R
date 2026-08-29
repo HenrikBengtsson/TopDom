@@ -48,9 +48,9 @@
 #'   TopDom: an efficient and deterministic method for identifying
 #'   topological domains in genomes,
 #'   _Nucleic Acids Research_, 44(7): e70, April 2016.
-#'   doi: 10.1093/nar/gkv1505,
-#'   PMCID: [PMC4838359](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/),
-#'   PMID: [26704975](https://pubmed.ncbi.nlm.nih.gov/26704975/)
+#'   doi: \doi{10.1093/nar/gkv1505},
+#'   PMCID: PMC4838359,
+#'   PMID: 26704975
 #'
 #' @author Henrik Bengtsson - based on the description in Shin et al. (2016).
 #' 

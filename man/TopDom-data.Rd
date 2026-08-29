@@ -40,14 +40,14 @@ on GEO and was published part of Dixon, et al. (2012).
 \item Dixon JR, Selvaraj S, Yue F, Kim A, et al. Topological domains in
 mammalian genomes identified by analysis of chromatin interactions.
 Nature 2012 Apr 11; 485(7398):376-80,
-doi: 10.1038/nature11082,
-PMCID: \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3356448/}{PMC3356448},
+doi: \doi{10.1038/nature11082},
+PMCID: PMC3356448,
 PMID: 22495300.
 \item Shin, et al., TopDom: an efficient and deterministic method for
 identifying topological domains in genomes,
 Nucleic Acids Res. 2016 Apr 20; 44(7): e70., 2016.
-doi: 10.1093/nar/gkv1505,
-PMCID: \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/}{PMC4838359},
+doi: \doi{10.1093/nar/gkv1505},
+PMCID: PMC4838359,
 PMID: 26704975.
 }
 }
