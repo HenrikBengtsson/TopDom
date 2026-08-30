@@ -146,6 +146,17 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
   matrix.data <- data$counts
   n_bins <- nrow(bins)
 
+  ## The matrix-scaling part of the statistical-filtering step (statFilter =
+  ## TRUE) addresses elements of the N-by-N contact matrix by their linear
+  ## index, up to N * N.  For a large enough N, that product overflows R's
+  ## integer range, after which seq() fails with an obscure "'to' must be a
+  ## finite number" error preceded by a "NAs produced by integer overflow"
+  ## warning.  Fail early with an explanation instead.
+  ## See <https://github.com/HenrikBengtsson/TopDom/issues/10>.
+  if (statFilter && n_bins > sqrt(.Machine$integer.max)) {
+    stop(sprintf("The statistical-filtering step of TopDom() (statFilter = TRUE) does not support contact matrices with more than %d bins; here the matrix has %d bins, for which the internal index arithmetic (n_bins * n_bins) would overflow R's integer range. Workarounds: (i) call TopDom() with statFilter = FALSE, or (ii) use a larger bin size so that the chromosome is represented by fewer bins", as.integer(sqrt(.Machine$integer.max)), n_bins))
+  }
+
   mean.cf <- rep(0, times = n_bins)
   pvalue <- rep(1.0, times = n_bins)
 
@@ -208,7 +219,7 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
       mcat("Step 3 : Statistical Filtering of false positive TD boundaries")
       mcat("#########################################################################")
     }
-    
+
     ptm <- proc.time()
     if (debug) mcat("-- Matrix Scaling....")
     scale.matrix.data <- matrix.data

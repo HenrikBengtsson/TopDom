@@ -113,6 +113,31 @@ stopifnot(
   grepl("sparse", conditionMessage(res))
 )
 
+## Corner case: matrix too large for statFilter index arithmetic -------
+## With more than sqrt(.Machine$integer.max) bins, the internal
+## 'n_bins * n_bins' overflows R's integer range and seq() used to fail
+## with an obscure "'to' must be a finite number" error
+## <https://github.com/HenrikBengtsson/TopDom/issues/10>.  TopDom() should
+## now fail early (before touching 'counts') with an informative message,
+## but only when statFilter = TRUE.
+N <- as.integer(sqrt(.Machine$integer.max)) + 1L
+big <- structure(list(
+  bins = data.frame(id = seq_len(N), chr = "1",
+                    from.coord = (seq_len(N) - 1) * 1000,
+                    to.coord = seq_len(N) * 1000),
+  counts = matrix(0, nrow = 2L, ncol = 2L)  ## deliberately tiny
+), class = "TopDomData")
+res <- tryCatch(TopDom(big, window.size = 5L), error = identity)
+stopifnot(
+  inherits(res, "error"),
+  grepl("statFilter", conditionMessage(res)),
+  grepl("overflow", conditionMessage(res)),
+  grepl(as.character(N), conditionMessage(res), fixed = TRUE)
+)
+## statFilter = FALSE must not raise this particular error
+res <- tryCatch(TopDom(big, window.size = 5L, statFilter = FALSE), error = identity)
+stopifnot(!grepl("overflow R's integer range", conditionMessage(res)))
+
 ## Invalid arguments -----------------------------------------------------
 res <- tryCatch(TopDom(data, window.size = -1L), error = identity)
 stopifnot(inherits(res, "error"))

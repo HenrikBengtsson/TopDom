@@ -13,6 +13,15 @@
    sparse for the statistical-filtering step and suggesting remedies
    such as `statFilter = FALSE` or a larger bin size.
 
+ * `TopDom()` with `statFilter = TRUE` (default) on a very large
+   contact matrix (more than `sqrt(.Machine$integer.max)`, i.e. 46340,
+   bins) used to fail with an obscure `'to' must be a finite number`
+   error from `seq()`, preceded by an `NAs produced by integer
+   overflow` warning, because the internal `n_bins * n_bins` index
+   arithmetic overflowed R's integer range.  It now fails early with
+   an informative message suggesting `statFilter = FALSE` or a larger
+   bin size.
+
 ## Miscellaneous
 
  * Increased the package test coverage from 47% to 63%, adding tests for
