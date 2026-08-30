@@ -14,8 +14,8 @@ tmpdir <- tempfile("readHiC-")
 dir.create(tmpdir)
 
 write_ws <- function(df, file) {
-  write.table(df, file = file, sep = "\t", quote = FALSE,
-              row.names = FALSE, col.names = FALSE)
+  utils::write.table(df, file = file, sep = "\t", quote = FALSE,
+                     row.names = FALSE, col.names = FALSE)
   file
 }
 

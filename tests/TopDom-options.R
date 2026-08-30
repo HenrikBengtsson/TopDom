@@ -14,7 +14,7 @@ params <- attr(fit, "parameters")
 stopifnot(params$window.size == 5L, isTRUE(params$statFilter))
 
 ## print.TopDom() --------------------------------------------------------
-out <- capture.output(print(fit))
+out <- utils::capture.output(print(fit))
 stopifnot(length(out) > 0L)
 
 ## dim.TopDom() and [.TopDom -------------------------------------------
@@ -25,7 +25,7 @@ stopifnot(inherits(fit_sub, "TopDom"), nrow(fit_sub$domain) == 3L)
 ## print.TopDom() when no parameters are attached
 fit_noparam <- fit
 attr(fit_noparam, "parameters") <- NULL
-out <- capture.output(print(fit_noparam))
+out <- utils::capture.output(print(fit_noparam))
 stopifnot(any(grepl("N/A", out)))
 
 ## A larger window size yields 'boundary' domains, exercising the
@@ -50,7 +50,7 @@ stopifnot(inherits(fit_chr, "TopDom"))
 stopifnot(identical(fit_chr$domain, fit$domain))
 
 ## debug = TRUE exercises the messaging code paths --------------------
-msg <- capture.output(
+msg <- utils::capture.output(
   fit_dbg <- TopDom(data, window.size = 5L, debug = TRUE),
   type = "message"
 )
@@ -62,9 +62,9 @@ tmp <- tempfile("TopDom-")
 fit_out <- TopDom(data, window.size = 5L, outFile = tmp)
 for (ext in c(".binSignal", ".domain", ".bed")) {
   f <- paste0(tmp, ext)
-  stopifnot(file_test("-f", f), file.size(f) > 0L)
+  stopifnot(utils::file_test("-f", f), file.size(f) > 0L)
 }
-bed <- read.table(paste0(tmp, ".bed"), sep = "\t", header = FALSE)
+bed <- utils::read.table(paste0(tmp, ".bed"), sep = "\t", header = FALSE)
 stopifnot(nrow(bed) == nrow(fit_out$bed))
 unlink(paste0(tmp, c(".binSignal", ".domain", ".bed")))
 

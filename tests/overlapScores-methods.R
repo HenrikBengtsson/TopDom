@@ -11,7 +11,7 @@ tds_5 <- TopDom(data, window.size = 5L)
 tds_6 <- TopDom(data, window.size = 6L)
 
 ## overlapScores() with debug output ------------------------------------
-msg <- capture.output(
+msg <- utils::capture.output(
   ov <- overlapScores(tds_6, reference = tds_5, debug = TRUE),
   type = "message"
 )
@@ -23,7 +23,7 @@ scores <- ov_self[[chr]]$best_score
 stopifnot(all(scores[!is.na(scores)] == 1))
 
 ## print.TopDomOverlapScores() ----------------------------------------
-out <- capture.output(print(ov_self))
+out <- utils::capture.output(print(ov_self))
 stopifnot(any(grepl("Chromosomes:", out)),
           any(grepl("best scores", out)))
 

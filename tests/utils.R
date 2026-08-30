@@ -32,6 +32,6 @@ res <- tryCatch(
 stopifnot(inherits(res, "error"))
 
 ## mcat() writes to stderr and returns invisibly
-err <- capture.output(out <- withVisible(mcat("hello", " ", "world")), type = "message")
+err <- utils::capture.output(out <- withVisible(mcat("hello", " ", "world")), type = "message")
 stopifnot(isFALSE(out$visible))
 stopifnot(any(grepl("hello world", err)))
