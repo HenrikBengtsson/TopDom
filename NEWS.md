@@ -6,6 +6,13 @@
    when called on data where no region can be processed, e.g. when
    every non-gap run of bins is shorter than the minimum region size.
 
+ * `TopDom()` with `statFilter = TRUE` (default) on extremely sparse
+   data used to fail deep inside `stats::wilcox.test()` with an
+   obscure `not enough (finite) 'x' observations` error.  It now fails
+   early with an informative message explaining that the data is too
+   sparse for the statistical-filtering step and suggesting remedies
+   such as `statFilter = FALSE` or a larger bin size.
+
 ## Miscellaneous
 
  * Increased the package test coverage from 47% to 63%, adding tests for

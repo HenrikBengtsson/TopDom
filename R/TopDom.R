@@ -212,14 +212,27 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     ptm <- proc.time()
     if (debug) mcat("-- Matrix Scaling....")
     scale.matrix.data <- matrix.data
+    scaled.idxs <- integer(0L)
     for (i in seq_len(2 * window.size)) {
       # diag(scale.matrix.data[, i:n_bins]) <- scale(diag(matrix.data[, i:n_bins]))
       idxs <- seq(from = 1 + (n_bins * i), to = n_bins * n_bins, by = 1 + n_bins)
       scale.matrix.data[idxs] <- scale(matrix.data[idxs])
+      scaled.idxs <- c(scaled.idxs, idxs)
     }
     ## 'idxs' is only created if 2 * window.size >= 1
     if (exists("idxs", inherits = FALSE)) rm(list = "idxs")
     rm(list = "matrix.data")
+
+    ## Standardizing an all-constant (typically all-zero) near-diagonal band
+    ## produces non-finite values, because such a band has zero variance.
+    ## These NaNs later propagate into Get.Pvalue() -> wilcox.test(), which
+    ## then fails with an obscure "not enough (finite) 'x' observations"
+    ## error.  Detect this here and explain the actual problem instead.
+    ## See <https://github.com/HenrikBengtsson/TopDom/issues/17>.
+    if (length(scaled.idxs) > 0L && any(!is.finite(scale.matrix.data[scaled.idxs]))) {
+      stop("The statistical-filtering step of TopDom() (statFilter = TRUE) failed because standardizing the near-diagonal bands of the contact matrix produced non-finite values. This happens when one or more of these bands has zero variance (e.g. all contact counts are zero) or contains missing values, which is typically caused by very sparse input data (too few read pairs and/or too small a bin size). Possible workarounds: (i) call TopDom() with statFilter = FALSE, (ii) use a larger bin size, or (iii) drop empty / very-low-count bins before calling TopDom()")
+    }
+    rm(list = "scaled.idxs")
     
     if (debug) mcat("-- Compute p-values by Wilcox Ranksum Test")
     for (i in seq_len(nrow(proc.regions))) {

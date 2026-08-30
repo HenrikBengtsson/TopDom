@@ -93,6 +93,26 @@ fit_edge <- withCallingHandlers(
 stopifnot(inherits(fit_edge, "TopDom"))
 stopifnot(!any(grepl("object 'idxs' not found", warns)))
 
+## Corner case: extremely sparse data and statFilter = TRUE -----------
+## Standardizing an all-zero near-diagonal band yields non-finite values
+## that used to surface as an obscure wilcox.test() error
+## <https://github.com/HenrikBengtsson/TopDom/issues/17>.  TopDom() should
+## now fail early with an informative message that mentions statFilter.
+m <- 40L
+sparse <- structure(list(
+  bins = data.frame(id = seq_len(m), chr = "22",
+                    from.coord = (seq_len(m) - 1L) * 500000L,
+                    to.coord = seq_len(m) * 500000L,
+                    stringsAsFactors = FALSE),
+  counts = { z <- matrix(0, nrow = m, ncol = m); diag(z) <- 5; z }
+), class = "TopDomData")
+res <- tryCatch(TopDom(sparse, window.size = 5L), error = identity)
+stopifnot(
+  inherits(res, "error"),
+  grepl("statFilter", conditionMessage(res)),
+  grepl("sparse", conditionMessage(res))
+)
+
 ## Invalid arguments -----------------------------------------------------
 res <- tryCatch(TopDom(data, window.size = -1L), error = identity)
 stopifnot(inherits(res, "error"))
