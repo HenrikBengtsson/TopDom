@@ -1,5 +1,11 @@
 # Version (development version)
 
+## Bug Fixes
+
+ * `TopDom()` no longer produces a warning `object 'idxs' not found`
+   when called on data where no region can be processed, e.g. when
+   every non-gap run of bins is shorter than the minimum region size.
+
 ## Miscellaneous
 
  * Increased the package test coverage from 47% to 63%, adding tests for

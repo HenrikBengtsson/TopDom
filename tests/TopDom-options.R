@@ -68,6 +68,31 @@ bed <- utils::read.table(paste0(tmp, ".bed"), sep = "\t", header = FALSE)
 stopifnot(nrow(bed) == nrow(fit_out$bed))
 unlink(paste0(tmp, c(".binSignal", ".domain", ".bed")))
 
+## Corner case: input with no processable region -----------------------
+## When every non-gap run is shorter than the minimum region size, the
+## internal 'idxs' loop variable is never created.  TopDom() used to warn
+## "object 'idxs' not found" from rm(list = "idxs"); make sure it does not.
+n <- 10L
+z <- matrix(0, nrow = n, ncol = n)
+diag(z)[c(1L, n)] <- 5  ## isolated signal, no run of >= 3 bins
+edge <- structure(list(
+  bins = data.frame(id = seq_len(n), chr = "chr1",
+                    from.coord = (0:(n - 1)) * 40000L,
+                    to.coord = (1:n) * 40000L,
+                    stringsAsFactors = FALSE),
+  counts = z
+), class = "TopDomData")
+warns <- NULL
+fit_edge <- withCallingHandlers(
+  TopDom(edge, window.size = 3L, statFilter = FALSE),
+  warning = function(w) {
+    warns <<- c(warns, conditionMessage(w))
+    invokeRestart("muffleWarning")
+  }
+)
+stopifnot(inherits(fit_edge, "TopDom"))
+stopifnot(!any(grepl("object 'idxs' not found", warns)))
+
 ## Invalid arguments -----------------------------------------------------
 res <- tryCatch(TopDom(data, window.size = -1L), error = identity)
 stopifnot(inherits(res, "error"))

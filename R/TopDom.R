@@ -193,7 +193,8 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     local.ext[idxs] <- Detect.Local.Extreme(x = mean.cf[idxs])  ## assigns values (-1,0,+1)
   }
   stop_if_not(!anyNA(local.ext), length(local.ext) == n_bins, all(local.ext %in% c(-0.5, -1, 0, +1)))
-  rm(list = "idxs")
+  ## 'idxs' is only created if there is at least one region to process
+  if (exists("idxs", inherits = FALSE)) rm(list = "idxs")
 
   eltm <- proc.time() - ptm
   if (debug) {
@@ -216,7 +217,9 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
       idxs <- seq(from = 1 + (n_bins * i), to = n_bins * n_bins, by = 1 + n_bins)
       scale.matrix.data[idxs] <- scale(matrix.data[idxs])
     }
-    rm(list = c("idxs", "matrix.data"))
+    ## 'idxs' is only created if 2 * window.size >= 1
+    if (exists("idxs", inherits = FALSE)) rm(list = "idxs")
+    rm(list = "matrix.data")
     
     if (debug) mcat("-- Compute p-values by Wilcox Ranksum Test")
     for (i in seq_len(nrow(proc.regions))) {
@@ -228,7 +231,8 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
       idxs <- start:end
       pvalue[idxs] <- Get.Pvalue(matrix.data = scale.matrix.data[idxs, idxs], size = window.size, scale = 1.0)
     }
-    rm(list = "idxs")
+    ## 'idxs' is only created if there is at least one region to process
+    if (exists("idxs", inherits = FALSE)) rm(list = "idxs")
     stop_if_not(length(pvalue) == n_bins, !anyNA(pvalue))
     if (debug) mcat("-- Done!")
 
