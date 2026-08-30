@@ -1,5 +1,13 @@
 # Version (development version)
 
+## Miscellaneous
+
+ * Increased the package test coverage from 47% to 63%, adding tests for
+   `countsPerRegion()`, `subsetByRegion()`, `readHiC()`,
+   `ggCountHeatmap()`, `ggDomain()`, `ggDomainLabel()`, `legacy()`, the
+   `overlapScores()` methods, several `TopDom()` options (`statFilter`,
+   `outFile`, `debug`, file-path input), and internal utility functions.
+
 ## Documentation
 
  * Fix equation format issue and update one URL.
