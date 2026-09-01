@@ -1,3 +1,8 @@
+# Version (development version)
+
+ * ...
+ 
+
 # Version 0.10.2 [2026-08-30]
 
 ## Bug Fixes
