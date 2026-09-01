@@ -18,9 +18,10 @@
 #' 
 #' 2. A normalized HiC-count matrix file \file{nij.chr19.gz}, where the
 #' non-compressed version is part of the \file{mESC.norm.tar.gz} file
-#' (1,305,763,679 bytes; md5 2e79d0f57463b5b7c4bf86b187086d3c) originally
-#' downloaded from the
-#' [UCSD Ren Lab](http://chromosome.sdsc.edu/mouse/hi-c/download.html).
+#' (1,305,763,679 bytes; md5 2e79d0f57463b5b7c4bf86b187086d3c) made available
+#' by [UCSD Ren Lab](http://renlab.sdsc.edu/renlab_website/) originally
+#' downloaded from \file{http://chromosome.sdsc.edu/mouse/hi-c/download.html}
+#' (no longer available).
 #' It is a tab-delimited file containing a 3250-by-3250 numeric matrix
 #' non-negative decimal values. The underlying HiC sequence data is
 #' available from
@@ -31,15 +32,15 @@
 #' 1. Dixon JR, Selvaraj S, Yue F, Kim A, et al. Topological domains in
 #'    mammalian genomes identified by analysis of chromatin interactions.
 #'    Nature 2012 Apr 11; 485(7398):376-80,
-#'    doi: 10.1038/nature11082,
-#'    PMCID: [PMC3356448](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3356448/),
+#'    doi: \doi{10.1038/nature11082},
+#'    PMCID: PMC3356448,
 #'    PMID: 22495300.
 #' 
 #' 2. Shin, et al., TopDom: an efficient and deterministic method for
 #'    identifying topological domains in genomes,
 #'    Nucleic Acids Res. 2016 Apr 20; 44(7): e70., 2016.
-#'    doi: 10.1093/nar/gkv1505,
-#'    PMCID: [PMC4838359](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/),
+#'    doi: \doi{10.1093/nar/gkv1505},
+#'    PMCID: PMC4838359,
 #'    PMID: 26704975.
 #'
 #' @name TopDom-data

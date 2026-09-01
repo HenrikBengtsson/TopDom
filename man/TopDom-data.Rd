@@ -23,9 +23,10 @@ These data were downloaded from the
 TopDom website (http://zhoulab.usc.edu/TopDom/ - now defunct).
 \item A normalized HiC-count matrix file \file{nij.chr19.gz}, where the
 non-compressed version is part of the \file{mESC.norm.tar.gz} file
-(1,305,763,679 bytes; md5 2e79d0f57463b5b7c4bf86b187086d3c) originally
-downloaded from the
-\href{http://chromosome.sdsc.edu/mouse/hi-c/download.html}{UCSD Ren Lab}.
+(1,305,763,679 bytes; md5 2e79d0f57463b5b7c4bf86b187086d3c) made available
+by \href{http://renlab.sdsc.edu/renlab_website/}{UCSD Ren Lab} originally
+downloaded from \file{http://chromosome.sdsc.edu/mouse/hi-c/download.html}
+(no longer available).
 It is a tab-delimited file containing a 3250-by-3250 numeric matrix
 non-negative decimal values. The underlying HiC sequence data is
 available from
@@ -39,14 +40,14 @@ on GEO and was published part of Dixon, et al. (2012).
 \item Dixon JR, Selvaraj S, Yue F, Kim A, et al. Topological domains in
 mammalian genomes identified by analysis of chromatin interactions.
 Nature 2012 Apr 11; 485(7398):376-80,
-doi: 10.1038/nature11082,
-PMCID: \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3356448/}{PMC3356448},
+doi: \doi{10.1038/nature11082},
+PMCID: PMC3356448,
 PMID: 22495300.
 \item Shin, et al., TopDom: an efficient and deterministic method for
 identifying topological domains in genomes,
 Nucleic Acids Res. 2016 Apr 20; 44(7): e70., 2016.
-doi: 10.1093/nar/gkv1505,
-PMCID: \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/}{PMC4838359},
+doi: \doi{10.1093/nar/gkv1505},
+PMCID: PMC4838359,
 PMID: 26704975.
 }
 }

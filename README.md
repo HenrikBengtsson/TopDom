@@ -1,12 +1,7 @@
 
 
 <div id="badges"><!-- pkgdown markup -->
-
-<a href="https://github.com/HenrikBengtsson/TopDom/actions?query=workflow%3AR-CMD-check"><img border="0" src="https://github.com/HenrikBengtsson/TopDom/workflows/R-CMD-check/badge.svg?branch=develop" alt="Build status"></a></a>
-<a href="https://travis-ci.org/HenrikBengtsson/TopDom"><img border="0" src="https://travis-ci.org/HenrikBengtsson/TopDom.svg" alt="Build status"></a></a>
-<a href="https://ci.appveyor.com/project/HenrikBengtsson/topdom"><img border="0" src="https://ci.appveyor.com/api/projects/status/github/HenrikBengtsson/TopDom?svg=true" alt="Build status"></a></a>
-<a href="https://codecov.io/gh/HenrikBengtsson/TopDom"><img border="0" src="https://codecov.io/gh/HenrikBengtsson/TopDom/branch/develop/graph/badge.svg" alt="Coverage Status"></a></a>
-
+<a href="https://CRAN.R-project.org/web/checks/check_results_TopDom.html"><img border="0" src="https://www.r-pkg.org/badges/version/TopDom" alt="CRAN check status"/></a> <a href="https://github.com/HenrikBengtsson/TopDom/actions?query=workflow%3AR-CMD-check"><img border="0" src="https://github.com/HenrikBengtsson/TopDom/actions/workflows/R-CMD-check.yaml/badge.svg?branch=develop" alt="R CMD check status"/></a>     <a href="https://app.codecov.io/gh/HenrikBengtsson/TopDom"><img border="0" src="https://codecov.io/gh/HenrikBengtsson/TopDom/branch/develop/graph/badge.svg" alt="Coverage Status"/></a> 
 </div>
 
 # TopDom: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes 
@@ -18,11 +13,11 @@ The TopDom method identifies topological domains in genomes from Hi-C sequence d
 
 Whenever using the TopDom method, please cite:
 
-* Hanjun Shin, Yi Shi, Chao Dai, Harianto Tjong, Ke Gong, Frank Alber, Xianghong Jasmine Zhou; TopDom: an efficient and deterministic method for identifying topological domains in genomes, Nucleic Acids Research, Volume 44, Issue 7, 20 April 2016, Pages e70, [10.1093/nar/gkv1505](https://doi.org/10.1093/nar/gkv1505). PMCID: [PMC4838359](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/), PMID: 26704975.
+* Hanjun Shin, Yi Shi, Chao Dai, Harianto Tjong, Ke Gong, Frank Alber, Xianghong Jasmine Zhou; TopDom: an efficient and deterministic method for identifying topological domains in genomes, Nucleic Acids Research, Volume 44, Issue 7, 20 April 2016, Pages e70, [10.1093/nar/gkv1505](https://doi.org/10.1093/nar/gkv1505). PMCID: PMC4838359, PMID: 26704975.
 
 Whenever using the **TopDom** package, please cite:
 
-* Henrik Bengtsson, Hanjun Shin, Harris Lazaris, Gangqing Hu and Xianghong Zhou (2020). R Package TopDom: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes. R package version 0.10.0. https://github.com/HenrikBengtsson/TopDom
+* Henrik Bengtsson, Hanjun Shin, Harris Lazaris, Gangqing Hu and Xianghong Zhou (2020). R Package TopDom: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes. R package version 0.10.1. <https://CRAN.R-project.org/package=TopDom>
 
 The above information is also available as plain text as well as BibTeX entries via `citation("TopDom")`.
 
@@ -47,9 +42,9 @@ The original R script (versions 0.0.1 and 0.0.2) and the TopDom manual were made
 [TopDomData]: https://github.com/HenrikBengtsson/TopDomData/
 
 ## Installation
-R package TopDom is only available via [GitHub](https://github.com/HenrikBengtsson/TopDom) and can be installed in R as:
+R package TopDom is available on [CRAN](https://cran.r-project.org/package=TopDom) and can be installed in R as:
 ```r
-remotes::install_github("HenrikBengtsson/TopDom", ref="master")
+install.packages("TopDom")
 ```
 
 

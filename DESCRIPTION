@@ -1,29 +1,37 @@
 Package: TopDom
-Version: 0.10.1
+Version: 0.10.2
 Title: An Efficient and Deterministic Method for Identifying Topological Domains in Genomes
 Depends: R (>= 3.3.0)
 Imports:
     matrixStats,
+    graphics,
     grid,
     ggplot2,
     reshape2,
-    tibble
+    stats,
+    tibble,
+    utils
 Suggests:
     diffobj (>= 0.1.11)
 Authors@R: c(person("Henrik", "Bengtsson", role = c("aut", "cre", "cph"),
-                    email = "henrikb@braju.com"),
+                    email = "henrikb@braju.com",
+                    comment = c(ORCID = "0000-0002-7579-5165")),
              person("Hanjun", "Shin", role = c("aut", "ctr", "cph"),
-	            email = "shanjun@usc.edu"),
+                    email = "shanjun@usc.edu"),
              person("Harris", "Lazaris", role = c("ctr", "cph"),
-	            comment = "PhD Student, NYU"),
+                    comment = c("PhD Student, NYU",
+                                ORCID = "0000-0002-7345-8288")),
              person("Gangqing", "Hu", role = c("ctr", "cph"),
-	            comment = "Staff Scientist, NIH"),
+                    comment = c("Staff Scientist, NIH",
+                                ORCID = "0000-0001-5453-6888")),
              person("Xianghong", "Zhou", role = c("ctr"),
-	            email = "XJZhou@mednet.ucla.edu"))
+                    email = "XJZhou@mednet.ucla.edu"))
 Description: The 'TopDom' method identifies topological domains in genomes from Hi-C sequence data (Shin et al., 2016 <doi:10.1093/nar/gkv1505>).  The authors published an implementation of their method as an R script (two different versions; also available in this package).  This package originates from those original 'TopDom' R scripts and provides help pages adopted from the original 'TopDom' PDF documentation.  It also provides a small number of bug fixes to the original code.
-License: GPL
-LazyLoad: TRUE
 URL: https://github.com/HenrikBengtsson/TopDom
 BugReports: https://github.com/HenrikBengtsson/TopDom/issues
-RoxygenNote: 7.1.1
+License: GPL
+Language: en-US
+Encoding: UTF-8
+LazyLoad: TRUE
 Roxygen: list(markdown = TRUE)
+Config/roxygen2/version: 8.1.0

@@ -18,7 +18,7 @@ TopDom(
 Hi-C contact matrix file as read by \code{\link[=readHiC]{readHiC()}}, that specify N bins.}
 
 \item{window.size}{The number of bins to extend (as a non-negative integer).
-Recommended range is in {5, ..., 20}.}
+Recommended range is in \{5, ..., 20\}.}
 
 \item{outFile}{(optional) The filename without extension of the three
 result files optionally produced. See details below.}
@@ -184,26 +184,23 @@ print(gg, newpage = TRUE, vp = vp)
 TopDom: an efficient and deterministic method for identifying
 topological domains in genomes,
 \emph{Nucleic Acids Research}, 44(7): e70, April 2016.
-DOI: 10.1093/nar/gkv1505,
-PMCID: \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/}{PMC4838359},
-PMID: \href{https://pubmed.ncbi.nlm.nih.gov/26704975/}{26704975}
+DOI: \doi{10.1093/nar/gkv1505},
+PMCID: PMC4838359,
+PMID: 26704975
 \item Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017 (originally from
 \code{http://zhoulab.usc.edu/TopDom/};
-later available on \url{https://github.com/jasminezhoulab/TopDom} via
-\url{https://zhoulab.dgsom.ucla.edu/pages/software})
+later available on \url{https://github.com/jasminezhoulab/TopDom})
 \item Shin et al., TopDom Manual, 2016-07-08 (original from
 \code{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf};
-later available on \url{https://github.com/jasminezhoulab/TopDom} via
-\url{https://zhoulab.dgsom.ucla.edu/pages/software})
+later available on \url{https://github.com/jasminezhoulab/TopDom})
 \item Hanjun Shin, Understanding the 3D genome organization in topological
 domain level, Doctor of Philosophy Dissertation,
-University of Southern California, March 2017,
-\url{http://digitallibrary.usc.edu/cdm/ref/collection/p15799coll40/id/347735}
+University of Southern California, March 2017.
 \item Dixon JR, Selvaraj S, Yue F, Kim A, et al. Topological domains in
 mammalian genomes identified by analysis of chromatin interactions.
 \emph{Nature}; 485(7398):376-80, April 2012.
-DOI: 10.1038/nature11082,
-PMCID: \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3356448/}{PMC3356448},
+DOI: \doi{10.1038/nature11082},
+PMCID: PMC3356448,
 PMID: 22495300.
 }
 }

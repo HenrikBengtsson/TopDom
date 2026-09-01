@@ -4,7 +4,7 @@
 #' Hi-C contact matrix file as read by [readHiC()], that specify N bins.
 #' 
 #' @param window.size The number of bins to extend (as a non-negative integer).
-#' Recommended range is in {5, ..., 20}.
+#' Recommended range is in \{5, ..., 20\}.
 #' 
 #' @param outFile (optional) The filename without extension of the three
 #' result files optionally produced. See details below.
@@ -106,30 +106,27 @@
 #'   TopDom: an efficient and deterministic method for identifying
 #'   topological domains in genomes,
 #'   _Nucleic Acids Research_, 44(7): e70, April 2016.
-#'   DOI: 10.1093/nar/gkv1505,
-#'   PMCID: [PMC4838359](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4838359/),
-#'   PMID: [26704975](https://pubmed.ncbi.nlm.nih.gov/26704975/)
+#'   DOI: \doi{10.1093/nar/gkv1505},
+#'   PMCID: PMC4838359,
+#'   PMID: 26704975
 #'
 #' * Shin et al., \R script \file{TopDom_v0.0.2.R}, 2017 (originally from
 #'   \code{http://zhoulab.usc.edu/TopDom/};
-#'   later available on \url{https://github.com/jasminezhoulab/TopDom} via
-#'   \url{https://zhoulab.dgsom.ucla.edu/pages/software})
+#'   later available on \url{https://github.com/jasminezhoulab/TopDom})
 #'
 #' * Shin et al., TopDom Manual, 2016-07-08 (original from
 #'   \code{http://zhoulab.usc.edu/TopDom/TopDom\%20Manual_v0.0.2.pdf};
-#'   later available on \url{https://github.com/jasminezhoulab/TopDom} via
-#'   \url{https://zhoulab.dgsom.ucla.edu/pages/software})
+#'   later available on \url{https://github.com/jasminezhoulab/TopDom})
 #'
 #' * Hanjun Shin, Understanding the 3D genome organization in topological
 #'   domain level, Doctor of Philosophy Dissertation,
-#'   University of Southern California, March 2017,
-#'   \url{http://digitallibrary.usc.edu/cdm/ref/collection/p15799coll40/id/347735}
+#'   University of Southern California, March 2017.
 #'
 #' * Dixon JR, Selvaraj S, Yue F, Kim A, et al. Topological domains in
 #'   mammalian genomes identified by analysis of chromatin interactions.
 #'   _Nature_; 485(7398):376-80, April 2012.
-#'   DOI: 10.1038/nature11082,
-#'   PMCID: [PMC3356448](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3356448/),
+#'   DOI: \doi{10.1038/nature11082},
+#'   PMCID: PMC3356448,
 #'   PMID: 22495300.
 #'
 #' @importFrom utils read.table write.table
@@ -148,6 +145,17 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
   bins <- data$bins
   matrix.data <- data$counts
   n_bins <- nrow(bins)
+
+  ## The matrix-scaling part of the statistical-filtering step (statFilter =
+  ## TRUE) addresses elements of the N-by-N contact matrix by their linear
+  ## index, up to N * N.  For a large enough N, that product overflows R's
+  ## integer range, after which seq() fails with an obscure "'to' must be a
+  ## finite number" error preceded by a "NAs produced by integer overflow"
+  ## warning.  Fail early with an explanation instead.
+  ## See <https://github.com/HenrikBengtsson/TopDom/issues/10>.
+  if (statFilter && n_bins > sqrt(.Machine$integer.max)) {
+    stop(sprintf("The statistical-filtering step of TopDom() (statFilter = TRUE) does not support contact matrices with more than %d bins; here the matrix has %d bins, for which the internal index arithmetic (n_bins * n_bins) would overflow R's integer range. Workarounds: (i) call TopDom() with statFilter = FALSE, or (ii) use a larger bin size so that the chromosome is represented by fewer bins", as.integer(sqrt(.Machine$integer.max)), n_bins))
+  }
 
   mean.cf <- rep(0, times = n_bins)
   pvalue <- rep(1.0, times = n_bins)
@@ -196,7 +204,8 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
     local.ext[idxs] <- Detect.Local.Extreme(x = mean.cf[idxs])  ## assigns values (-1,0,+1)
   }
   stop_if_not(!anyNA(local.ext), length(local.ext) == n_bins, all(local.ext %in% c(-0.5, -1, 0, +1)))
-  rm(list = "idxs")
+  ## 'idxs' is only created if there is at least one region to process
+  if (exists("idxs", inherits = FALSE)) rm(list = "idxs")
 
   eltm <- proc.time() - ptm
   if (debug) {
@@ -210,16 +219,31 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
       mcat("Step 3 : Statistical Filtering of false positive TD boundaries")
       mcat("#########################################################################")
     }
-    
+
     ptm <- proc.time()
     if (debug) mcat("-- Matrix Scaling....")
     scale.matrix.data <- matrix.data
+    scaled.idxs <- integer(0L)
     for (i in seq_len(2 * window.size)) {
       # diag(scale.matrix.data[, i:n_bins]) <- scale(diag(matrix.data[, i:n_bins]))
       idxs <- seq(from = 1 + (n_bins * i), to = n_bins * n_bins, by = 1 + n_bins)
       scale.matrix.data[idxs] <- scale(matrix.data[idxs])
+      scaled.idxs <- c(scaled.idxs, idxs)
     }
-    rm(list = c("idxs", "matrix.data"))
+    ## 'idxs' is only created if 2 * window.size >= 1
+    if (exists("idxs", inherits = FALSE)) rm(list = "idxs")
+    rm(list = "matrix.data")
+
+    ## Standardizing an all-constant (typically all-zero) near-diagonal band
+    ## produces non-finite values, because such a band has zero variance.
+    ## These NaNs later propagate into Get.Pvalue() -> wilcox.test(), which
+    ## then fails with an obscure "not enough (finite) 'x' observations"
+    ## error.  Detect this here and explain the actual problem instead.
+    ## See <https://github.com/HenrikBengtsson/TopDom/issues/17>.
+    if (length(scaled.idxs) > 0L && any(!is.finite(scale.matrix.data[scaled.idxs]))) {
+      stop("The statistical-filtering step of TopDom() (statFilter = TRUE) failed because standardizing the near-diagonal bands of the contact matrix produced non-finite values. This happens when one or more of these bands has zero variance (e.g. all contact counts are zero) or contains missing values, which is typically caused by very sparse input data (too few read pairs and/or too small a bin size). Possible workarounds: (i) call TopDom() with statFilter = FALSE, (ii) use a larger bin size, or (iii) drop empty / very-low-count bins before calling TopDom()")
+    }
+    rm(list = "scaled.idxs")
     
     if (debug) mcat("-- Compute p-values by Wilcox Ranksum Test")
     for (i in seq_len(nrow(proc.regions))) {
@@ -231,7 +255,8 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
       idxs <- start:end
       pvalue[idxs] <- Get.Pvalue(matrix.data = scale.matrix.data[idxs, idxs], size = window.size, scale = 1.0)
     }
-    rm(list = "idxs")
+    ## 'idxs' is only created if there is at least one region to process
+    if (exists("idxs", inherits = FALSE)) rm(list = "idxs")
     stop_if_not(length(pvalue) == n_bins, !anyNA(pvalue))
     if (debug) mcat("-- Done!")
 
