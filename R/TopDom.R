@@ -144,7 +144,7 @@ TopDom <- function(data, window.size, outFile = NULL, statFilter = TRUE, ..., de
 
   bins <- data$bins
   matrix.data <- data$counts
-  n_bins <- nrow(bins)
+  n_bins <- as.numeric(nrow(bins))
 
   ## The matrix-scaling part of the statistical-filtering step (statFilter =
   ## TRUE) addresses elements of the N-by-N contact matrix by their linear
